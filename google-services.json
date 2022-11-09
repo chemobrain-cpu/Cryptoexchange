@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "555241436309",
+    "project_id": "coincap-d7aaa",
+    "storage_bucket": "coincap-d7aaa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555241436309:android:ad2e571969b24cce63579c",
+        "android_client_info": {
+          "package_name": "com.chemobrain857380.coincap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555241436309-qi1a3l8r5msbfkqnetrkcaof9gh5vvs2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBb2OHLmA_z5j1L0AlMyHmmBs8pdG7wYos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555241436309-qi1a3l8r5msbfkqnetrkcaof9gh5vvs2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
