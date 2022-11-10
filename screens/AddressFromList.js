@@ -213,8 +213,8 @@ const styles = StyleSheet.create({
 
     },
     headerText: {
-        fontSize: 18,
-        fontFamily: 'Poppins'
+        fontSize: 21,
+        fontFamily: 'ABeeZee',
 
     },
     assetsheaderCon: {
@@ -232,11 +232,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
+        paddingHorizontal: 15,
 
     },
     inputContainer: {
         width: '100%',
-        marginRight: 15,
         borderRadius: 25,
         borderWidth: 1,
         display: 'flex',
@@ -249,11 +249,11 @@ const styles = StyleSheet.create({
 
     },
     input: {
-        paddingHorizontal: 10,
+        height: 45,
         fontFamily: 'ABeeZee',
         marginBottom: 5,
         alignSelf: 'stretch',
-        width: '80%',
+        width: '100%',
         fontSize: 17,
 
     },

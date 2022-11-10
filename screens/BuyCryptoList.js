@@ -1,5 +1,5 @@
 import React, { useState, useEffect, } from 'react'
-import { View, Text, SafeAreaView, StyleSheet, TextInput,Pressable,KeyboardAvoidingView} from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TextInput, Pressable, KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
@@ -20,16 +20,16 @@ let BuyCryptoList = ({ navigation }) => {
   let dispatch = useDispatch()
 
   //preventing memory leak
-    useEffect(() => {
-        let focus = navigation.addListener('beforeRemove', (e) => {
-            if(isLoading){
-                e.preventDefault();
-            }else{
-                //can go back
-            }
-        });
-        return focus
-    }, [isLoading]);
+  useEffect(() => {
+    let focus = navigation.addListener('beforeRemove', (e) => {
+      if (isLoading) {
+        e.preventDefault();
+      } else {
+        //can go back
+      }
+    });
+    return focus
+  }, [isLoading]);
 
   let navigationHandler = (coin) => {
     navigation.navigate('BuyPriceChart',
@@ -92,7 +92,7 @@ let BuyCryptoList = ({ navigation }) => {
 
   let onEndFetch = async (pageNumber) => {
     // You can await here
-   
+
     let response = await dispatch(loadCoins(pageNumber))
     if (!response.bool) {
 
@@ -138,7 +138,7 @@ let BuyCryptoList = ({ navigation }) => {
 
 
   if (isLoading) {
-    return <WalletAssetLoader navigation={navigation} title="Select an asset to buy"  />
+    return <WalletAssetLoader navigation={navigation} title="Select an asset to buy" />
   }
   if (error) {
     return <Error tryAgain={fetchData} navigation={navigation} />
@@ -241,15 +241,13 @@ const styles = StyleSheet.create({
 
   },
   assetsText: {
-    fontSize: 20,
-    fontFamily: 'Poppins',
-    marginLeft: 50,
-    textAlign: 'center'
+    fontSize: 21,
+    fontFamily: 'ABeeZee',
+    marginLeft: '5%'
 
   },
   inputContainer: {
-    width: '80%',
-    marginRight: 15,
+    width: '90%',
     borderRadius: 25,
     borderWidth: 1,
     display: 'flex',
@@ -265,7 +263,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ABeeZee',
     marginBottom: 5,
     alignSelf: 'stretch',
-    width: '80%'
+    width: '100%'
   },
   /*end of header section style*/
   middlesection: {

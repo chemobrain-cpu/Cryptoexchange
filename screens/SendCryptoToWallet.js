@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     View,
     Text,
@@ -13,11 +13,10 @@ import { Feather, AntDesign } from '@expo/vector-icons';
 import { useDispatch } from "react-redux"
 import Error from "../component/errorComponent";
 import { useRoute } from "@react-navigation/native";
-import { topUp } from "../store/action/appStorage";
 import Loader from '../loaders/Loader';
-import AuthModal from '../modals/authModal'
+import AuthModal from '../modals/authModal';
 
-const TopUp = ({ navigation }) => {
+const SendCryptoToWallet = ({ navigation }) => {
     const route = useRoute();
     let [value, setValue] = useState("")
     let [isLoading, setIsLoading] = useState(false)
@@ -26,10 +25,11 @@ const TopUp = ({ navigation }) => {
     const [isAuthError, setIsAuthError] = useState(false)
     const [authInfo, setAuthInfo] = useState("")
     const [modalVisible, setModalVisible] = useState("")
+    const [url, setUrl] = useState("")
 
     const dispatch = useDispatch()
 
-     //preventing memory leak
+    //preventing memory leak
     useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
@@ -41,14 +41,22 @@ const TopUp = ({ navigation }) => {
         return focus
     }, [isLoading]);
 
+    const {
+        id,
+        price,
+        name,
+        quantity
+    } = route.params
+   
+
 
 
     let dataUi = (data) => {
         if (data.length <= 8) {
-            return <Text style={{ ...styles.dollarPrice, fontSize: 40 }}>${data}</Text>
+            return <Text style={{ ...styles.dollarPrice, fontSize: 30 }}>{id} {data}</Text>
 
         }
-        return <Text style={{ ...styles.dollarPrice, fontSize: 40 }}>${data}</Text>
+        return <Text style={{ ...styles.dollarPrice, fontSize: 30 }}>{id} {data}</Text>
 
     }
 
@@ -86,30 +94,35 @@ const TopUp = ({ navigation }) => {
     let deleteHandler = () => {
         //get the value string and remove the last element
         setValue(prev => prev.slice(0, -1))
-
     }
-
 
 
     let proceedHandler = async () => {
         setIsLoading(true)
-        let res = await dispatch(topUp({ amount: value }))
-        if (!res.bool) {
+        //check for equity of balances
+        if (value > quantity) {
             setIsAuthError(true)
-            setAuthInfo(res.message)
+            setAuthInfo(`insufficient fund!.You have ${quantity.toFixed(4)}  ${id} worthing $ ${price.toFixed(2)}  available for withdrawal`)
             setIsLoading(false)
             return
-
         }
-        setIsAuthError(true)
-        setAuthInfo('Account topup successful')
         setIsLoading(false)
-
+        return navigation.navigate('CryptoForm', {
+            id: id,
+            price: price,
+            name: name,
+            quantity: Number(value)
+        })
+        
     }
 
 
     let changeVisibility = () => {
         setIsAuthError(prev => !prev)
+        if (url) {
+            navigation.navigate(url)
+        }
+        return
     }
 
 
@@ -135,7 +148,7 @@ const TopUp = ({ navigation }) => {
                         </Pressable>
 
                         <Pressable style={styles.headerContainerTitle} >
-                            <Text style={styles.title}>Top Up Account</Text>
+                            <Text style={styles.title}>Send {id} to wallet </Text>
 
                         </Pressable>
 
@@ -147,7 +160,7 @@ const TopUp = ({ navigation }) => {
                 <View style={styles.priceContainer}>
                     <View style={styles.valueCon}>
                         {value == '' ? <View style={styles.moneyCon}>
-                            <Text style={styles.money}>$ 0</Text>
+                            <Text style={styles.money}>{id} 0</Text>
 
                         </View> : <View style={styles.twoPriceColumn}>
 
@@ -249,18 +262,18 @@ const TopUp = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    screen:{ 
-        flex: 1, 
-        backgroundColor: '#fff' 
+    screen: {
+        flex: 1,
+        backgroundColor: '#fff'
     },
 
     scrollContainer: {
         width: Dimensions.get('window').width,
         paddingHorizontal: 15,
     },
-    headerOuterCon:{ 
-        display: 'flex', 
-        width: '100%' 
+    headerOuterCon: {
+        display: 'flex',
+        width: '100%'
     },
     headerContainer: {
         paddingTop: 20,
@@ -271,11 +284,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     headerContainerIcon: {
-      
+
 
     },
     headerContainerTitle: {
-        paddingLeft: 50
+        paddingLeft: '5%'
     },
 
     title: {
@@ -333,7 +346,7 @@ const styles = StyleSheet.create({
 
     },
     money: {
-        fontSize: 40,
+        fontSize: 30,
         color: '#1652f0',
         fontFamily: 'Poppins'
 
@@ -455,4 +468,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default TopUp;
+export default SendCryptoToWallet;

@@ -230,14 +230,13 @@ const styles = StyleSheet.create({
 
     },
     assetsText: {
-        fontSize: 20,
-        fontFamily: 'Poppins',
-        marginLeft: 30
+        fontSize: 21,
+        fontFamily: 'ABeeZee',
+        marginLeft: '6%'
 
     },
     inputContainer: {
-        width: '80%',
-        marginRight: 15,
+        width: '90%',
         borderRadius: 25,
         borderWidth: 1,
         display: 'flex',

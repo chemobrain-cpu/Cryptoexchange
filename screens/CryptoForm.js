@@ -79,8 +79,7 @@ const CryptoForm = ({ navigation }) => {
             setUrl(res.url)
             return
         }
-        setIsLoading(false)
-        //go to verification page passing the email as a parameter
+    
         setIsAuthError(true)
         setAuthInfo("Transaction is being processed")
         setIsLoading(false)
@@ -133,11 +132,6 @@ const CryptoForm = ({ navigation }) => {
                     <Text style={styles.titleText}>You're about sending {quantity.toFixed(5)} {name} worthing ${price.toFixed(5)}</Text>
 
                 </View>
-
-
-
-
-
 
                 <KeyboardAvoidingView style={styles.formCon}>
                     <TextInput style={styles.input}

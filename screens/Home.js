@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, Image, Dimensions, ActivityIndicator, Platform, Pressable,Alert } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Platform, Alert } from 'react-native'
 import ContentLoaders from '../loaders/contentLoader'
 import WatchList from '../component/HomeWatchList'
 import Button from '../component/homeButton'
 import TopMovers from "../component/HomeTopMovers"
 import TimelineContainer from "../component/homeTimeline"
-import Setup from "../component/setup"
 import { Entypo, Ionicons, AntDesign, Octicons } from '@expo/vector-icons';
-import { Card } from "react-native-shadow-cards"
 import { timelineData } from "../data/data"
 import { useDispatch, useSelector } from "react-redux";
 import Error from '../component/errorComponent'
-import { loadCoins, loadWatchList, addNotificationToken,getUser } from "../store/action/appStorage";
+import { loadCoins, loadWatchList, addNotificationToken, getUser } from "../store/action/appStorage";
 import ShortListLoader from '../loaders/shortListLoader'
 import MoversLoader from "../loaders/moversLoader";
 import * as Notifications from 'expo-notifications';
@@ -39,15 +37,15 @@ const Home = ({ navigation }) => {
 
     //notification
     const [expoPushToken, setExpoPushToken] = useState([]);
-  
+
     let { user } = useSelector(state => state.userAuth)
 
 
-
+    //setting up notifications listeners
     useEffect(() => {
         Notifications.addNotificationReceivedListener(notification => {
             //write a logic to update the user
-            fetchUser().then(()=>{
+            fetchUser().then(() => {
                 setIsLoading(false)
             })
         })
@@ -57,23 +55,42 @@ const Home = ({ navigation }) => {
             //update user when notification is recieved
         })
     }, [fetchUser]);
+    
+/*
+    //triggering security check
+    useEffect(()=>{
+        let timer
+        if(!isLoading && !isWatchListLoading && !isMoversLoading && !isMounted && !isError){
+            timer = setTimeout(()=>{
+                alert('secure your account')
+            },1000)
 
-    let fetchUser = async()=>{
+        }
+
+        return ()=>{
+            clearTimeout(timer)
+        }
+
+    },[])
+    */
+
+
+    let fetchUser = async () => {
         setIsLoading(true)
         let res = await dispatch(getUser())
-        if(!res){
+        if (!res) {
             setIsError(true)
         }
     }
 
+
+  //use effect for registering notification token
     useEffect(() => {
         setIsLoading(true)
         //registering for push notification
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     }, []);
-
-
 
     const registerForPushNotificationsAsync = async () => {
         let token;
@@ -97,13 +114,13 @@ const Home = ({ navigation }) => {
         }
         if (finalStatus !== 'granted') {
             Alert.alert('Permission required',
-            'Push notifications need the appropriate permissions.')
+                'Push notifications need the appropriate permissions.')
             return;
         }
         token = (await Notifications.getExpoPushTokenAsync()).data;
         //save the token in users account
 
-        if (token) {
+        if (token && !user.notificationToken) {
             let res = await dispatch(addNotificationToken({ notificationToken: token }))
             if (!res.bool) {
                 setIsError(true)
@@ -192,9 +209,10 @@ const Home = ({ navigation }) => {
         fetchWatchList()
     }
 
-    let setupHandler = (url) => {
-        navigation.navigate(url)
-    }
+        /*
+        let setupHandler = (url) => {
+            navigation.navigate(url)
+        }*/
 
     let actionHandler = (data) => {
         if (data === "Buy") {
@@ -263,25 +281,15 @@ const Home = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.screen}>
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
-                <>
-                    {header ? <View >
+                <View>
+                    <View >
                         <View style={{ ...styles.headerContainer }}>
                             <TouchableOpacity onPress={() => navigation.openDrawer()}>
                                 <Entypo name="menu" size={24} color="black" />
 
                             </TouchableOpacity>
 
-                            <TouchableOpacity >
 
-                                {user.isHideBalance ? <Text style={styles.giftText}>
-                                </Text> : <Text style={{ ...styles.giftText }}>
-
-                                    ${Number(user.accountBalance).toFixed(2)}
-
-                                </Text>}
-
-
-                            </TouchableOpacity>
 
 
 
@@ -300,165 +308,69 @@ const Home = ({ navigation }) => {
 
                         </View>
 
+                    </View>
+                    <View style={styles.balanceContainer}>
 
-                        {headerAction ? <View style={{ ...styles.actionContainer, zIndex: 15, backgroundColor: '#fff' }}>
-                            <Button
-                                text="Buy"
-                                pressHandler={actionHandler}
-                            >
-                                <Ionicons name="add" size={30} color="#fff" />
-                            </Button>
+                        {user.isHideBalance ? <Text >
+                        </Text> : <View style={styles.balanceInnerContainer}>
 
-                            <Button
-                                text="Sell"
-                                pressHandler={actionHandler}
-                            >
-                                <AntDesign name="minus" size={22} color="#fff" />
-                            </Button>
+                            <Text style={{ ...styles.headText }}>
+                                Total Balance
 
-                            <Button
-                                text="Send"
-                                pressHandler={actionHandler}
-                            >
-                                <AntDesign name="arrowup" size={22} color="#fff" />
-                            </Button>
-
-                            <Button
-                                text="Convert"
-                                pressHandler={actionHandler}
-                            >
-                                <Octicons name="sync" size={22} color="#fff" />
-                            </Button>
-
-                            <Button
-                                text="Receive"
-                                pressHandler={actionHandler}
-                            >
-                                <AntDesign name="arrowdown" size={22} color="#fff" />
-                            </Button>
-
-                        </View> : <></>}
+                            </Text>
 
 
-
-                    </View> : <View style={styles.headerContainer}>
-                        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                            <Entypo name="menu" size={24} color="black" />
-
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.giftContainer}>
-
-                            {user.isHideBalance ? <Text style={{ ...styles.giftText }}>
-
-
-
-                            </Text> : <Text style={styles.giftText}>
+                            <Text style={{ ...styles.giftText }}>
 
                                 ${Number(user.accountBalance).toFixed(2)}
 
-                            </Text>}
+                            </Text>
+                        </View>}
 
 
-                        </TouchableOpacity>
+                    </View>
 
+                    <View style={styles.actionContainer}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('Notification')} >
-                            <Ionicons name="notifications" size={30} color="black" />
-                            <View style={styles.notification}>
-                                <View style={styles.notificationTextContainer}>
-                                    <Text style={styles.notificationText}>{user.notifications.length}</Text>
+                        <Button
+                            text="Buy"
+                            pressHandler={actionHandler}
+                        >
+                            <Ionicons name="add" size={30} color="#fff" />
+                        </Button>
 
-                                </View>
+                        <Button
+                            text="Sell"
+                            pressHandler={actionHandler}
+                        >
+                            <AntDesign name="minus" size={22} color="#fff" />
+                        </Button>
 
-                            </View>
+                        <Button
+                            text="Send"
+                            pressHandler={actionHandler}
+                        >
+                            <AntDesign name="arrowup" size={22} color="#fff" />
+                        </Button>
 
-                        </TouchableOpacity>
+                        <Button
+                            text="Convert"
+                            pressHandler={actionHandler}
+                        >
+                            <Octicons name="sync" size={22} color="#fff" />
+                        </Button>
 
+                        <Button
+                            text="Receive"
+                            pressHandler={actionHandler}
+                        >
+                            <AntDesign name="arrowdown" size={22} color="#fff" />
+                        </Button>
 
-                    </View>}
-                </>
-
-                <View style={styles.imageContainer}>
-                    <Image
-                        source={require('../assets/icons/homebox.jpg')}
-                        style={{ width: 250, height: 250, marginBottom: 35 }} />
+                    </View>
 
                 </View>
 
-
-                <Setup setupHandler={setupHandler} />
-
-
-
-                <Text style={styles.explore}>Explore Coincap</Text>
-                <Pressable>
-                    <Card style={styles.learnearnContainer}>
-                        <View>
-                            <Text style={styles.learnText}>
-                                Want to learn
-                            </Text>
-                            <Text style={styles.learnText}>
-                                more?
-                            </Text>
-
-                            <Text style={styles.earnText}>
-                                Want to learn
-                            </Text>
-                            <Text style={styles.earnText}>
-                                more?
-                            </Text>
-
-                        </View>
-
-
-                        <Image
-                            source={require('../assets/icons/bulb.jpg')}
-                            style={{ width: 60, height: 60, marginBottom: 35 }} />
-
-
-                    </Card>
-                </Pressable>
-
-
-                {headerAction ? <></> : <View style={styles.actionContainer}>
-
-                    <Button
-                        text="Buy"
-                        pressHandler={actionHandler}
-                    >
-                        <Ionicons name="add" size={30} color="#fff" />
-                    </Button>
-
-                    <Button
-                        text="Sell"
-                        pressHandler={actionHandler}
-                    >
-                        <AntDesign name="minus" size={22} color="#fff" />
-                    </Button>
-
-                    <Button
-                        text="Send"
-                        pressHandler={actionHandler}
-                    >
-                        <AntDesign name="arrowup" size={22} color="#fff" />
-                    </Button>
-
-                    <Button
-                        text="Convert"
-                        pressHandler={actionHandler}
-                    >
-                        <Octicons name="sync" size={22} color="#fff" />
-                    </Button>
-
-                    <Button
-                        text="Receive"
-                        pressHandler={actionHandler}
-                    >
-                        <AntDesign name="arrowdown" size={22} color="#fff" />
-                    </Button>
-
-                </View>}
 
                 <View style={styles.watchListContainer}>
                     <View>
@@ -524,12 +436,23 @@ const styles = StyleSheet.create({
         alignItems: 'center'
 
     },
+    headText: {
+        paddingHorizontal: 15,
+        fontSize: 18,
+        fontFamily: 'ABeeZee',
+    },
+    balanceContainer: {
+        backgroundColor: '#fff',
+        marginBottom: 0
+
+    },
     giftContainer: {
         display: "flex",
         flexDirection: 'row',
         borderRadius: 10,
-        height: 40,
+        height: 30,
         paddingHorizontal: 30,
+        backgroundColor: 'red'
     },
     giftText: {
         fontSize: 30,
@@ -565,39 +488,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins',
     },
 
-    imageContainer: {
-        height: Dimensions.get('window').height / 2.5,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
 
-    explore: {
-        fontSize: 22,
-        fontFamily: 'Poppins',
-        marginBottom: 10,
-        marginHorizontal: '5%',
-    },
-    learnearnContainer: {
-        borderRadius: 10,
-        padding: 15,
-        marginHorizontal: '5%',
-        marginBottom: 35,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        zIndex: -5
-
-    },
-    learnText: {
-        fontSize: 18,
-        fontFamily: 'Poppins',
-    },
-    earnText: {
-        fontSize: 18,
-        fontFamily: 'ABeeZee',
-        color: 'rgb(100,100,100)'
-    },
     actionContainer: {
         display: 'flex',
         flexDirection: 'row',

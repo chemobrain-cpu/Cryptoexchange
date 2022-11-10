@@ -222,10 +222,9 @@ const styles = StyleSheet.create({
     },
 
     headerText: {
-        fontSize: 20,
-        fontFamily: 'Poppins',
-        marginLeft: 20
-
+        fontSize: 21,
+        fontFamily: 'ABeeZee',
+        marginLeft: '5%'
     },
     assetsheaderCon: {
         display: 'flex',
@@ -233,7 +232,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '100%',
-        marginBottom: 20
+        marginBottom: 10
     },
     searchCon: {
         display: 'flex',
@@ -244,8 +243,7 @@ const styles = StyleSheet.create({
 
     },
     inputContainer: {
-        width: '100%',
-        marginRight: 15,
+        width: '90%',
         borderRadius: 25,
         borderWidth: 1,
         display: 'flex',
@@ -262,7 +260,7 @@ const styles = StyleSheet.create({
         fontFamily: 'ABeeZee',
         marginBottom: 5,
         alignSelf: 'stretch',
-        width: '80%',
+        width: '90%',
         fontSize: 17,
 
     },

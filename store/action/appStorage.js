@@ -1408,6 +1408,7 @@ export const sendCrypto = (data) => {
       })
       if (response.status === 400) {
         let data = await response.json()
+        console.log(data)
         return {
           bool: false,
           message: data.response,
@@ -1416,6 +1417,7 @@ export const sendCrypto = (data) => {
       }
       if (response.status === 401) {
         let data = await response.json()
+        console.log(data)
         return {
           bool: false,
           message: data.response,
@@ -1424,6 +1426,7 @@ export const sendCrypto = (data) => {
       }
       if (response.status === 402) {
         let data = await response.json()
+        console.log(data)
         return {
           bool: false,
           message: data.response,
@@ -1432,6 +1435,7 @@ export const sendCrypto = (data) => {
       }
       if (response.status === 403) {
         let data = await response.json()
+        console.log(data)
         return {
           bool: false,
           message: data.response,
@@ -1441,6 +1445,7 @@ export const sendCrypto = (data) => {
       if (response.status === 300) {
 
         let data = await response.json()
+        console.log(data)
         return {
           bool: false,
           message: data.response
@@ -1449,6 +1454,7 @@ export const sendCrypto = (data) => {
       if (response.status === 200) {
 
         let data = await response.json()
+        console.log(data)
         return {
           bool: true,
           message: data.response

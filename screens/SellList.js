@@ -1,5 +1,5 @@
 import React, { useState, useEffect, } from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, FlatList,Pressable,KeyboardAvoidingView } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TextInput, FlatList, Pressable, KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
@@ -20,17 +20,17 @@ let SellList = ({ navigation }) => {
   let dispatch = useDispatch()
   let { user } = useSelector(state => state.userAuth)
 
-   //preventing memory leak
-    useEffect(() => {
-        let focus = navigation.addListener('beforeRemove', (e) => {
-            if (isLoading) {
-                e.preventDefault();
-            } else {
-                //can go back
-            }
-        });
-        return focus
-    }, [isLoading]);
+  //preventing memory leak
+  useEffect(() => {
+    let focus = navigation.addListener('beforeRemove', (e) => {
+      if (isLoading) {
+        e.preventDefault();
+      } else {
+        //can go back
+      }
+    });
+    return focus
+  }, [isLoading]);
 
   //destructuring from param
 
@@ -43,9 +43,9 @@ let SellList = ({ navigation }) => {
         market_cap: coin.market_cap,
         total_volume: coin.total_volume, circulating_supply: coin.circulating_supply,
         market_cap_rank: coin.market_cap_rank,
-        image:coin.image,
-        symbol:coin.symbol
-        
+        image: coin.image,
+        symbol: coin.symbol
+
       })
   }
 
@@ -75,12 +75,12 @@ let SellList = ({ navigation }) => {
     let assets = user.personalAssets.map(data => {
       return data.id.toLowerCase()
     })
-    
+
 
     let transformIds = assets.join('%2c')
-  
+
     let response = await dispatch(loadWatchList(transformIds))
-   
+
 
 
     if (!response.bool) {
@@ -178,7 +178,7 @@ let SellList = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         data={filteredCoins}
         keyExtractor={(item, index) => item.id}
-       
+
         renderItem={renderItem}
       />
     </View>
@@ -229,13 +229,13 @@ const styles = StyleSheet.create({
 
   },
   assetsText: {
-    fontSize: 20,
-    fontFamily: 'Poppins',
-    marginLeft: 30
+    fontSize: 21,
+    fontFamily: 'ABeeZee',
+    marginLeft: '5%'
 
   },
   inputContainer: {
-    width: '80%',
+    width: '90%',
     marginRight: 15,
     borderRadius: 25,
     borderWidth: 1,

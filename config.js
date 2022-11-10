@@ -60,6 +60,8 @@ import PinSetting from "./screens/PinSetting";
 import Password from "./screens/Password";
 import Authorize from "./screens/Authorize";
 import Photo from "./screens/Photo";
+import SendCryptoToBank from "./screens/SendCryptoToBank"
+import SendCryptoToWallet from "./screens/SendCryptoToWallet"
 
 //auth screen
 import Splash_1 from "./auth/splash";
@@ -526,6 +528,17 @@ const HomeStackNavigator = () => {
             <Stack.Screen
                 name="PhotoIdentity"
                 component={Photo}
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+                name='SendCryptoToBank'
+                component = {SendCryptoToBank}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='SendCryptoToWallet'
+                component = {SendCryptoToWallet}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>

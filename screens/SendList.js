@@ -1,8 +1,9 @@
 import React, { useState, useEffect, } from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, FlatList,Pressable,KeyboardAvoidingView} from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, FlatList, Pressable, KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
+import SendModal from "../modals/sendAssetModal";
 import Error from '../component/errorComponent'
 import { useDispatch, } from "react-redux"
 import { useSelector } from "react-redux";
@@ -14,15 +15,20 @@ let SendList = ({ navigation }) => {
     let [text, setText] = useState('')
     let [focus, setFocus] = useState(false)
     let [coins, setCoins] = useState([])
+    let [transferedCoin, setTransferedCoin] = useState()
     let [filteredCoins, setFilteredCoins] = useState([])
     let [isLoading, setIsLoading] = useState(true)
     let [error, setError] = useState(false)
     let dispatch = useDispatch()
     let { user } = useSelector(state => state.userAuth)
+    const [modalTopic, setModalTopic] = useState('');
+    const [modalText, setModalText] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [currencyName, setCurrencyName] = useState(false);
 
 
-     //preventing memory leak
-     useEffect(() => {
+    //preventing memory leak
+    useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
                 e.preventDefault();
@@ -35,15 +41,40 @@ let SendList = ({ navigation }) => {
 
     //destructuring from param
 
-    let navigationHandler = (coin) => {
-        //here were navigating to send calculator
-        return navigation.navigate('CryptoCalculator', {
-            id: coin.id,
-            price: coin.price,
-            name: coin.name,
-            image: coin.image,
-            action: 'send'
+    let walletNavigationHandler = (coin) => {
+        let quantity = Number(transferedCoin.current_price)/Number(transferedCoin.price)
+
+        setModalVisible(prev => !prev)
+        return navigation.navigate('SendCryptoToWallet', {
+            id: transferedCoin.symbol,
+            price: transferedCoin.current_price,
+            name: transferedCoin.name,
+            quantity: quantity
         })
+
+    }
+
+    let bankNavigationHandler = (coin) => {
+        let quantity = Number(transferedCoin.current_price)/Number(transferedCoin.price)
+
+        setModalVisible(prev => !prev)
+        return navigation.navigate('SendCryptoToBank', {
+            id: transferedCoin.symbol,
+            price: transferedCoin.current_price,
+            name: transferedCoin.name,
+            quantity: quantity
+
+        })
+
+    }
+
+    let modalHandler = (coin) => {
+        //store coin in a state
+        setTransferedCoin(coin)
+        //set modal to visible
+        setModalVisible(true)
+        setCurrencyName(coin.name)
+        return
 
     }
 
@@ -84,7 +115,7 @@ let SendList = ({ navigation }) => {
                 if (mem.id == val.id.toLowerCase()) {
                     mem.price = mem.current_price
                     mem.current_price = val.quantity * mem.current_price
-                     
+
                     arr.push(mem)
                 }
             }
@@ -95,12 +126,16 @@ let SendList = ({ navigation }) => {
         setIsLoading(false)
     }
 
+    let changeVisibility = () => {
+        setModalVisible(prev => !prev)
+    }
+
 
     useEffect(() => {
         fetchData()
     }, [])
 
-    const renderItem = ({ item, index }) => <CryptoCard navigationHandler={() => navigationHandler(item)}
+    const renderItem = ({ item, index }) => <CryptoCard navigationHandler={() => modalHandler(item)}
         key={item}
         coin={item}
     />
@@ -116,58 +151,68 @@ let SendList = ({ navigation }) => {
 
     if (filteredCoins.length === 0) {
         return <EmptyList navigation={navigation} actionText="send" />
-
     }
 
-    return <SafeAreaView style={styles.screen}>
-        <View style={styles.headerContainer}>
+    return <>
+        <SendModal
+            modalVisible={modalVisible}
+            changeVisibility={changeVisibility} bankNavigationHandler={bankNavigationHandler}
+            walletNavigationHandler={walletNavigationHandler}
+            modalTopic={modalTopic}
+            modalText={modalText}
+            currencyName={currencyName} />
+        <SafeAreaView style={styles.screen}>
+            <View style={styles.headerContainer}>
+
+                <View style={styles.assetsheaderText}>
+                    <Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderTextCon}>
+                        <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
+                        <Text style={styles.assetsText}>Send available assets</Text>
+
+                    </Pressable>
 
 
-            <View style={styles.assetsheaderText}>
-                <Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderTextCon}>
-                    <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
-                    <Text style={styles.assetsText}>Select available asset</Text>
+                </View>
 
-                </Pressable>
+                <View style={styles.assetsheaderCon}>
+
+                    <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
+                        <FontAwesome name="search" size={18} color={focus ? "#1652f0" : "rgb(44, 44, 44)"} />
+                        <TextInput
+                            style={{ ...styles.input, borderColor: 'orange' }}
+                            onChangeText={changeText}
+                            value={text}
+                            placeholder="Search"
+                            onFocus={() => {
+                                setFocus(true);
+                            }}
+                            onBlur={() => {
+                                setFocus(false);
+                            }}
+
+                        />
+                    </KeyboardAvoidingView>
+
+                </View>
 
 
             </View>
 
-            <View style={styles.assetsheaderCon}>
 
-                <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
-                    <FontAwesome name="search" size={18} color={focus ? "#1652f0" : "rgb(44, 44, 44)"} />
-                    <TextInput
-                        style={{ ...styles.input, borderColor: 'orange' }}
-                        onChangeText={changeText}
-                        value={text}
-                        placeholder="Search"
-                        onFocus={() => {
-                            setFocus(true);
-                        }}
-                        onBlur={() => {
-                            setFocus(false);
-                        }}
-
-                    />
-                </KeyboardAvoidingView>
-
+            <View style={styles.middlesection}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={filteredCoins}
+                    keyExtractor={(item, index) => item.id}
+                    initialNumToRender={20}
+                    renderItem={renderItem}
+                />
             </View>
 
 
-        </View>
 
-
-        <View style={styles.middlesection}>
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                data={filteredCoins}
-                keyExtractor={(item, index) => item.id}
-                initialNumToRender={20}
-                renderItem={renderItem}
-            />
-        </View>
-    </SafeAreaView>
+        </SafeAreaView>
+    </>
 
 }
 
@@ -214,14 +259,13 @@ const styles = StyleSheet.create({
 
     },
     assetsText: {
-        fontSize: 20,
-        fontFamily: 'Poppins',
-        marginLeft: 30
+        fontSize: 21,
+        fontFamily: 'ABeeZee',
+        marginLeft: '5%'
 
     },
     inputContainer: {
-        width: '80%',
-        marginRight: 15,
+        width: '90%',
         borderRadius: 25,
         borderWidth: 1,
         display: 'flex',
@@ -271,6 +315,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
+
 
 })
 

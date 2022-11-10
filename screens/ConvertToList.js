@@ -1,5 +1,5 @@
 import React, { useState, useEffect, } from 'react'
-import { View, Text, SafeAreaView, Pressable, StyleSheet, TextInput,KeyboardAvoidingView} from 'react-native'
+import { View, Text, SafeAreaView, Pressable, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
@@ -9,7 +9,7 @@ import { useDispatch, } from "react-redux"
 import { useRoute } from "@react-navigation/native";
 import FooterLoader from '../loaders/listFooterLoader'
 import { OptimizedFlatList } from 'react-native-optimized-flatlist'
-import {truncate} from "../utils/util"
+import { truncate } from "../utils/util"
 
 let ConvertToList = ({ navigation }) => {
   //getting crypto data from coinmarcap
@@ -25,17 +25,17 @@ let ConvertToList = ({ navigation }) => {
   //destructuring from param
   let { fromName, fromImage, fromPrice, fromSymbol } = route.params
 
-  
-    //preventing memory leak
-    useEffect(() => {
-      let focus = navigation.addListener('beforeRemove', (e) => {
-          if(isLoading){
-              e.preventDefault();
-          }else{
-              //can go back
-          }
-      });
-      return focus
+
+  //preventing memory leak
+  useEffect(() => {
+    let focus = navigation.addListener('beforeRemove', (e) => {
+      if (isLoading) {
+        e.preventDefault();
+      } else {
+        //can go back
+      }
+    });
+    return focus
   }, [isLoading]);
 
 
@@ -50,7 +50,6 @@ let ConvertToList = ({ navigation }) => {
       toPrice: coin.current_price,
       toSymbol: coin.symbol
     }
-    console.log(data)
 
     navigation.navigate('ConvertCalculator',
       {
@@ -258,19 +257,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: '100%'
-
-
   },
   assetsText: {
-    fontSize: 20,
-    fontFamily: 'Poppins',
-    marginLeft: 15,
-    textAlign: 'center'
+    fontSize: 21,
+    fontFamily: 'ABeeZee',
+    marginLeft: '5%'
 
   },
   inputContainer: {
-    width: '80%',
-    marginRight: 15,
+    width: '90%',
     borderRadius: 25,
     borderWidth: 1,
     display: 'flex',

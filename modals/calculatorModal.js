@@ -1,23 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
     View,
     Text,
     StyleSheet,
     TouchableOpacity,
-    SafeAreaView,
-    ScrollView,
-    Image,
     Dimensions,
-    ActivityIndicator,
     Modal,
-    Alert
 } from "react-native";
-import { Feather, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useSelector, useDispatch } from "react-redux"
-import { Card } from "react-native-shadow-cards"
-
-import Error from "../component/errorComponent";
-import { useRoute } from "@react-navigation/native";
 
 
 
