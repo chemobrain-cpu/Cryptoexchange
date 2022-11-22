@@ -1,8 +1,13 @@
-import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native'
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
+import { useSelector } from "react-redux";
 
 
-const LoginModal = ({modalVisible,updateVisibility,navigateHandler}) => {
+const LoginModal = ({ modalVisible, updateVisibility, navigateHandler }) => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
+
+
     return (
         <Modal
             animationType="slide"
@@ -10,17 +15,18 @@ const LoginModal = ({modalVisible,updateVisibility,navigateHandler}) => {
             visible={modalVisible}
             onRequestClose={updateVisibility}
         >
-            <View style={styles.modalBackground}>
-                <View style={styles.modalTop}>
+            <View style={{ ...styles.modalBackground, backgroundColor: background === 'black' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.5)' }}>
+                <View style={{ ...styles.modalTop, backgroundColor: background === 'white' ? fadeColor : importantText }}>
                 </View>
-                <View style={styles.modalView}>
-                    <Text style={styles.modalQuest}>You're not signed in yet?</Text>
+
+                <View style={{ ...styles.modalView, backgroundColor: background, borderColor: fadeColor }}>
+                    <Text style={{ ...styles.modalQuest, color: importantText }}>You're not signed in yet?</Text>
 
                     <Text style={styles.modalState}>Are you sure you want to quit?</Text>
 
                     <View style={styles.modalButtonContainer}>
-                        <TouchableOpacity style={styles.acceptBtn} onPress={() => navigateHandler()} >
-                            <Text>yes, i'm sure</Text>
+                        <TouchableOpacity style={{ ...styles.acceptBtn, borderColor: fadeColor }} onPress={() => navigateHandler()} >
+                            <Text style={{ color: importantText }}>yes, i'm sure</Text>
 
                         </TouchableOpacity>
 
@@ -40,12 +46,11 @@ const LoginModal = ({modalVisible,updateVisibility,navigateHandler}) => {
 const styles = StyleSheet.create({
     modalBackground: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)'
+
     },
     modalTop: {
         height: 4,
         width: '20%',
-        backgroundColor: 'rgb(225,225,225)',
         position: 'absolute',
         top: '62%',
         alignSelf: 'center',
@@ -53,30 +58,26 @@ const styles = StyleSheet.create({
     },
 
     modalView: {
-        backgroundColor: "#fff",
         borderRadius: 20,
         alignItems: "center",
-
         position: 'absolute',
-        backgroundColor: '#fff',
         width: Dimensions.get('window').width,
         top: '65%',
-        height: '35%',
+        padding:10,
         display: 'flex',
         flexDirection: 'column',
-        borderTopColor: 'rgb(240,240,240)',
-        borderTopWidth: 1
+        borderWidth: .5,
 
 
 
 
     },
     modalQuest: {
-        paddingTop: 20,
+        paddingTop: 15,
         fontSize: 22,
         fontFamily: 'Poppins',
         paddingLeft: 15,
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
 
     },
     modalState: {
@@ -111,8 +112,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'ABeeZee',
         borderWidth: 1,
-        borderColor: 'rgb(240,240,240)',
-        backgroundColor: 'rgb(240,240,240)',
+        color: 'red'
     },
     cancelBtn: {
         width: '35%',
@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontFamily: 'ABeeZee'
-
     },
+
     buttonClose: {
         backgroundColor: "#2196F3",
     },

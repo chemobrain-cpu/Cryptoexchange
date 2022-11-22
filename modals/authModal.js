@@ -1,30 +1,40 @@
 import React from 'react'
-import { View, Text, Modal, Dimensions, StyleSheet,TouchableOpacity } from 'react-native'
+import { View, Text, Modal, Dimensions, StyleSheet, TouchableOpacity } from 'react-native'
+import {  useSelector } from "react-redux"
 
 
 
-const AuthModal = ({ modalVisible,updateVisibility,message }) => {
-    
+const AuthModal = ({ modalVisible, updateVisibility, message }) => {
+
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
+
     return (<>
         <Modal
             animationType="slide"
             transparent={true}
             visible={modalVisible}
-            
-        >
-            <View style={styles.modalBackground}>
-                
-                <View style={styles.modalView}>
 
-                    <Text style={styles.modalState}>{message}</Text>
+        >
+            <View style={{ ...styles.modalBackground, backgroundColor: background === 'black' ? 'rgba(0,0,0,0.96)' : 'rgba(0,0,0,0.5)', }}>
+
+                <View style={{
+                    ...styles.modalView, borderColor: fadeColor,
+                    backgroundColor: background == 'black' ? 'rgb(30,30,30)' : '#fff',
+                }}>
+
+                    <Text style={{...styles.modalState,color:importantText}}>{message}</Text>
 
                     <View style={styles.modalButtonContainer}>
-                        <TouchableOpacity style={styles.acceptBtn} onPress={() => updateVisibility()} >
-                            <Text style={styles.acceptBtnText}>got it!</Text>
+                        <TouchableOpacity style={{
+                            ...styles.acceptBtn, borderColor: fadeColor,
+                            backgroundColor:background==='black'?blue:fadeColor
+                        }} onPress={() => updateVisibility()} >
+                            <Text style={{...styles.acceptBtnText,color: importantText}}>got it!</Text>
 
                         </TouchableOpacity>
 
-                        
+
                     </View>
 
                 </View>
@@ -40,26 +50,22 @@ const AuthModal = ({ modalVisible,updateVisibility,message }) => {
 const styles = StyleSheet.create({
     modalBackground: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'center'
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-   
+
 
     modalView: {
-        backgroundColor: "#fff",
         borderRadius: 10,
         alignItems: "center",
-        backgroundColor: '#fff',
-        width: Dimensions.get('window').width *0.9,
+        width: Dimensions.get('window').width * 0.9,
         display: 'flex',
         flexDirection: 'column',
-        borderTopColor: 'rgb(240,240,240)',
-        borderTopWidth: 1,
-        paddingVertical:30
+        borderWidth: 1,
+        paddingVertical: 30
     },
-   
+
     modalState: {
         paddingTop: 10,
         fontSize: 17,
@@ -68,6 +74,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         alignSelf: 'center',
         paddingHorizontal: 15,
+        color: 'grey',
 
     },
     modalButtonContainer: {
@@ -88,13 +95,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         fontFamily: 'ABeeZee',
-        backgroundColor: 'rgb(240,240,240)',
+        borderWidth: 1,
+
     },
     acceptBtnText: {
         fontSize: 15,
         fontFamily: 'ABeeZee',
+        
     },
-  
+
     buttonClose: {
         backgroundColor: "#2196F3",
     },

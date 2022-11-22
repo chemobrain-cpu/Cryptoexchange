@@ -1,4 +1,3 @@
-
 export const timelineData = [
     {
         logo: "brick",

@@ -2,11 +2,13 @@ import React,{useState}  from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Dimensions, } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { goToHome } from "../store/action/appStorage";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 
 
 
 const VerifySuccess = ({ navigation }) => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
     let [isLoading,setIsLoading] = useState(false)
     let dispatch = useDispatch()
    
@@ -19,7 +21,7 @@ const VerifySuccess = ({ navigation }) => {
         
     }
 
-    return (<SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    return (<SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
         <View style={styles.container}>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
@@ -31,9 +33,9 @@ const VerifySuccess = ({ navigation }) => {
 
                 </View>
 
-                <Text style={styles.headerText}>You're verified!</Text>
+                <Text style={{ ...styles.headerText, color: importantText }}>You're verified!</Text>
 
-                <Text style={styles.contentText}>Thanks for your help verifying your identity .Now you're all set to start trading crypto.</Text>
+                <Text style={{ ...styles.contentText, color: normalText }}>Thanks for your help verifying your identity .Now you're all set to start trading crypto.</Text>
 
 
 
@@ -59,15 +61,19 @@ const VerifySuccess = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: '90%',
-        marginHorizontal: '5%',
+    screen: {
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingHorizontal: '5%',
         paddingTop: 20
+    },
+    container: {
+        width: '100%',
 
     },
 
     body: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'column'
     },

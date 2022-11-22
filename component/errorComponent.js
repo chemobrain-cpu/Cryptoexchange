@@ -1,41 +1,45 @@
 import React from 'react'
 import { View, Text, SafeAreaView, StyleSheet, Dimensions, ScrollView,Image } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from "react-redux";
 
 let Error = ({tryAgain}) => {
+
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
     const handleTry = ()=>{
         tryAgain()
     }
 
     return (
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{...styles.screen,backgroundColor:background}}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/setting.jpg')}
+                        source={require('../assets/icons/setting.png')}
                         style={{ width: 300, height: 300 }} />
 
                 </View>
                 <View style={styles.textContainer}>
-                    <Text style={styles.title}>We're having connection issues</Text>
-                    <Text style={styles.text}>We're looking into it right now. </Text>
-                    <Text style={styles.text}>
+                    <Text style={{...styles.title,color:importantText}}>We're having connection issues</Text>
+                    <Text style={{...styles.text,color:normalText}}>We're looking into it right now. </Text>
+                    <Text style={{...styles.text,color:normalText}}>
                         please quit the app and try
                     </Text>
-                    <Text style={styles.text}>
+                    <Text style={{...styles.text,color:normalText}}>
                         again.funds are safe
                     </Text>
 
                 </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.tryContainer} onPress={handleTry}>
-                        <Text style={styles.statusText}>
+                <View style={{...styles.buttonContainer}}>
+                    <TouchableOpacity style={{...styles.tryContainer,backgroundColor:fadeColor}} onPress={handleTry}>
+                        <Text style={{...styles.statusText,color:importantText}}>
                             Try again
                         </Text>
 
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.statusContainer}>
-                        <Text style={styles.statusText}>check status</Text>
+                    <TouchableOpacity style={{...styles.statusContainer,backgroundColor:fadeColor}}>
+                        <Text style={{...styles.statusText,color:importantText}}>check status</Text>
 
                     </TouchableOpacity>
 
@@ -50,7 +54,6 @@ let Error = ({tryAgain}) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
         paddingHorizontal: 15
     },
     imageContainer: {

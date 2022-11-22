@@ -3,15 +3,21 @@ import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet,  ScrollView,  D
 import { useRoute} from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress'
+import { useDispatch,useSelector } from "react-redux";
 
 
 
 
 const Number = ({navigation}) => {
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
     const route = useRoute();
     const {
         email
     } = route.params
+    
+
+    
 
 
     const continueHandler = ()=>{
@@ -21,11 +27,11 @@ const Number = ({navigation}) => {
     }
 
 
-    return (<SafeAreaView style={styles.screen}>
+    return (<SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
         <View style={styles.container}>
-            <View style={styles.navigationHeader}>
+            <View style={{ ...styles.navigationHeader, backgroundColor: background, borderColor: background }}>
                 <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={22} fontWeight={100} color="rgb(44, 44, 44)" style={{ fontWeight: '200' }} />
+                    <Ionicons name="arrow-back" size={22} fontWeight={100} color={normalText} style={{ fontWeight: '200' }} />
                 </TouchableOpacity>
 
                 <View style={styles.progress}>
@@ -50,12 +56,12 @@ const Number = ({navigation}) => {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/photo1(7).jpg')}
+                        source={require('../assets/icons/photo1(7).png')}
                         style={{ width: 300, height: 300 }} />
                 </View>
 
-                <Text style={styles.headerText}> secure your account</Text>
-                <Text style={styles.statement}>
+                <Text style={{ ...styles.headerText, color: importantText }}> secure your account</Text>
+                <Text style={{...styles.statement, color: normalText }}>
                     One way we keep your account secure is with 2-step verification,which requires your phone number .We will never call you or use your number without your permission
                 </Text>
 
@@ -81,7 +87,7 @@ const Number = ({navigation}) => {
 const styles = StyleSheet.create({
     screen:{ 
         flex: 1, 
-        backgroundColor: "#fff" ,
+        backgroundColor: "black" ,
         paddingTop: 20
     },
     container: {
@@ -90,19 +96,25 @@ const styles = StyleSheet.create({
        
 
     },
+    
     navigationHeader: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        backgroundColor: '#fff',
         zIndex: 10,
         borderColor: '#fff',
 
-
+    },
+    close: {
+        width: '20%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
 
     },
     progress: {
+        width: '80%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -112,7 +124,6 @@ const styles = StyleSheet.create({
 
     },
     progressbar: {
-        paddingLeft: 8
 
     },
     close: {
@@ -123,7 +134,7 @@ const styles = StyleSheet.create({
 
     },
     body: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection:'column'
     },

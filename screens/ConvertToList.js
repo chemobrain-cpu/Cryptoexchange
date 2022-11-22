@@ -5,7 +5,7 @@ import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
 import { loadCoins } from "../store/action/appStorage";
 import Error from '../component/errorComponent'
-import { useDispatch, } from "react-redux"
+import { useDispatch,useSelector } from "react-redux"
 import { useRoute } from "@react-navigation/native";
 import FooterLoader from '../loaders/listFooterLoader'
 import { OptimizedFlatList } from 'react-native-optimized-flatlist'
@@ -21,6 +21,8 @@ let ConvertToList = ({ navigation }) => {
   let [error, setError] = useState(false)
   let dispatch = useDispatch()
   const route = useRoute()
+
+  let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
 
   //destructuring from param
   let { fromName, fromImage, fromPrice, fromSymbol } = route.params
@@ -165,14 +167,13 @@ let ConvertToList = ({ navigation }) => {
     return <Error tryAgain={fetchData} navigation={navigation} />
   }
 
-  return <SafeAreaView style={styles.screen}>
-    <View style={styles.headerContainer}>
-
+  return <SafeAreaView style={{ flex: 1, backgroundColor:background }}>
+    <View style={{ ...styles.headerContainer,backgroundColor:background }}>
 
       <View style={styles.assetsheaderText}>
         <Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderTextCon}>
-          <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
-          <Text style={styles.assetsText}>Exchange {truncate(fromName, 5)} with </Text>
+          <Feather name="arrow-left" size={25} color={background==='white'?"black":"white"} />
+          <Text style={{...styles.assetsText,color:importantText}}>Exchange {truncate(fromName, 5)} with </Text>
         </Pressable>
 
 
@@ -180,13 +181,14 @@ let ConvertToList = ({ navigation }) => {
 
       <View style={styles.assetsheaderCon}>
 
-        <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
-          <FontAwesome name="search" size={18} color={focus ? "#1652f0" : "rgb(44, 44, 44)"} />
+        <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: blue } : { ...styles.inputContainer, borderColor:importantText , }}>
+          <FontAwesome name="search" size={18} color={focus ? blue : normalText} />
           <TextInput
-            style={{ ...styles.input, borderColor: 'orange' }}
+            style={{ ...styles.input}}
             onChangeText={changeText}
             value={text}
             placeholder="Search"
+            placeholderTextColor={normalText}
             onFocus={() => {
               setFocus(true);
             }}
@@ -203,7 +205,7 @@ let ConvertToList = ({ navigation }) => {
     </View>
 
 
-    <View style={styles.middlesection}>
+    <View style={{...styles.middlesection,backgroundColor:background}}>
       <OptimizedFlatList
         showsVerticalScrollIndicator={false}
         data={filteredCoins}
@@ -220,17 +222,15 @@ let ConvertToList = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex: 1
   },
   headerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: '#fff',
     zIndex: 10,
-    paddingTop: 20,
+    paddingTop: 15,
     paddingHorizontal: 15
   },
   assetsheaderCon: {

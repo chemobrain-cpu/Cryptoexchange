@@ -7,12 +7,13 @@ import {
     Dimensions,
     Modal,
 } from "react-native";
+import { useSelector } from "react-redux"
 
 
 
 const Calculator = ({ modalVisible,changeVisibility,navigateToCard,modalTopic,modalText}) => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
     
-
 
 
     return (<Modal
@@ -23,18 +24,18 @@ const Calculator = ({ modalVisible,changeVisibility,navigateToCard,modalTopic,mo
                 changeVisibility;
             }}
         >
-            <View style={styles.modalBackground}>
-                <View style={styles.modalTop}>
+            <View style={{ ...styles.modalBackground, backgroundColor: background === 'black' ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.5)' }}>
+                <View style={{ ...styles.modalTop, backgroundColor: background === 'white' ? fadeColor : importantText }}>
                 </View>
 
-                <View style={styles.modalView}>
+                <View style={{ ...styles.modalView, backgroundColor: background, borderColor: fadeColor }}>
 
-                    <Text style={styles.modalHeader}>{modalTopic}</Text>
+                    <Text style={{...styles.modalHeader,color:importantText}}>{modalTopic}</Text>
 
-                    <Text style={styles.modalText}>{modalText}</Text>
+                    <Text style={{...styles.modalText,color:normalText}}>{modalText}</Text>
 
-                    <TouchableOpacity style={styles.modalButtonContainer} onPress={navigateToCard}>
-                        <Text style={styles.modalButtonText}>got it!</Text>
+                    <TouchableOpacity style={{...styles.modalButtonContainer,backgroundColor:fadeColor}} onPress={navigateToCard}>
+                        <Text style={{...styles.modalButtonText,color:importantText}}>got it!</Text>
                     </TouchableOpacity>
 
 
@@ -57,9 +58,8 @@ const styles = StyleSheet.create({
     modalTop: {
         height: 4,
         width: '20%',
-        backgroundColor: 'rgb(225,225,225)',
         position: 'absolute',
-        top: '62%',
+        top: '65%',
         alignSelf: 'center',
         borderRadius: 5
 
@@ -69,13 +69,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: '#fff',
         width: Dimensions.get('window').width,
-        top: '65%',
-        height:240,
+        top: '68%',
+        padding:15,
         display: 'flex',
         flexDirection: 'column',
-        borderTopColor: 'rgb(240,240,240)',
-        borderTopWidth: 1,
-        paddingTop: 20,
+        borderWidth: .5,
         paddingHorizontal: 20
 
     },

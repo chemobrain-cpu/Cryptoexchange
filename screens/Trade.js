@@ -8,7 +8,6 @@ import {
   ScrollView,
   TextInput,
   Dimensions,
-  Modal,
   KeyboardAvoidingView
 } from "react-native";
 
@@ -21,13 +20,13 @@ import Error from '../component/errorComponent'
 import ShortListLoader from '../loaders/shortListLoader'
 import { loadCoins } from "../store/action/appStorage";
 import MoversLoader from "../loaders/moversLoader";
-
+import Modal from "../modals/tradingMethodModal"
 
 const Trades = ({ navigation }) => {
   const dispatch = useDispatch()
   let [text, setText] = useState('')
   let [focus, setFocus] = useState(false)
-  let { user, notifications } = useSelector(state => state.userAuth)
+  let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
   const [modalVisible, setModalVisible] = useState(false);
   const [status, seStatus] = useState(false)
   const [isError, setIsError] = useState(false)
@@ -39,7 +38,7 @@ const Trades = ({ navigation }) => {
   let [isTrendingCoinsLoading, setIsTrendingCoinsLoading] = useState(true)
   let [isMoversLoading, setIsMoversLoading] = useState(true)
   let [isCoinLoading, setIsCoinLoading] = useState(true)
-  let [isRunning, setIsRunning] = useState(true)
+  
 
 
   let navigateToList = () => {
@@ -141,60 +140,34 @@ const Trades = ({ navigation }) => {
       onRequestClose={() => {
         setModalVisible(!modalVisible);
       }}
-    >
-      <View style={styles.modalBackground}>
-        <View style={styles.modalTop}>
-        </View>
+      modalVisible = {modalVisible}
+      setModalVisible = {setModalVisible}
+      status = {status}
+      changeTradeBasic = {changeTradeBasic}
+    />
+      
 
-        <View style={styles.modalView}>
-
-          <Text style={styles.modalHeader}>choose trading method</Text>
-
-          <TouchableOpacity style={{ ...styles.modalButtonContainer, backgroundColor: status === false ? 'rgb(240,240,240)' : '#fff' }} onPress={changeTradeBasic}>
-            <View>
-              <Feather name="trending-up" size={18} color="#1652f0" />
-
-            </View>
-            <View>
-              <Text style={styles.modalButtonHead}> Trade</Text>
-              <Text style={styles.modalButtonText}> Simple buying and selli..</Text>
-
-            </View>
-            <View>
-              {status ? <></> : <AntDesign name="check" size={24} color="#1652f0" />
-              }
-
-            </View>
-
-          </TouchableOpacity>
-
-        </View>
-
-      </View>
-
-    </Modal>
-
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
       <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
         <View style={{ display: 'flex', width: '100%' }}>
-          <View style={{ ...styles.headerContainer, backgroundColor: '#fff', }}>
+          <View style={{ ...styles.headerContainer, backgroundColor:background, }}>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Entypo name="menu" size={24} color="black" />
+              <Entypo name="menu" size={24} color={background==='white'?"black":"white"} />
 
             </TouchableOpacity>
 
             <TouchableOpacity onPress={modalHandler} style={styles.giftContainer}>
 
-              <Text style={styles.giftText}>Trade </Text>
+              <Text style={{...styles.giftText,color:importantText}}>Trade </Text>
 
-              <MaterialIcons name="keyboard-arrow-down" size={28} color="black" />
+              <MaterialIcons name="keyboard-arrow-down" size={28} color={background==='white'?"black":"white"} />
 
 
             </TouchableOpacity>
 
 
             <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-            <Ionicons name="notifications"  size={30} color="black" />
+            <Ionicons name="notifications"  size={30} color={background==='white'?"black":"white"} />
               <View style={styles.notification}>
                 <View style={styles.notificationTextContainer}>
                   <Text style={styles.notificationText}>{user.notifications.length}</Text>
@@ -209,13 +182,14 @@ const Trades = ({ navigation }) => {
           </View>
         </View>
 
-        <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
-          <FontAwesome name="search" size={18} color={"black"} style={{ marginBottom: 10 }} />
+        <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: blue } : { ...styles.inputContainer, borderColor:importantText , }}>
+          <FontAwesome name="search" size={18} color={focus ? blue : normalText} style={{ marginBottom: 10 }} />
           <TextInput
             style={{ ...styles.input }}
             onChangeText={changeText}
             value={text}
             placeholder="Search for an asset"
+             placeholderTextColor={normalText}
             onFocus={() => {
               setFocus(true);
             }}
@@ -226,17 +200,17 @@ const Trades = ({ navigation }) => {
           />
         </KeyboardAvoidingView>
 
-        <View style={styles.moversection}>
+        <View style={{...styles.moversection,borderColor: background === 'white' ? 'rgb(180,180,180)' : fadeColor,}}>
           <View style={styles.moversectionheading}>
             <Text
-              style={styles.moverlefttext}
+              style={{...styles.moverlefttext,color:importantText}}
             >
               New on coincapp
             </Text>
 
             <TouchableOpacity onPress={() => navigateToList()}>
               <Text
-                style={styles.moverrighttext}
+                style={{...styles.moverrighttext}}
               >
                 See all
               </Text>
@@ -254,10 +228,10 @@ const Trades = ({ navigation }) => {
           
 
         </View>
-        <View style={styles.moversection}>
+        <View style={{...styles.moversection,borderColor: background === 'white' ? 'rgb(180,180,180)' : fadeColor,}}>
           <View style={styles.moversectionheading}>
             <Text
-              style={styles.moverlefttext}
+              style={{...styles.moverlefttext,color:importantText}}
             >
               Top movers
             </Text>
@@ -284,7 +258,7 @@ const Trades = ({ navigation }) => {
         <View style={styles.assetsection}>
           <View style={styles.assetsectionheading}>
             <Text
-              style={styles.assetlefttext}
+              style={{...styles.assetlefttext,color:importantText}}
             >
               Top assets
             </Text>
@@ -392,7 +366,7 @@ const styles = StyleSheet.create({
 
   },
   headerContainer: {
-    paddingTop: 20,
+    paddingTop: 15,
     display: "flex",
     flexDirection: "row",
     justifyContent: 'space-between',
@@ -422,8 +396,8 @@ const styles = StyleSheet.create({
     marginRight: 20
   },
   notificationTextContainer: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
     backgroundColor: 'red',
     position: 'absolute',
     bottom: 35,
@@ -431,7 +405,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: "center",
     justifyContent: 'center',
-    borderRadius: 20
+    borderRadius: 25
   },
   notificationText: {
     color: '#fff',
@@ -468,7 +442,6 @@ const styles = StyleSheet.create({
   moversection: {
     paddingLeft: 0,
     paddingTop: 15,
-    borderColor: 'rgb(230,230,230)',
     borderBottomWidth: 1,
     paddingBottom: 30,
     paddingHorizontal: 15,
@@ -498,8 +471,8 @@ const styles = StyleSheet.create({
   assetsection: {
     paddingLeft: 0,
     paddingTop: 15,
-    paddingBottom: 30,
-    marginBottom: 50
+    paddingBottom: 10,
+    marginBottom: 10
   },
   assetsectionheading: {
     display: 'flex',

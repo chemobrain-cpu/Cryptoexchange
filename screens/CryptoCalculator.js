@@ -37,7 +37,7 @@ const Calculator = ({ navigation }) => {
 
     const dispatch = useDispatch()
 
-    let { user } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
     const {
         id,
@@ -83,7 +83,7 @@ const Calculator = ({ navigation }) => {
             setModalVisible(false)
             navigation.navigate('VerifyId')
         }
-        else if(userStatus== "unverified"){
+        else if (userStatus == "unverified") {
             setModalVisible(false)
             setModalVisible(false)
             setModalTopic("")
@@ -157,7 +157,7 @@ const Calculator = ({ navigation }) => {
     //executing action like buy,sell,send e.t.c
     let proceedHandler = async () => {
         if (action == 'buy') {
-            if (!value) {
+            if (!value || Number(value) == 0) {
                 return
             }
             //if user has no payment method
@@ -254,7 +254,7 @@ const Calculator = ({ navigation }) => {
 
         } else if (action == 'sell') {
 
-            if (!value) {
+            if (!value || Number(value) == 0) {
                 return
             }
             //if user has no payment method
@@ -274,9 +274,9 @@ const Calculator = ({ navigation }) => {
                 return
 
             }
-              //check for trading status
+            //check for trading status
 
-              if (!user.status) {
+            if (!user.status) {
                 setIsLoading(false)
                 setModalVisible(true)
                 setUserStatus('unverified')
@@ -374,7 +374,7 @@ const Calculator = ({ navigation }) => {
                 return
 
             }
-              //check for trading status
+            //check for trading status
 
             if (!user.status) {
                 setIsLoading(false)
@@ -487,18 +487,18 @@ const Calculator = ({ navigation }) => {
     }
     let invertedCryptoPriceUi = (data) => {
         if (data.length <= 8) {
-            return <Text style={{ ...styles.cryptoPrice, fontSize: 18 }}>{data} {id}</Text>
+            return <Text style={{ ...styles.cryptoPrice, fontSize: 18,color:blue }}>{data} {id}</Text>
         }
-        return <Text style={{ ...styles.cryptoPrice, fontSize: 15 }}>{data} {truncate(id, 4)}</Text>
+        return <Text style={{ ...styles.cryptoPrice, fontSize: 15,color:blue  }}>{data} {truncate(id, 4)}</Text>
 
     }
 
 
     let cryptoPriceUi = (data) => {
         if (data.length <= 8) {
-            return <Text style={{ ...styles.cryptoPrice, fontSize: 18 }}>{data} {id}</Text>
+            return <Text style={{ ...styles.cryptoPrice, fontSize: 18,color:blue  }}>{data} {id}</Text>
         }
-        return <Text style={{ ...styles.cryptoPrice, fontSize: 15 }}>{data} {truncate(id, 4)}</Text>
+        return <Text style={{ ...styles.cryptoPrice, fontSize: 15,color:blue  }}>{data} {truncate(id, 4)}</Text>
 
     }
 
@@ -516,38 +516,36 @@ const Calculator = ({ navigation }) => {
     return (<>
         <CalculatorModal modalVisible={modalVisible} changeVisibility={changeVisibility} navigateToCard={navigateToCard} modalTopic={modalTopic} modalText={modalText} />
 
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ backgroundColor: background, flex: 1 }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={{ display: 'flex', width: '100%' }}>
-                    <View style={{ ...styles.headerContainer, }}>
+                    <View style={{ ...styles.headerContainer, backgroundColor: background }}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerContainerIcon} >
-                            <AntDesign name="close" size={23} />
+                            <AntDesign name="close" size={23} color={background === 'white' ? "black" : "white"} />
                         </TouchableOpacity>
 
                         {userAsset ?
                             <TouchableOpacity style={styles.headerContainerTitle} >
-                                <Text style={styles.title}>Enter amount</Text>
-                                {userAsset ? <Text style={styles.balance}> {Number(cryptoQuantity).toFixed(4)} of {truncate(id, 5)} available </Text> : <Text style={styles.balance}> 0 of {id} available </Text>}
+                                <Text style={{ ...styles.title, color: importantText }}>Enter amount</Text>
+                                {userAsset ? <Text style={{ ...styles.balance, color: normalText }}> {Number(cryptoQuantity).toFixed(4)} of {truncate(id, 5)} available </Text> : <Text style={styles.balance}> 0 of {id} available </Text>}
                             </TouchableOpacity> : <TouchableOpacity style={styles.headerContainerTitle} >
-                                <Text style={styles.title}>Enter amount</Text>
-                                <Text style={styles.balance}>0 of {id} available </Text>
+                                <Text style={{ ...styles.title, color: importantText }}>Enter amount</Text>
+                                <Text style={{ ...styles.balance, color: normalText }}>0 of {id} available </Text>
                             </TouchableOpacity>}
-
-
 
                     </View>
                 </View>
 
 
                 <View style={styles.priceContainer}>
-                    <TouchableOpacity style={styles.maxButtonCon}>
-                        <Text style={styles.maxText}>Max</Text>
 
+                    <TouchableOpacity style={{...styles.maxButtonCon,backgroundColor:fadeColor}}>
+                        <Text style={{...styles.maxText,color:importantText}}>Max</Text>
                     </TouchableOpacity>
 
                     <View style={styles.valueCon}>
                         {value == '' ? <View style={styles.moneyCon}>
-                            <Text style={styles.money}>$ 0</Text>
+                            {invert?<Text style={styles.money}> 0 qty</Text>:<Text style={styles.money}>$ 0</Text>}
 
                         </View> : <View style={styles.twoPriceColumn}>
                             {invert ? <View style={styles.dollarPriceCon}>
@@ -566,15 +564,14 @@ const Calculator = ({ navigation }) => {
 
                     </View>
 
-
-                    <TouchableOpacity style={styles.invertButtonCon} onPress={invertPriceHandler}>
-                        <MaterialCommunityIcons name="swap-vertical" size={24} color="black" />
+                    <TouchableOpacity style={{...styles.invertButtonCon,backgroundColor:fadeColor}} onPress={invertPriceHandler}>
+                        <MaterialCommunityIcons name="swap-vertical" size={24} color={background === 'white' ? "black" : "white"} />
                     </TouchableOpacity>
 
 
                 </View>
 
-                <Card style={styles.card}>
+                <Card style={{...styles.card,backgroundColor:background,borderColor:background=='black'?fadeColor:""}}>
                     <View style={styles.cryptoCon}>
                         <View style={styles.cryptoLogo}>
                             <Image source={{ uri: image }}
@@ -582,14 +579,14 @@ const Calculator = ({ navigation }) => {
 
                         </View>
                         <View style={styles.cryptoNameCon}>
-                            <Text style={styles.cryptoName}>{truncate(name, 5)}</Text>
+                            <Text style={{...styles.cryptoName,color:importantText}}>{truncate(name, 5)}</Text>
 
                         </View>
 
                     </View>
                     <View style={styles.cryptoWorth}>
-                        <Text style={styles.cryptoWorthCash}>$ 1.0</Text>
-                        <Text style={styles.cryptoWorthText}>{(1 / conversionRate).toFixed(3)} {truncate(id, 4)}</Text>
+                        <Text style={{...styles.cryptoWorthCash,color:importantText}}>$ 1.0</Text>
+                        <Text style={{...styles.cryptoWorthText,color:importantText}}>{(1 / conversionRate).toFixed(3)} {truncate(id, 4)}</Text>
 
                     </View>
                 </Card>
@@ -598,59 +595,59 @@ const Calculator = ({ navigation }) => {
 
                 <View style={styles.calculatorCon}>
                     <View style={styles.numberContainer}>
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('1')}>
-                            <Text style={styles.number}>1</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('1')}>
+                            <Text style={{...styles.number,color:importantText}}>1</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('2')}>
-                            <Text style={styles.number}>2</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('2')}>
+                            <Text style={{...styles.number,color:importantText}}>2</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('3')}>
-                            <Text style={styles.number}>3</Text>
-                        </TouchableOpacity>
-
-                    </View>
-                    <View style={styles.numberContainer}>
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('4')}>
-                            <Text style={styles.number}>4</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('5')}>
-                            <Text style={styles.number}>5</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('6')}>
-                            <Text style={styles.number}>6</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('3')}>
+                            <Text style={{...styles.number,color:importantText}}>3</Text>
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.numberContainer}>
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('7')}>
-                            <Text style={styles.number}>7</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('4')}>
+                            <Text style={{...styles.number,color:importantText}}>4</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('8')}>
-                            <Text style={styles.number}>8</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('5')}>
+                            <Text style={{...styles.number,color:importantText}}>5</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('9')}>
-                            <Text style={styles.number}>9</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('6')}>
+                            <Text style={{...styles.number,color:importantText}}>6</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                    <View style={styles.numberContainer}>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('7')}>
+                            <Text style={{...styles.number,color:importantText}}>7</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('8')}>
+                            <Text style={{...styles.number,color:importantText}}>8</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('9')}>
+                            <Text style={{...styles.number,color:importantText}}>9</Text>
                         </TouchableOpacity>
 
                     </View>
 
                     <View style={styles.numberContainer}>
-                        <TouchableOpacity style={styles.numberButton} onPress={() => point(".")}>
-                            <Text style={styles.number}>.</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => point(".")}>
+                            <Text style={{...styles.number,color:importantText}}>.</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.numberButton} onPress={() => button('0')}>
-                            <Text style={styles.number}>0</Text>
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => button('0')}>
+                            <Text style={{...styles.number,color:importantText}}>0</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.numberButton} onPress={() => deleteHandler()}>
-                            <Feather name="arrow-left" size={22} color="rgb(44, 44, 44)" />
+                        <TouchableOpacity style={{...styles.numberButton,color:importantText}} onPress={() => deleteHandler()}>
+                            <Feather name="arrow-left" size={30} color={background === 'white' ? "black" : "white"} />
                         </TouchableOpacity>
 
                     </View>
@@ -674,10 +671,6 @@ const Calculator = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: '#fff'
-    },
 
     scrollContainer: {
         width: Dimensions.get('window').width,
@@ -687,31 +680,36 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         marginBottom: 45,
         alignItems: 'center',
-        backgroundColor: '#fff'
     },
     headerContainerIcon: {
-        flex: 1
+        width: '10%',
+        display: "flex",
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'flex-start'
 
     },
     headerContainerTitle: {
-        flex: 5,
+        width: '90%',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: 'flex-start',
     },
 
     title: {
-        fontSize: 16,
+        fontSize: 17,
         fontFamily: 'Poppins',
-        paddingLeft: 50
+        alignSelf: 'center'
     },
     balance: {
-        fontSize: 17,
+        fontSize: 18,
         fontFamily: 'ABeeZee',
-        paddingLeft: 8,
-        color: 'rgb(100,100,100)'
+        alignSelf: 'center'
     },
     priceContainer: {
         display: 'flex',
@@ -724,11 +722,13 @@ const styles = StyleSheet.create({
     valueCon: {
         alignSelf: 'center',
         display: 'flex',
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
 
     },
     twoPriceColumn: {
+        display:'flex',
         justifyContent: 'center',
         alignItems: 'center'
 
@@ -790,7 +790,8 @@ const styles = StyleSheet.create({
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
-        marginBottom: 35
+        marginBottom: 35,
+        borderWidth:.5
     },
     cryptoCon: {
         flex: 1,
@@ -839,11 +840,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     numberButton: {
-        width: 30,
+        width: 60,
         height: 60,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
 
     },
     number: {
@@ -862,14 +863,14 @@ const styles = StyleSheet.create({
     button: {
         width: '100%',
         backgroundColor: '#1652f0',
-        paddingVertical: 17,
+        paddingVertical: 18,
         borderRadius: 30,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 18,
+        fontSize: 20,
         fontFamily: "ABeeZee",
         color: '#fff',
 

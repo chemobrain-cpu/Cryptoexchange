@@ -60,8 +60,10 @@ import PinSetting from "./screens/PinSetting";
 import Password from "./screens/Password";
 import Authorize from "./screens/Authorize";
 import Photo from "./screens/Photo";
-import SendCryptoToBank from "./screens/SendCryptoToBank"
-import SendCryptoToWallet from "./screens/SendCryptoToWallet"
+import SendCryptoCalculator from "./screens/SendCryptoCalculator"
+import Appearance from "./screens/Appearance"
+import SendToBank from "./screens/SendCryptoToBank"
+import SendCashToBank from "./screens/SendCashToBank"
 
 //auth screen
 import Splash_1 from "./auth/splash";
@@ -85,6 +87,8 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const TabNavigator = () => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
     return <Tab.Navigator
         initialRouteName='HomeApp'
         tabBarOptions={{
@@ -92,7 +96,7 @@ const TabNavigator = () => {
             style: {
                 position: "absolute",
                 elevation: 0,
-                backgroundColor: "#fff",
+                backgroundColor: background,
                 borderRadius: 15,
                 height: 70,
             },
@@ -106,9 +110,9 @@ const TabNavigator = () => {
                 tabBarIcon: ({ focused }) => (
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
 
-                        <Octicons name="home" size={24} color={focused ? "#1652f0" : "black"} />
+                        <Octicons name="home" size={24} color={focused ? "#1652f0" : importantText} />
                         <Text
-                            style={{ color: focused ? "#1652f0" : "rgb(100,100,100)", fontSize: 10, fontFamily: 'Poppins' }}
+                            style={{ color: focused ? "#1652f0" : importantText, fontSize: 10, fontFamily: 'Poppins' }}
                         >
                             Home
                         </Text>
@@ -125,8 +129,8 @@ const TabNavigator = () => {
             options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <MaterialCommunityIcons name="clock-time-three-outline" size={24} color={focused ? "#1652f0" : "black"} />
-                        <Text style={{ color: focused ? "#1652f0" : "rgb(100,100,100)", fontSize: 10, fontFamily: 'Poppins' }}>Assets</Text>
+                        <MaterialCommunityIcons name="clock-time-three-outline" size={24} color={focused ? "#1652f0" : importantText} />
+                        <Text style={{ color: focused ? "#1652f0" : importantText, fontSize: 10, fontFamily: 'Poppins' }}>Assets</Text>
                     </View>
                 ),
             }}
@@ -140,9 +144,9 @@ const TabNavigator = () => {
             options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <Feather name="trending-up" size={24} color={focused ? "#1652f0" : "black"} />
+                        <Feather name="trending-up" size={24} color={focused ? "#1652f0" : importantText} />
                         <Text
-                            style={{ color: focused ? "#1652f0" : "rgb(100,100,100)", fontSize: 10, fontFamily: 'Poppins' }}
+                            style={{ color: focused ? "#1652f0" : importantText, fontSize: 10, fontFamily: 'Poppins' }}
                         >
                             Trade
                         </Text>
@@ -158,9 +162,9 @@ const TabNavigator = () => {
             options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ alignItems: "center", justifyContent: "center" }}>
-                        <AntDesign name="man" size={24} color={focused ? "#1652f0" : "black"} />
+                        <AntDesign name="man" size={24} color={focused ? "#1652f0" : importantText} />
                         <Text
-                            style={{ color: focused ? "#1652f0" : "rgb(100,100,100)", fontSize: 10, fontFamily: 'Poppins' }}
+                            style={{ color: focused ? "#1652f0" : importantText, fontSize: 10, fontFamily: 'Poppins' }}
                         >
                             Pay
                         </Text>
@@ -172,9 +176,10 @@ const TabNavigator = () => {
 }
 
 const DrawerNavigator = () => {
-    let { user, token } = useSelector(state => state.userAuth)
+    let { user, token, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
     return <Drawer.Navigator
-        drawerContent={(props) => CustomDrawerContent({ ...props, user })}
+        drawerContent={(props) => CustomDrawerContent({ ...props, user, background, importantText, normalText, fadeColor, blue, fadeButtonColor })}
     >
         <Drawer.Screen name='Home' component={TabNavigator} />
     </Drawer.Navigator>
@@ -256,9 +261,29 @@ const HomeStackNavigator = () => {
         </Stack.Navigator>
     } else {
         return <Stack.Navigator initialRouteName="Home">
+
+
             <Stack.Screen
                 name="Home"
                 component={DrawerNavigator}
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+                name="SendToBank"
+                component={SendToBank}
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+                name="SendCashToBank"
+                component={SendCashToBank}
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+                name="Appearance"
+                component={Appearance}
                 options={{ headerShown: false }}
             />
 
@@ -519,12 +544,13 @@ const HomeStackNavigator = () => {
                 component={ConfirmPin}
                 options={{ headerShown: false }}
             />
-
             <Stack.Screen
                 name="Authorize"
                 component={Authorize}
                 options={{ headerShown: false }}
             />
+
+
             <Stack.Screen
                 name="PhotoIdentity"
                 component={Photo}
@@ -532,15 +558,11 @@ const HomeStackNavigator = () => {
             />
 
             <Stack.Screen
-                name='SendCryptoToBank'
-                component = {SendCryptoToBank}
+                name='SendCryptoCalculator'
+                component={SendCryptoCalculator}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen
-                name='SendCryptoToWallet'
-                component = {SendCryptoToWallet}
-                options={{ headerShown: false }}
-            />
+
         </Stack.Navigator>
     }
 }
@@ -549,7 +571,7 @@ const HomeStackNavigator = () => {
 
 
 function Configuration() {
-    
+
 
     return (
         <NavigationContainer >

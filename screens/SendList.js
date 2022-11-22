@@ -1,12 +1,11 @@
 import React, { useState, useEffect, } from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, FlatList, Pressable, KeyboardAvoidingView } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TextInput, FlatList, Pressable, KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
-import SendModal from "../modals/sendAssetModal";
+import SendModal from "../modals/sendOptionModal";
 import Error from '../component/errorComponent'
-import { useDispatch, } from "react-redux"
-import { useSelector } from "react-redux";
+import { useDispatch,useSelector } from "react-redux"
 import { loadWatchList } from "../store/action/appStorage";
 import EmptyList from "../component/emptyList";
 
@@ -20,7 +19,7 @@ let SendList = ({ navigation }) => {
     let [isLoading, setIsLoading] = useState(true)
     let [error, setError] = useState(false)
     let dispatch = useDispatch()
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
     const [modalTopic, setModalTopic] = useState('');
     const [modalText, setModalText] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
@@ -45,11 +44,13 @@ let SendList = ({ navigation }) => {
         let quantity = Number(transferedCoin.current_price)/Number(transferedCoin.price)
 
         setModalVisible(prev => !prev)
-        return navigation.navigate('SendCryptoToWallet', {
+        return navigation.navigate('SendCryptoCalculator', {
             id: transferedCoin.symbol,
-            price: transferedCoin.current_price,
+            price: transferedCoin.price,
             name: transferedCoin.name,
-            quantity: quantity
+            quantity: quantity,
+            image:transferedCoin.image,
+            action:'SendToWallet'
         })
 
     }
@@ -58,14 +59,15 @@ let SendList = ({ navigation }) => {
         let quantity = Number(transferedCoin.current_price)/Number(transferedCoin.price)
 
         setModalVisible(prev => !prev)
-        return navigation.navigate('SendCryptoToBank', {
+        return navigation.navigate('SendCryptoCalculator', {
             id: transferedCoin.symbol,
-            price: transferedCoin.current_price,
+            price: transferedCoin.price,
             name: transferedCoin.name,
-            quantity: quantity
-
+            quantity: quantity,
+            image:transferedCoin.image,
+            action:'SendToWallet',
+            action:'SendToBank',
         })
-
     }
 
     let modalHandler = (coin) => {
@@ -116,6 +118,8 @@ let SendList = ({ navigation }) => {
                     mem.price = mem.current_price
                     mem.current_price = val.quantity * mem.current_price
 
+                    console.log(mem)
+
                     arr.push(mem)
                 }
             }
@@ -156,18 +160,20 @@ let SendList = ({ navigation }) => {
     return <>
         <SendModal
             modalVisible={modalVisible}
-            changeVisibility={changeVisibility} bankNavigationHandler={bankNavigationHandler}
-            walletNavigationHandler={walletNavigationHandler}
-            modalTopic={modalTopic}
-            modalText={modalText}
-            currencyName={currencyName} />
-        <SafeAreaView style={styles.screen}>
-            <View style={styles.headerContainer}>
+            changeVisibility={changeVisibility} navigationHandler_1={bankNavigationHandler}
+            navigationHandler_2={walletNavigationHandler}
+            asset={currencyName}
+            option_1="Bank account"
+            option_2="Wallet address"
+             />
 
+
+        <SafeAreaView style={{ flex: 1, backgroundColor:background }}>
+            <View style={{ ...styles.headerContainer,backgroundColor:background }}>
                 <View style={styles.assetsheaderText}>
                     <Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderTextCon}>
-                        <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
-                        <Text style={styles.assetsText}>Send available assets</Text>
+                        <Feather name="arrow-left" size={25} color={background==='white'?"black":"white"} />
+                        <Text style={{...styles.assetsText,color:importantText}}>Send available assets</Text>
 
                     </Pressable>
 
@@ -176,13 +182,14 @@ let SendList = ({ navigation }) => {
 
                 <View style={styles.assetsheaderCon}>
 
-                    <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
-                        <FontAwesome name="search" size={18} color={focus ? "#1652f0" : "rgb(44, 44, 44)"} />
+                    <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: blue } : { ...styles.inputContainer, borderColor:importantText , }}>
+                        <FontAwesome name="search" size={18} color={focus ? blue : normalText}  />
                         <TextInput
-                            style={{ ...styles.input, borderColor: 'orange' }}
+                            style={{ ...styles.input}}
                             onChangeText={changeText}
                             value={text}
                             placeholder="Search"
+                            placeholderTextColor={normalText}
                             onFocus={() => {
                                 setFocus(true);
                             }}
@@ -199,7 +206,7 @@ let SendList = ({ navigation }) => {
             </View>
 
 
-            <View style={styles.middlesection}>
+            <View style={{...styles.middlesection,backgroundColor:background}}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     data={filteredCoins}
@@ -218,17 +225,15 @@ let SendList = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
-        backgroundColor: '#fff',
+        flex: 1
     },
     headerContainer: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         width: '100%',
-        backgroundColor: '#fff',
         zIndex: 10,
-        paddingTop: 20,
+        paddingTop: 15,
         paddingHorizontal: 15
     },
     assetsheaderCon: {
@@ -299,9 +304,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 15
-
-
+        marginRight: 15,
     },
 
     assetText: {

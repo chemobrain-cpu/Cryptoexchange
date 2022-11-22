@@ -19,8 +19,8 @@ import {
 import { useRoute } from "@react-navigation/native";
 import Error from '../component/errorComponent'
 import FilterComponent from '../component/filterComponent'
-import {truncate} from "../utils/util"
-import { useDispatch, } from "react-redux"
+import { truncate } from "../utils/util"
+import { useDispatch,useSelector } from "react-redux"
 import millify from "millify";
 import Loader from '../loaders/Loader'
 
@@ -32,6 +32,9 @@ const filterDaysArray = [
   { filterDay: "max", filterText: "All" },
 ];
 
+
+
+
 const PriceChart = ({ navigation }) => {
   let dispatch = useDispatch()
   const [coin, setCoin] = useState(null);
@@ -42,20 +45,22 @@ const PriceChart = ({ navigation }) => {
   const [isError, setIsError] = useState(false);
   const [selectedRange, setSelectedRange] = useState("1");
   const [isCandleChartVisible, setIsCandleChartVisible] = useState(false);
+  
+  let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
   const route = useRoute();
 
-  
-    //preventing memory leak
-    useEffect(() => {
-      let focus = navigation.addListener('beforeRemove', (e) => {
-          if (isLoading) {
-              e.preventDefault();
-          } else {
-              //can go back
-          }
-      });
-      return focus
+
+  //preventing memory leak
+  useEffect(() => {
+    let focus = navigation.addListener('beforeRemove', (e) => {
+      if (isLoading) {
+        e.preventDefault();
+      } else {
+        //can go back
+      }
+    });
+    return focus
   }, [isLoading]);
 
 
@@ -74,7 +79,7 @@ const PriceChart = ({ navigation }) => {
     return navigation.navigate('Login')
   }
 
-  
+
 
   const fetchCoinData = async () => {
     setIsLoading(true)
@@ -134,13 +139,14 @@ const PriceChart = ({ navigation }) => {
   }
 
 
- 
+
 
   useEffect(() => {
     fetchCoinData();
     fetchMarketCoinData(1);
     fetchCandleStickChartData();
-  }, []);
+    
+  }, [fetchCoinData,fetchMarketCoinData,fetchCandleStickChartData]);
 
 
   const onSelectedRangeChange = (selectedRangeValue) => {
@@ -200,25 +206,23 @@ const PriceChart = ({ navigation }) => {
 
 
   return (
-    <SafeAreaView style={{ paddingHorizontal: 10, backgroundColor: '#fff', flex: 1 }}>
+    <SafeAreaView style={{ paddingHorizontal: 10, backgroundColor: background, flex: 1 }}>
       <ScrollView style={styles.chartCon} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]} onScroll={scrollHandler}>
         {header ? <View >
-          <View style={{ ...styles.scrollNavigationHeader }}>
+          <View style={{ ...styles.scrollNavigationHeader,backgroundColor: background,borderBottomColor: fadeColor}}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-              <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
+              <Feather name="arrow-left" size={28} color={background === 'white' ? "black" : "white"} />
             </TouchableOpacity>
 
-            <Text style={{ ...styles.headerName }}>{name}</Text>
+            <Text style={{ ...styles.headerName,color: importantText }}>{name}</Text>
 
             <View style={styles.favouriteContainer}>
               <Pressable>
-                <MaterialIcons name="star" size={22} fontWeight='Poppins' color="black" />
-
+                <MaterialIcons name="star" size={28} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
               </Pressable>
 
               <Pressable>
-                <AntDesign name="download" size={22} fontWeight='Poppins' color="rgb(44, 44, 44)" />
-
+                <AntDesign name="download" size={28} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
               </Pressable>
 
 
@@ -235,32 +239,30 @@ const PriceChart = ({ navigation }) => {
         >
 
           {header ? <></> : <View style={{ ...styles.priceContainer, opacity: header ? 0 : 1 }}>
-            <View style={styles.navigationHeader}>
+            <View style={{...styles.navigationHeader,backgroundColor: background,}}>
               <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
-                <AntDesign name="arrowleft" size={22} fontWeight='Poppins' color="rgb(44, 44, 44)" />
+                <AntDesign name="arrowleft" size={28} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
               </TouchableOpacity>
-
-
 
             </View>
 
 
             <View>
-              <Text style={styles.name}>{name}</Text>
+              <Text style={{...styles.name,color: importantText,}}>{name}</Text>
               <View style={styles.favoriteContainer}>
                 <LineChart.PriceText
                   format={formatCurrency}
-                  style={styles.currentPrice}
+                  style={{...styles.currentPrice,color: importantText,}}
                 />
 
 
                 <View style={styles.favorite}>
-                  <Pressable style={styles.favoriteIcon} >
-                      <MaterialIcons name="star" size={22} fontWeight='Poppins' color="black" />
+                  <Pressable style={{...styles.favoriteIcon,backgroundColor: fadeColor}}>
+                    <MaterialIcons name="star" size={28} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
                   </Pressable>
 
-                  <Pressable style={styles.favoriteIcon} >
-                    <AntDesign name="download" size={22} fontWeight='Poppins' color="rgb(44, 44, 44)" />
+                  <Pressable style={{...styles.favoriteIcon,backgroundColor: fadeColor}} >
+                    <AntDesign name="download" size={28} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
                   </Pressable>
                 </View>
 
@@ -312,30 +314,30 @@ const PriceChart = ({ navigation }) => {
                 </CandlestickChart>
                 <View style={styles.candleStickDataContainer}>
                   <View>
-                    <Text style={styles.candleStickTextLabel}>Open</Text>
+                    <Text style={{...styles.candleStickTextLabel,color: fadeColor}}>Open</Text>
                     <CandlestickChart.PriceText
-                      style={styles.candleStickText}
+                      style={{...styles.candleStickText,color: background,}}
                       type="open"
                     />
                   </View>
                   <View>
-                    <Text style={styles.candleStickTextLabel}>High</Text>
+                    <Text style={{...styles.candleStickTextLabel,color: fadeColor}}>High</Text>
                     <CandlestickChart.PriceText
-                      style={styles.candleStickText}
+                      style={{...styles.candleStickText,color: background,}}
                       type="high"
                     />
                   </View>
                   <View>
-                    <Text style={styles.candleStickTextLabel}>Low</Text>
+                    <Text style={{...styles.candleStickTextLabel,color: fadeColor}}>Low</Text>
                     <CandlestickChart.PriceText
-                      style={styles.candleStickText}
+                      style={{...styles.candleStickText,color: background,}}
                       type="low"
                     />
                   </View>
                   <View>
-                    <Text style={styles.candleStickTextLabel}>Close</Text>
+                    <Text style={{...styles.candleStickTextLabel,color: fadeColor}}>Close</Text>
                     <CandlestickChart.PriceText
-                      style={styles.candleStickText}
+                      style={{...styles.candleStickText,color: background,}}
                       type="close"
                     />
                   </View>
@@ -366,31 +368,29 @@ const PriceChart = ({ navigation }) => {
           </View>
         </LineChart.Provider>
 
-        <View style={styles.aboutContainer}>
-          <Text style={styles.aboutHead}>About {name}</Text>
-          <Text style={styles.aboutText}>{truncate(coin.description.en, 400)}</Text>
+        <View style={{...styles.aboutContainer,borderTopColor: importantText,borderBottomColor: importantText,}}>
+          <Text style={{...styles.aboutHead,color:importantText}}>About {name}</Text>
+          <Text style={{...styles.aboutText,color: normalText}}>{truncate(coin.description.en, 400)}</Text>
         </View>
-        <View style={styles.marketContainer}>
-          <Text style={styles.aboutHead}>Market stats</Text>
-
+        <View style={{...styles.marketContainer,borderTopColor: importantText,borderBottomColor: importantText,}}>
+          <Text style={{...styles.aboutHead,color: importantText}}>Market stats</Text>
 
           <View style={styles.listContainer}>
             <View style={styles.leftListCon}>
 
               <View style={styles.logoCon}>
-                <AntDesign name="layout" size={20} color='#1652f0' />
+                <AntDesign name="layout" size={20} color={blue} />
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Market cap</Text>
-
+                <Text style={{...styles.logoText,color: normalText}}>Market cap</Text>
               </View>
 
 
 
             </View>
             <View style={styles.rightListConCon}>
-              <Text style={styles.rightListText}>{millify(market_cap)}</Text>
+              <Text style={{...styles.rightListText,color: normalText}}>{millify(market_cap)}</Text>
 
 
             </View>
@@ -400,11 +400,11 @@ const PriceChart = ({ navigation }) => {
             <View style={styles.leftListCon}>
 
               <View style={styles.logoCon}>
-                <Entypo name="bar-graph" size={20} color='#1652f0' />
+                <Entypo name="bar-graph" size={20} color={blue} />
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Volume</Text>
+                <Text style={{...styles.logoText,color: normalText}}>Volume</Text>
 
               </View>
 
@@ -431,19 +431,19 @@ const PriceChart = ({ navigation }) => {
             <View style={styles.leftListCon}>
 
               <View style={styles.logoCon}>
-                <FontAwesome name="clock-o" size={20} color='#1652f0' />
+                <FontAwesome name="clock-o" size={20} color={blue} />
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Circulating supply</Text>
+                <Text style={{...styles.logoText,color: normalText}}>Circulating supply</Text>
 
               </View>
 
 
 
             </View>
-            <View style={styles.rightListConCon}>
-              <Text style={styles.rightListText}>{millify(market_cap)}</Text>
+            <View style={{...styles.rightListConCon}}>
+              <Text style={{...styles.rightListText,color: normalText}}>{millify(market_cap)}</Text>
 
 
             </View>
@@ -453,11 +453,11 @@ const PriceChart = ({ navigation }) => {
             <View style={styles.leftListCon}>
 
               <View style={styles.logoCon}>
-                <MaterialCommunityIcons name="star-four-points" size={20} color='#1652f0' />
+                <MaterialCommunityIcons name="star-four-points" size={20} color={blue} />
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Popularity</Text>
+                <Text style={{...styles.logoText,color: normalText}}>Popularity</Text>
 
               </View>
 
@@ -465,7 +465,7 @@ const PriceChart = ({ navigation }) => {
 
             </View>
             <View style={styles.popularityListCon}>
-              <Text style={styles.rightListText}>#{market_cap_rank}</Text>
+              <Text style={{...styles.rightListText,color: normalText}}>#{market_cap_rank}</Text>
 
 
             </View>
@@ -478,8 +478,8 @@ const PriceChart = ({ navigation }) => {
 
 
 
-      <View style={styles.buttonCon} >
-        <TouchableOpacity style={styles.button} onPress={buyCrypto}>
+      <View style={{...styles.buttonCon,backgroundColor: background,}} >
+        <TouchableOpacity style={{...styles.button,backgroundColor: blue,}} onPress={buyCrypto}>
           <Text style={styles.buttonText}>buy</Text>
         </TouchableOpacity>
       </View>
@@ -490,24 +490,19 @@ const PriceChart = ({ navigation }) => {
 const styles = StyleSheet.create({
   scrollNavigationHeader: {
     paddingBottom: 10,
-    backgroundColor: '#fff',
     zIndex: 10,
     width: '100%',
-    borderBottomColor: 'rgb(197, 197, 197)',
     borderBottomWidth: .5,
-    paddingTop: 20,
+    paddingTop: 10,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
-
   },
   headerName: {
     fontFamily: 'ABeeZee',
     fontSize: 20,
-    fontFamily: 'Poppins'
-
+    fontFamily: 'Poppins',
   },
   goback: {
     display: 'flex',
@@ -536,20 +531,20 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: '#fff',
+    //backgroundColor: background,
     zIndex: 5,
-    paddingTop: 20
+    paddingTop: 10
 
   },
   currentPrice: {
-    color: "black",
+   // color: importantText,
     fontSize: 25,
     fontWeight: "600",
     letterSpacing: 1,
     flex: 2
   },
   name: {
-    color: "rgb(100,100,100)",
+    //color: importantText,
     fontSize: 20,
     fontFamily: 'Poppins'
   },
@@ -570,7 +565,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   priceChange: {
-    color: "#fff",
+    //color: background,
     fontSize: 17,
     fontWeight: "500",
     fontFamily: 'Poppins'
@@ -579,23 +574,26 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 50,
-    backgroundColor: 'rgb(240,240,240)',
+    //backgroundColor: fadeColor,
     display: 'flex',
     flexDirection: "row",
     justifyContent: 'center',
     alignItems: "center"
 
   },
+
+  /*
   input: {
     flex: 1,
     height: 40,
     margin: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#fff",
+    borderBottomColor: background,
     padding: 10,
     fontSize: 16,
-    color: "#fff",
+    color: background,
   },
+  */
   filtersContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -605,7 +603,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   candleStickText: {
-    color: "#fff",
+    //color: background,
     fontWeight: "700",
   },
   candleStickDataContainer: {
@@ -615,7 +613,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   candleStickTextLabel: {
-    color: 'rgb(100,100,100)',
+    //color: fadeColor,
     fontSize: 13
   },
   chartContainer: {
@@ -628,9 +626,7 @@ const styles = StyleSheet.create({
   aboutContainer: {
     paddingVertical: 20,
     borderTopWidth: .5,
-    borderTopColor: 'rgb(200,200,200)',
     borderBottomWidth: .5,
-    borderBottomColor: 'rgb(200,200,200)',
     display: 'flex',
     flexDirection: 'column',
     paddingHorizontal: 8
@@ -638,9 +634,7 @@ const styles = StyleSheet.create({
   marketContainer: {
     paddingVertical: 20,
     borderTopWidth: .5,
-    borderTopColor: 'rgb(200,200,200)',
     borderBottomWidth: .5,
-    borderBottomColor: 'rgb(200,200,200)',
     display: 'flex',
     flexDirection: 'column',
     paddingHorizontal: 15
@@ -648,13 +642,12 @@ const styles = StyleSheet.create({
   aboutHead: {
     fontSize: 23,
     marginBottom: 10,
-    fontFamily: 'Poppins'
+    fontFamily: 'Poppins',
+    
   },
   aboutText: {
     fontSize: 18,
     fontFamily: 'ABeeZee',
-    color: 'rgb(100,100,100)'
-
   },
   marketStatContainer: {
     display: 'flex',
@@ -672,7 +665,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     fontFamily: 'Poppins',
-    backgroundColor: '#fff',
     height: 80,
     display: 'flex',
     alignItems: 'center',
@@ -680,7 +672,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    backgroundColor: '#1652f0',
     paddingVertical: 17,
     marginHorizontal: '5%',
     borderRadius: 30,
@@ -737,7 +728,8 @@ const styles = StyleSheet.create({
   rightListText: {
     fontSize: 19,
     fontFamily: 'ABeeZee',
-    paddingRight: 5
+    paddingRight: 5,
+    
 
   },
   popularityListCon: {

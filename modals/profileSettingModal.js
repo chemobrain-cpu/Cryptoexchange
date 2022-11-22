@@ -1,8 +1,9 @@
 import React from 'react'
 import { View, Text, Pressable, StyleSheet, Modal, Dimensions } from 'react-native'
-
+import { useSelector } from "react-redux";
 
 const SettingModal = ({modalVisible,updateVisibility,topic,info,action}) => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
     const handler = ()=>{
         if(action=="closeAccount"){
@@ -21,16 +22,16 @@ const SettingModal = ({modalVisible,updateVisibility,topic,info,action}) => {
             visible={modalVisible}
             onRequestClose={updateVisibility}
         >
-            <View style={styles.modalBackground}>
-                <View style={styles.modalTop}>
+            <View style={{ ...styles.modalBackground, backgroundColor: background === 'black' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.5)' }}>
+                <View style={{ ...styles.modalTop, backgroundColor: background === 'white' ? fadeColor : importantText }}>
                 </View>
-                <View style={styles.modalView}>
-                    <Text style={styles.modalQuest}> {topic}</Text>
+                <View style={{ ...styles.modalView, backgroundColor: background, borderColor: fadeColor }}>
+                    <Text style={{...styles.modalQuest,color:importantText}}> {topic}</Text>
 
-                    <Text style={styles.modalState}>{info}</Text>
+                    <Text style={{...styles.modalState,color:normalText}}>{info}</Text>
 
-                    <Pressable style={styles.button} onPress={handler}>
-                        <Text style={styles.buttonText}>Continue</Text>
+                    <Pressable style={{...styles.button,backgroundColor:fadeColor}} onPress={handler}>
+                        <Text style={{...styles.buttonText,color:importantText}}>Continue</Text>
                     </Pressable>
 
                     
@@ -52,7 +53,6 @@ const styles = StyleSheet.create({
     modalTop: {
         height: 4,
         width: '20%',
-        backgroundColor: 'rgb(225,225,225)',
         position: 'absolute',
         top: '65%',
         alignSelf: 'center',
@@ -63,16 +63,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 30,
         alignItems: "center",
-
         position: 'absolute',
         backgroundColor: '#fff',
         width: Dimensions.get('window').width,
         top: '69%',
-        height: '35%',
+        padding:10,
         display: 'flex',
         flexDirection: 'column',
-        borderTopColor: 'rgb(240,240,240)',
-        borderTopWidth: 1,
+        borderWidth: 1,
         paddingHorizontal:15
 
 
@@ -80,7 +78,7 @@ const styles = StyleSheet.create({
 
     },
     modalQuest: {
-        paddingTop: 20,
+        paddingTop: 15,
         fontSize: 22,
         fontFamily: 'Poppins',
         alignSelf: 'flex-start'

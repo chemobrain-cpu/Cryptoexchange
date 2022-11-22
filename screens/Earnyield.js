@@ -30,7 +30,7 @@ const Earn = ({ navigation }) => {
 
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/photo1.jpg')}
+                        source={require('../assets/icons/photo1.png')}
                         style={{ width: 350,height:'100%'}} />
                 </View>
 
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
         width: '100%',
         borderBottomColor: 'rgb(197, 197, 197)',
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

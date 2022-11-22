@@ -23,7 +23,7 @@ import Loader from '../loaders/Loader';
 
 
 const UserCard = ({ navigation }) => {
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
     const dispatch = useDispatch()
     const [header, setHeader] = useState(false);
 
@@ -125,39 +125,41 @@ const UserCard = ({ navigation }) => {
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
 
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollviewContainer} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
-                <View style={{ ...styles.navigationHeader }}>
+                <View style={{...styles.navigationHeader,backgroundColor: background}}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                        <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
+                        <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
                     </TouchableOpacity>
                 </View>
 
 
                 <View style={styles.title}>
-                    <Text style={styles.titleText}>Personnal Information</Text>
+                    <Text style={{...styles.titleText,color:importantText}}>Personnal Information</Text>
                 </View>
 
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}>First Name</Text>
+                    <Text style={{...styles.label,color:normalText}}>First Name</Text>
 
                     <TextInput
-                        style={styles.input}
+                        style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
                         onChangeText={changeFirstName}
                         value={firstName}
+                        placeholderTextColor={normalText}
                     />
                     <Text style={styles.errorText}>{firstNameError ? firstNameError : ""}</Text>
 
                 </KeyboardAvoidingView>
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}>Last Name</Text>
+                    <Text style={{...styles.label,color:normalText}}>Last Name</Text>
 
                     <TextInput
-                        style={styles.input}
+                        style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
                         onChangeText={changeLastName}
                         value={lastName}
+                        placeholderTextColor={normalText}
                     />
                     <Text style={styles.errorText}>{lastNameError ? firstNameError : ""}</Text>
 
@@ -190,12 +192,12 @@ const UserCard = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
         width: Dimensions.get('window').width,
-        paddingTop: 20,
+        
     },
     scrollviewContainer: {
-        paddingHorizontal: 21,
+        paddingHorizontal: '5%',
+        paddingTop: 15,
     },
     navigationHeader: {
         paddingBottom: 10,

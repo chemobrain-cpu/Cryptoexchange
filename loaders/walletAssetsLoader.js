@@ -1,34 +1,40 @@
-import React, { useState } from 'react'
+import React, { useState} from 'react'
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, TextInput, Dimensions, KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons';
-import ContentLoader, { Rect } from 'react-content-loader/native'
+import ContentLoader, { Rect } from 'react-content-loader/native';
+import { useSelector } from "react-redux"
+
+
+
 
 let WalletAssetLoader = ({ navigation, title }) => {
-    let [text,setText] = useState('')
+    let [text, setText] = useState('')
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
-    return <SafeAreaView style={styles.screen}>
+    
+    return <SafeAreaView style={{...styles.screen,backgroundColor: background,}}>
         <ScrollView stickyHeaderIndices={[0]}>
 
-            <View style={styles.headerContainer}>
+            <View style={{...styles.headerContainer,backgroundColor: background,}}>
                 <View style={styles.assetsheaderCon}>
                     <TouchableOpacity style={styles.headerIconCon} >
-                        <Feather name="arrow-left" size={25} color={"rgb(44,44,44)"} />
+                        <Feather name="arrow-left" size={25} color={normalText} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.headerTextCon} onPress={() => navigation.goBack()}>
-                        <Text style={styles.headerText}>{title}</Text>
+                        <Text style={{...styles.headerText,color:importantText}}>{title}</Text>
                     </TouchableOpacity>
-
 
                 </View>
                 <View style={styles.searchCon}>
 
                     <KeyboardAvoidingView style={{ ...styles.inputContainer }}>
-                        <FontAwesome name="search" size={18} color={"black"} />
+                        <FontAwesome name="search" size={18} color={normalText} />
                         <TextInput
                             style={{ ...styles.input, borderColor: 'orange' }}
                             value={text}
                             placeholder="Search"
+                            placeholderTextColor={fadeColor}
 
 
                         />
@@ -39,26 +45,44 @@ let WalletAssetLoader = ({ navigation, title }) => {
 
             <View style={styles.loaderContainer}>
 
-                <ContentLoader 
-                duration={1000}
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#fff"
+                <ContentLoader
+                    duration={1000}
+                    backgroundColor={fadeColor}
+                        foregroundColor={background}
                     height={50}
-                     >
+                >
                     <Rect x="0" y="20" rx="5" ry="5" width="100" height="100%" />
                 </ContentLoader>
 
                 <View style={styles.container}>
-                    <ContentLoader height={40} width={'35%'} duration={1000} borderRadius={40}
-                        backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'35%'} duration={1000} borderRadius={40}
+                        backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
+
+                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+                    </ContentLoader>
+
+
+                </View>
+
+                <View style={styles.container}>
+                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
+
+                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                    </ContentLoader>
+                    <ContentLoader height={50} width={'50%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -69,34 +93,15 @@ let WalletAssetLoader = ({ navigation, title }) => {
                 </View>
 
                 <View style={styles.container}>
-                    <ContentLoader height={40} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'50%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={50} width={'50%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
-
-                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                    </ContentLoader>
-
-
-                </View>
-
-                <View style={styles.container}>
-                    <ContentLoader height={40} width={'50%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
-
-                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                    </ContentLoader>
-                    <ContentLoader height={50} width={'20%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'20%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -107,52 +112,15 @@ let WalletAssetLoader = ({ navigation, title }) => {
                 </View>
 
                 <View style={styles.container}>
-                    <ContentLoader height={40} width={'35%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'35%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={30} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
-
-                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                    </ContentLoader>
-
-
-                </View>
-                <View style={styles.container}>
-                    <ContentLoader height={40} width={'35%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
-
-                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                    </ContentLoader>
-                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
-
-                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                    </ContentLoader>
-
-
-                </View>
-
-                <View style={styles.container}>
-                    <ContentLoader height={40} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
-
-                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                    </ContentLoader>
-                    <ContentLoader height={50} width={'50%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -162,15 +130,15 @@ let WalletAssetLoader = ({ navigation, title }) => {
 
                 </View>
                 <View style={styles.container}>
-                    <ContentLoader height={40} width={'35%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'35%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -181,15 +149,52 @@ let WalletAssetLoader = ({ navigation, title }) => {
                 </View>
 
                 <View style={styles.container}>
-                    <ContentLoader height={40} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={50} width={'50%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                        foregroundColor="#fff">
+                    <ContentLoader height={50} width={'50%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
+
+                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                    </ContentLoader>
+
+
+                </View>
+                <View style={styles.container}>
+                    <ContentLoader height={50} width={'35%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
+
+                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                    </ContentLoader>
+                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
+
+                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                    </ContentLoader>
+
+
+                </View>
+
+                <View style={styles.container}>
+                    <ContentLoader height={50} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
+
+                        <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                    </ContentLoader>
+                    <ContentLoader height={50} width={'50%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                        foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -207,14 +212,12 @@ let WalletAssetLoader = ({ navigation, title }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
     },
     headerContainer: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        backgroundColor: '#fff',
         zIndex: 10,
         paddingTop: 15,
         paddingHorizontal: 20,
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 21,
         fontFamily: 'ABeeZee',
-        marginLeft: '5%'
+        marginLeft: '5%',
     },
     assetsheaderCon: {
         display: 'flex',

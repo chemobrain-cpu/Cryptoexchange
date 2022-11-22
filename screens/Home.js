@@ -15,6 +15,8 @@ import MoversLoader from "../loaders/moversLoader";
 import * as Notifications from 'expo-notifications';
 
 
+
+
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -38,13 +40,14 @@ const Home = ({ navigation }) => {
     //notification
     const [expoPushToken, setExpoPushToken] = useState([]);
 
-    let { user } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
 
     //setting up notifications listeners
     useEffect(() => {
         Notifications.addNotificationReceivedListener(notification => {
             //write a logic to update the user
+            console.log('working')
             fetchUser().then(() => {
                 setIsLoading(false)
             })
@@ -55,24 +58,24 @@ const Home = ({ navigation }) => {
             //update user when notification is recieved
         })
     }, [fetchUser]);
+
+    /*
+        //triggering security check
+        useEffect(()=>{
+            let timer
+            if(!isLoading && !isWatchListLoading && !isMoversLoading && !isMounted && !isError){
+                timer = setTimeout(()=>{
+                    alert('secure your account')
+                },1000)
     
-/*
-    //triggering security check
-    useEffect(()=>{
-        let timer
-        if(!isLoading && !isWatchListLoading && !isMoversLoading && !isMounted && !isError){
-            timer = setTimeout(()=>{
-                alert('secure your account')
-            },1000)
-
-        }
-
-        return ()=>{
-            clearTimeout(timer)
-        }
-
-    },[])
-    */
+            }
+    
+            return ()=>{
+                clearTimeout(timer)
+            }
+    
+        },[])
+        */
 
 
     let fetchUser = async () => {
@@ -84,7 +87,7 @@ const Home = ({ navigation }) => {
     }
 
 
-  //use effect for registering notification token
+    //use effect for registering notification token
     useEffect(() => {
         setIsLoading(true)
         //registering for push notification
@@ -120,7 +123,7 @@ const Home = ({ navigation }) => {
         token = (await Notifications.getExpoPushTokenAsync()).data;
         //save the token in users account
 
-        if (token && !user.notificationToken) {
+        if (token) {
             let res = await dispatch(addNotificationToken({ notificationToken: token }))
             if (!res.bool) {
                 setIsError(true)
@@ -209,14 +212,15 @@ const Home = ({ navigation }) => {
         fetchWatchList()
     }
 
-        /*
-        let setupHandler = (url) => {
-            navigation.navigate(url)
-        }*/
+    /*
+    let setupHandler = (url) => {
+        navigation.navigate(url)
+    }*/
 
     let actionHandler = (data) => {
         if (data === "Buy") {
             navigation.navigate("BuyCryptoList")
+
         } else if (data === "Sell") {
             navigation.navigate("SellList")
 
@@ -279,48 +283,51 @@ const Home = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
                 <View>
-                    <View >
-                        <View style={{ ...styles.headerContainer }}>
-                            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                                <Entypo name="menu" size={24} color="black" />
 
-                            </TouchableOpacity>
+                    <View style={{
+                        ...styles.headerContainer,
+                        backgroundColor: background
+                    }}>
+                        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                            <Entypo name="menu" size={24} color={background === 'white' ? "black" : "white"} />
+
+                        </TouchableOpacity>
 
 
 
 
 
 
-                            <TouchableOpacity onPress={() => navigation.navigate('Notification')} >
-                                <Ionicons name="notifications" size={30} color="black" />
-                                <View style={styles.notification}>
-                                    <View style={styles.notificationTextContainer}>
-                                        <Text style={styles.notificationText}>{user.notifications.length}</Text>
-
-                                    </View>
+                        <TouchableOpacity onPress={() => navigation.navigate('Notification')} style={styles.notificationCon} >
+                            <Ionicons name="notifications" size={30} color={background === 'white' ? "black" : "white"} />
+                            <View style={styles.notification}>
+                                <View style={styles.notificationTextContainer}>
+                                    <Text style={styles.notificationText}>{user.notifications.length}</Text>
 
                                 </View>
 
-                            </TouchableOpacity>
+                            </View>
 
-                        </View>
+                        </TouchableOpacity>
 
                     </View>
+
+
                     <View style={styles.balanceContainer}>
 
-                        {user.isHideBalance ? <Text >
-                        </Text> : <View style={styles.balanceInnerContainer}>
+                        {user.isHideBalance ? < >
+                        </> : <View style={{ ...styles.balanceInnerContainer, backgroundColor: background }}>
 
-                            <Text style={{ ...styles.headText }}>
+                            <Text style={{ ...styles.headText, color: importantText }}>
                                 Total Balance
 
                             </Text>
 
 
-                            <Text style={{ ...styles.giftText }}>
+                            <Text style={{ ...styles.balanceText, color: importantText }}>
 
                                 ${Number(user.accountBalance).toFixed(2)}
 
@@ -330,7 +337,7 @@ const Home = ({ navigation }) => {
 
                     </View>
 
-                    <View style={styles.actionContainer}>
+                    <View style={{ ...styles.actionContainer, borderColor: background === 'white' ? 'rgb(180,180,180)' : fadeColor, backgroundColor: background }}>
 
                         <Button
                             text="Buy"
@@ -372,9 +379,9 @@ const Home = ({ navigation }) => {
                 </View>
 
 
-                <View style={styles.watchListContainer}>
+                <View style={{ ...styles.watchListContainer, borderColor: background === 'white' ? 'rgb(180,180,180)' : fadeColor, }}>
                     <View>
-                        <Text style={styles.watchHeader}>Watchlist</Text>
+                        <Text style={{ ...styles.watchHeader, color: importantText }}>Watchlist</Text>
                     </View>
 
                     {isWatchListLoading ? <ShortListLoader /> : <WatchList navigationHandler={navigationHandler} parentErrorHandler={parentErrorHandler}
@@ -385,7 +392,7 @@ const Home = ({ navigation }) => {
 
                 <View style={styles.topMoversContainer}>
                     <Text
-                        style={styles.topMoversHeadingText}
+                        style={{ ...styles.topMoversHeadingText, color: importantText }}
                     >
                         Top Movers
                     </Text>
@@ -399,7 +406,6 @@ const Home = ({ navigation }) => {
 
 
                 {timelineData.map(data => <TimelineContainer key={data.about} data={data} />)}
-
                 <View style={styles.spinnerContainer}>
                     <ActivityIndicator color='#1652f0' size={30} />
                 </View>
@@ -411,29 +417,27 @@ const Home = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        paddingHorizontal: 0,
+
+    },
     header: {
         display: 'flex',
         flexDirection: "row",
-
-    },
-    screen: {
-        flex: 1,
-        backgroundColor: "#fff",
-        paddingHorizontal: 0,
 
     },
     scrollContainer: {
         paddingBottom: 100,
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',
         position: 'relative',
-        backgroundColor: '#fff',
         paddingHorizontal: 15,
-        alignItems: 'center'
+        alignItems: 'flex-start',
 
     },
     headText: {
@@ -446,19 +450,15 @@ const styles = StyleSheet.create({
         marginBottom: 0
 
     },
-    giftContainer: {
-        display: "flex",
-        flexDirection: 'row',
-        borderRadius: 10,
-        height: 30,
-        paddingHorizontal: 30,
-        backgroundColor: 'red'
-    },
-    giftText: {
-        fontSize: 30,
+
+    balanceText: {
+        fontSize: 28,
         fontFamily: 'Poppins',
         marginLeft: 10,
-        color: 'red',
+    },
+    notificationCon: {
+        paddingTop: 5,
+
     },
 
     notification: {
@@ -471,8 +471,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     notificationTextContainer: {
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         position: 'absolute',
         bottom: 35,
         backgroundColor: 'red',
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: "center",
         justifyContent: 'center',
-        borderRadius: 20,
+        borderRadius: 25,
 
     },
     notificationText: {
@@ -493,16 +493,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgb(230,230,230)',
+        borderBottomWidth: .5,
         paddingBottom: 10,
         paddingHorizontal: '5%',
-        backgroundColor: '#fff'
     },
 
     watchListContainer: {
         borderBottomWidth: .5,
-        borderBottomColor: "rgb(225,225,225)",
         marginBottom: 20,
 
     },

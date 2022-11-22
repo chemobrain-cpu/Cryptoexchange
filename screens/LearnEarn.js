@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, SafeAreaView, ScrollView, Pressable, StyleSheet, Image, Dimensions, Share } from 'react-native'
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Card } from "react-native-shadow-cards";
 import AuthModal from '../modals/authModal';
 import Loader from '../loaders/Loader'
 import { useSelector } from "react-redux";
 
 const LearnEarn = ({ navigation }) => {
-     let { user } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
     const [header, setHeader] = useState(false);
     const [link, setLink] = useState("")
     const [modalVisible, setModalVisible] = useState(false)
@@ -15,8 +16,8 @@ const LearnEarn = ({ navigation }) => {
     const [authInfo, setAuthInfo] = useState("")
     const [isLoading, setIsLoading] = useState(true);
 
-     //preventing memory leak
-     useEffect(() => {
+    //preventing memory leak
+    useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
                 e.preventDefault();
@@ -27,17 +28,17 @@ const LearnEarn = ({ navigation }) => {
         return focus
     }, [isLoading]);
 
-    
+
     useEffect(() => {
         let url = 'coincap.cloud'
         let username = user.lastName
         let fullUrl = `${url}/${username}`
         setLink(fullUrl)
-        setTimeout(()=>{
+        setTimeout(() => {
             setIsLoading(false)
-        },4000)
-        
-      }, []);
+        }, 4000)
+
+    }, []);
 
     const scrollHandler = (e) => {
         if (e.nativeEvent.contentOffset.y > 5) {
@@ -69,20 +70,20 @@ const LearnEarn = ({ navigation }) => {
 
     }
 
-    if(isLoading){
-        return <Loader/>
+    if (isLoading) {
+        return <Loader />
     }
 
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateVisibility} message={authInfo} />}
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
 
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollviewContainer} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
-                <View style={{ ...styles.navigationHeader, borderBottomWidth: header ? 1 : 0, }}>
+                <View style={{ ...styles.navigationHeader, borderBottomWidth: header ? 1 : 0,backgroundColor:background}}>
 
                     <Pressable onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                        <Feather name="arrow-left" size={23} color="rgb(44, 44, 44)" />
-                        <Text style={{ ...styles.headerName, display: header ? 'flex' : 'none' }}>Learn and earn</Text>
+                        <Feather name="arrow-left" size={23} color={background === 'white' ? "black" : "white"} />
+                        <Text style={{ ...styles.headerName,color:importantText, display: header ? 'flex' : 'none' }}>Learn and earn</Text>
                     </Pressable>
 
 
@@ -90,43 +91,48 @@ const LearnEarn = ({ navigation }) => {
 
 
 
-                <Text style={styles.username}>Learn and Earn</Text>
+                <Text style={{...styles.username,color:importantText}}>Learn and Earn</Text>
 
-                <Text style={{ ...styles.email }}>Start lessons,complete simple tasks and earn crypto in minutes.</Text>
+                <Text style={{ ...styles.email,color:normalText }}>Start lessons,complete simple tasks and earn crypto in minutes.</Text>
 
-                <Card style=
-                    {styles.card}>
-                    <Image
-                        source={require('../assets/icons/box.jpeg')}
-                        style={{ width: 90, height: 90, marginBottom: 30, marginLeft: 5 }} />
+                <Pressable style={{backgroundColor:background}}>
+                    <Card style=
+                        {{...styles.card,backgroundColor:background}}>
+                        <Image
+                            source={require('../assets/icons/box.png')}
+                            style={{ width: 90, height: 90, marginBottom: 30, marginLeft: 5 }} />
 
-                    <View style={styles.textContainer}>
-                        <Text style={styles.headerText}>Invite friends</Text>
-                        <Text style={styles.contentText}>You'll both get free Bitcoin when a friend buys or sells $100 of crypto</Text>
-
-                    </View>
-
-                    <View style={styles.rewardContainer}>
-                        <View>
-                            <Text style={styles.rewardText}>Reward</Text>
-                            <Text style={{ ...styles.rewardCash, color: 'green' }}>$10 in BTC</Text>
-                        </View>
-                        <View>
-                            <Text style={{ ...styles.rewardText }}>Rewards earned </Text>
-                            <Text style={styles.rewardCash}>$0 in BTC</Text>
+                        <View style={{...styles.textContainer}}>
+                            <Text style={{...styles.headerText,color:importantText}}>Invite friends</Text>
+                            <Text style={{...styles.contentText,color:normalText}}>You'll both get free Bitcoin when a friend buys or sells $100 of crypto</Text>
 
                         </View>
 
-                    </View>
+                        <View style={styles.rewardContainer}>
+                            <View>
+                                <Text style={styles.rewardText}>Reward</Text>
+                                <Text style={{ ...styles.rewardCash, color: 'green' }}>$10 in BTC</Text>
+                            </View>
+                            <View>
+                                <Text style={{ ...styles.rewardText }}>Rewards earned </Text>
+                                <Text style={{...styles.rewardCash,color:importantText}}>$0 in BTC</Text>
 
-                    <View style={styles.buttonContainer}>
-                        <Pressable style={styles.button} onPress={share}>
-                            <Text style={styles.buttonText}>Invite friends</Text>
-                        </Pressable>
+                            </View>
 
-                    </View>
+                        </View>
 
-                </Card>
+                        <View style={styles.buttonContainer}>
+                            <Pressable style={{...styles.button,backgroundColor:fadeColor}} onPress={share}>
+                                <Text style={{...styles.buttonText,color:importantText}}>Invite friends</Text>
+                            </Pressable>
+
+                        </View>
+
+                    </Card>
+
+                </Pressable>
+
+
                 <View style={styles.footerContainer}>
                     <Text style={styles.footerText}>
                         Limited while supplies last and amounts offered for each quiz may vary.Must verify ID to be eligible and complete quiz to earn.Customers may only earn once per quiz.Coincap  reserves the right to cancel the Earn offer at anytime.Coincap receives fees from assets issuers in connection with creating and distributing asset and/or protocol specific Earn content
@@ -143,7 +149,6 @@ const LearnEarn = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff"
     },
     navigationHeader: {
         paddingBottom: 10,
@@ -151,11 +156,11 @@ const styles = StyleSheet.create({
         zIndex: 10,
         width: '100%',
         borderBottomColor: 'rgb(197, 197, 197)',
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        
+
         paddingHorizontal: '5%',
 
 
@@ -190,7 +195,7 @@ const styles = StyleSheet.create({
         color: "black",
         fontSize: 25,
         fontFamily: 'ABeeZee',
-        
+
         paddingHorizontal: '5%',
 
     },
@@ -199,11 +204,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         height: Dimensions.get('window').height / 1.4,
         borderWidth: 1,
-        borderBottomWidth: 2,
         borderColor: 'rgb(223, 223, 223)',
         paddingTop: 50,
         marginBottom: 40,
-        
         marginHorizontal: '5%',
     },
     cardText: {

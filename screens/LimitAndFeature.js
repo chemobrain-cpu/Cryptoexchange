@@ -1,26 +1,28 @@
 import React from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, Pressable } from 'react-native'
 import { Ionicons, Feather } from '@expo/vector-icons';
-import { Card } from "react-native-shadow-cards"
+import { Card } from "react-native-shadow-cards";
+import { useSelector } from "react-redux";
 
 
 
 const LimitFeature = ({ navigation }) => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
     
 
     const continueHandler = () => {
         navigation.navigate('VerifyId')
     }
 
-    return (<SafeAreaView style={styles.screen}>
+    return (<SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
         <View style={styles.container}>
 
 
-            <View style={styles.navigationHeader}>
+            <View  style={{ ...styles.navigationHeader, backgroundColor: background}}>
 
                 <Pressable onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                    <Feather name="arrow-left" size={23} color="rgb(44, 44, 44)" />
-                    <Text style={styles.headerName}>Limits and Features</Text>
+                    <Feather name="arrow-left" size={23} color={background === 'white' ? "black" : "white"}  />
+                    <Text style={{...styles.headerName,color:importantText}}>Limits and Features</Text>
                 </Pressable>
 
 
@@ -32,16 +34,15 @@ const LimitFeature = ({ navigation }) => {
             <View style={styles.listContainer}>
                 <View style={styles.actionCon}>
                     <View style={{ ...styles.numberCon }}>
-                        <Feather name="credit-card" size={20} />
+                        <Feather name="credit-card" size={20} color={background === 'white' ? "black" : "white"}  />
                     </View>
                     <View style={styles.actionTextCon}>
-                        <Text style={styles.actionText}>3D Secure purchases</Text>
-
+                        <Text style={{...styles.actionText,color:normalText}}>3D Secure purchases</Text>
                     </View>
 
                 </View>
                 <View style={styles.durationCon}>
-                    <Text style={styles.durationText}>$40/week</Text>
+                    <Text style={{...styles.durationText,color:normalText}}>$40/week</Text>
 
                 </View>
 
@@ -51,16 +52,16 @@ const LimitFeature = ({ navigation }) => {
             <View style={styles.listContainer}>
                 <View style={styles.actionCon}>
                     <View style={{ ...styles.numberCon }}>
-                        <Ionicons name="send-sharp" size={24} color="black" />
+                        <Ionicons name="send-sharp" size={24} color={background === 'white' ? "black" : "white"} />
                     </View>
                     <View style={styles.actionTextCon}>
-                        <Text style={styles.actionText}>Send cryptocurrency</Text>
+                        <Text style={{...styles.actionText,color:normalText}}>Send cryptocurrency</Text>
 
                     </View>
 
                 </View>
                 <View style={styles.durationCon}>
-                    <Text style={styles.durationText}>Enabled</Text>
+                    <Text style={{...styles.durationText,color:normalText}}>Enabled</Text>
 
                 </View>
 
@@ -70,16 +71,16 @@ const LimitFeature = ({ navigation }) => {
             <View style={styles.listContainer}>
                 <View style={styles.actionCon}>
                     <View style={{ ...styles.numberCon }}>
-                        <Ionicons name="qr-code-sharp" size={24} color="black" />
+                        <Ionicons name="qr-code-sharp" size={24} color={background === 'white' ? "black" : "white"}  />
                     </View>
                     <View style={styles.actionTextCon}>
-                        <Text style={styles.actionText}>Receive cryptocurrency</Text>
+                        <Text style={{...styles.actionText,color:normalText}}>Receive cryptocurrency</Text>
 
                     </View>
 
                 </View>
                 <View style={styles.durationCon}>
-                    <Text style={styles.durationText}>Enabled</Text>
+                    <Text style={{...styles.durationText,color:normalText}}>Enabled</Text>
 
                 </View>
 
@@ -90,14 +91,14 @@ const LimitFeature = ({ navigation }) => {
 
 
 
-            <Card style={styles.photoCard}>
-                <Text style={styles.headingText}>
+            <Card style={{ ...styles.photoCard, backgroundColor: background,borderColor:background==='black'?fadeColor:'' }}>
+                <Text style={{...styles.headingText,color:importantText}}>
                         Feature upgrade available
                     </Text>
-                    <Text style={styles.text}>
+                    <Text style={{...styles.text,color:importantText}}>
                         Buy digital currency
                     </Text>
-                <TouchableOpacity style={styles.button} onPress={continueHandler}>
+                <TouchableOpacity style={{...styles.button}} onPress={continueHandler}>
                     <Text style={styles.buttonText}>
                         Verify photo ID
                     </Text>
@@ -126,7 +127,6 @@ const LimitFeature = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
         paddingHorizontal: '5%',
         paddingTop: 20
     },
@@ -220,7 +220,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent:"flex-start",
-        padding:10
+        padding:10,
+        borderWidth:.5
 
     },
     headingText:{

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, SafeAreaView, ScrollView, Pressable, StyleSheet, Image, Switch } from 'react-native'
 import { Feather, AntDesign } from '@expo/vector-icons';
 import { Card } from "react-native-shadow-cards"
@@ -13,7 +13,7 @@ import Loader from '../loaders/Loader';
 const ProfileSetting = ({ navigation }) => {
 
     const [header, setHeader] = useState(false);
-    let { user } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
     let dispatch = useDispatch()
     const [modalVisible, setModalVisible] = useState(false)
     const [isAuthError, setIsAuthError] = useState(false)
@@ -26,8 +26,8 @@ const ProfileSetting = ({ navigation }) => {
     const [isInfo, setIsInfo] = useState("")
     const [action, setAction] = useState("")
 
-     //preventing memory leak
-     useEffect(() => {
+    //preventing memory leak
+    useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
                 e.preventDefault();
@@ -40,7 +40,7 @@ const ProfileSetting = ({ navigation }) => {
 
 
     const scrollHandler = (e) => {
-        if (e.nativeEvent.contentOffset.y > 5) {
+        if (e.nativeEvent.contentOffset.y > 70) {
             setHeader(true)
         } else {
             setHeader(false)
@@ -155,6 +155,11 @@ const ProfileSetting = ({ navigation }) => {
         navigation.navigate('PinSetting')
     }
 
+    const appearanceHandler = ()=>{
+        navigation.navigate('Appearance')
+
+    }
+
     const hideHandler = async () => {
 
         if (isHideLoading) {
@@ -175,7 +180,7 @@ const ProfileSetting = ({ navigation }) => {
                 return
 
             }
-            setAuthInfo('Account balance for this device is not visible')
+            setAuthInfo('Account balance for this device is visible')
 
             setUrl('ProfileSetting')
 
@@ -199,7 +204,7 @@ const ProfileSetting = ({ navigation }) => {
 
         }
 
-        setAuthInfo('Account balance for this device is visible')
+        setAuthInfo('Account balance for this device is not visible')
         setUrl('ProfileSetting')
         setIsAuthError(true)
         setIsHideLoading(false)
@@ -234,47 +239,48 @@ const ProfileSetting = ({ navigation }) => {
         <SettingModal modalVisible={modalVisible}
             updateVisibility={updateVisibility} topic={isTopic} info={isInfo} action={action} />
 
-        <SafeAreaView style={styles.screen}>
-            <View style={{ ...styles.navigationHeader, position: header ? "absolute" : 'static', top: header ? 0 : 0, borderBottomWidth: header ? .5 : 0, borderBottomColor: 'rgb(200,200,200)' }}>
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
+
+            <View style={{ ...styles.navigationHeader, backgroundColor: background, position: header ? "absolute" : 'static', top: header ? 0 : 0, borderBottomWidth: header ? .5 : 0, borderBottomColor:fadeColor }}>
                 <Pressable onPress={() => navigation.goBack()} >
-                    <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
+
+                    <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
                 </Pressable>
 
-                <Text style={{ ...styles.headerName, display: header ? 'flex' : 'none' }}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
+                <Text style={{ ...styles.headerName, color: importantText, display: header ? 'flex' : 'none' }}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollviewContainer}
                 onScroll={scrollHandler}>
 
-                <Text style={{ ...styles.email, marginTop: header ? 100 : 0 }}>{user.email}</Text>
+                <Text style={{ ...styles.email, color: importantText, marginTop: header ? 50 : 0 }}>{user.email}</Text>
 
-                <Text style={styles.username}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
+                <Text style={{ ...styles.username, color: normalText }}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
 
 
-                <Card style=
-                    {styles.card}>
-                    <Text style={styles.cardText}>
+                <Card style={{ ...styles.card, borderColor: fadeColor, backgroundColor: background }}>
+                    <Text style={{ ...styles.cardText, color: normalText }}>
                         share your love of crypto and get $100.000 of free bitcoin
 
                     </Text>
                     <Image
-                        source={require('../assets/icons/box.jpeg')}
+                        source={require('../assets/icons/box.png')}
                         style={{ width: 70, height: 70 }} />
                 </Card>
 
-                <Text style={styles.paymentText}>Payments methods</Text>
+                <Text style={{ ...styles.paymentText, color: importantText }}>Payments methods</Text>
 
-                <Pressable style={styles.button} onPress={navigateToPayment}>
-                    <Text style={styles.buttonText}>Add a payment method</Text>
+                <Pressable style={{ ...styles.button,backgroundColor:fadeColor }} onPress={navigateToPayment}>
+                    <Text style={{ ...styles.buttonText, color: importantText }}>Add a payment method</Text>
                 </Pressable>
 
-                <Text style={styles.paymentText}>Account</Text>
+                <Text style={{ ...styles.paymentText, color: importantText }}>Account</Text>
 
                 <Pressable style={styles.settingContainer} onPress={limits}>
                     <View>
-                        <Text style={styles.settingText}>Limits and features</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Limits and features</Text>
                     </View>
-                    <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                    <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
                 </Pressable>
 
@@ -283,9 +289,9 @@ const ProfileSetting = ({ navigation }) => {
 
                 <Pressable style={styles.settingContainer} onPress={changeInfo}>
                     <View>
-                        <Text style={styles.settingText}>Change Info</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Change Info</Text>
                     </View>
-                    <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                    <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
                 </Pressable>
 
@@ -293,17 +299,17 @@ const ProfileSetting = ({ navigation }) => {
 
                 <Pressable style={styles.settingContainer} onPress={goToPrivacy}>
                     <View>
-                        <Text style={styles.settingText}>Privacy</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Privacy</Text>
                     </View>
-                    <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                    <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
                 </Pressable>
 
                 <Pressable style={styles.settingContainer} onPress={changePhone}>
                     <View>
-                        <Text style={styles.settingText}>Phone Numbers</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Phone Numbers</Text>
                     </View>
-                    <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                    <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
                 </Pressable>
 
@@ -311,7 +317,7 @@ const ProfileSetting = ({ navigation }) => {
 
                 <Pressable style={styles.switchContainer} onPress={hideHandler}>
                     <View>
-                        <Text style={styles.settingText}>Close Account</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Close Account</Text>
                     </View>
 
                     <Switch
@@ -330,19 +336,19 @@ const ProfileSetting = ({ navigation }) => {
 
 
 
-                <Text style={styles.paymentText}>Display</Text>
+                <Text style={{ ...styles.paymentText, color: importantText }}>Display</Text>
 
-                <Pressable style={styles.settingContainer} >
+                <Pressable style={styles.settingContainer}  onPress={appearanceHandler}>
                     <View>
-                        <Text style={styles.settingText}>Appearance</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Appearance</Text>
                     </View>
-                    <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                    <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
                 </Pressable>
 
                 <Pressable style={styles.switchContainer} onPress={hideHandler}>
                     <View>
-                        <Text style={styles.settingText}>Hide balance</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Hide balance</Text>
                     </View>
 
                     <Switch
@@ -355,14 +361,12 @@ const ProfileSetting = ({ navigation }) => {
                         style={{ transform: [{ scaleX: 1.7 }, { scaleY: 1.7 }] }}
 
                     />
-
-
                 </Pressable>
-                <Text style={styles.paymentText}>Display</Text>
+                <Text style={{ ...styles.paymentText, color: importantText }}>Security</Text>
 
                 <Pressable style={styles.switchContainer} onPress={requirePinHandler}>
                     <View>
-                        <Text style={styles.settingText}>Require pin</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Require pin</Text>
                     </View>
 
                     <Switch
@@ -378,9 +382,9 @@ const ProfileSetting = ({ navigation }) => {
 
                 <Pressable style={styles.settingContainer} onPress={pinSettingHandler}>
                     <View>
-                        <Text style={styles.settingText}>Pin settings</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Pin settings</Text>
                     </View>
-                    <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                    <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
                 </Pressable>
 
@@ -388,18 +392,18 @@ const ProfileSetting = ({ navigation }) => {
 
                 <Pressable style={styles.settingContainer} onPress={supportHandler}>
                     <View>
-                        <Text style={styles.settingText}>Support</Text>
+                        <Text style={{ ...styles.settingText, color: normalText }}>Support</Text>
                     </View>
-                    <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                    <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
                 </Pressable>
 
-                <Pressable style={styles.signoutbutton} onPress={signoutHandler}>
+                <Pressable style={{...styles.signoutbutton,backgroundColor:fadeColor}} onPress={signoutHandler}>
                     <Text style={styles.signoutbuttonText}>Sign out</Text>
                 </Pressable>
 
-                <Text style={styles.footerText}>App Version:10.26.4(10260004),</Text>
-                <Text style={styles.footerText}>production</Text>
+                <Text style={{...styles.footerText,color:normalText}}>App Version:10.26.4(10260004),</Text>
+                <Text style={{...styles.footerText,color:normalText}}>production</Text>
 
 
 
@@ -415,16 +419,12 @@ const ProfileSetting = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
-
-
-
     },
     navigationHeader: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        paddingTop: 20,
+        paddingTop: 15,
         paddingBottom: 10,
         backgroundColor: '#fff',
         zIndex: 10,
@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderWidth: 1,
         borderBottomWidth: 2,
-        borderColor: 'rgb(223, 223, 223)',
+
         marginBottom: 40,
         marginRight: '5%',
         marginLeft: '5%'
@@ -473,20 +473,16 @@ const styles = StyleSheet.create({
         width: '60%',
         fontFamily: 'ABeeZee',
         fontWeight: '100',
-        color: 'rgb(27, 27, 27)'
     },
     paymentText: {
         fontSize: 21,
         fontFamily: 'Poppins',
         marginBottom: 30
-
     },
 
     button: {
         width: '90%',
         paddingVertical: 18,
-        backgroundColor: 'rgb(240,240,240)',
-        borderColor: 'rgb(230,230,230)',
         borderRadius: 35,
         display: 'flex',
         alignItems: 'center',
@@ -494,7 +490,6 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         marginRight: '5%',
         marginLeft: '5%',
-        borderWidth: 1,
     },
     buttonText: {
         color: 'black',
@@ -526,14 +521,11 @@ const styles = StyleSheet.create({
     signoutbutton: {
         width: '100%',
         paddingVertical: 18,
-        borderColor: 'rgb(230,230,230)',
         borderRadius: 35,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 30,
-        borderWidth: 1,
-        backgroundColor: 'rgb(240,240,240)',
     },
     signoutbuttonText: {
         color: 'red',

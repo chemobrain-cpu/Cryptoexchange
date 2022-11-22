@@ -15,6 +15,8 @@ export const READNOTIFICATION = 'READNOTIFICATION'
 export const ADD_ID = "ADD_ID"
 export const LOGOUT = "LOGOUT"
 export const UPDATEUSER = "UPDATEUSER"
+export const CHANGE_BLACK = 'CHANGE_BLACK'
+export const CHANGE_WHITE = 'CHANGE_WHITE'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ErrorModal from '../../modals/errorModal';
 import { RNS3 } from "react-native-aws3"
@@ -35,7 +37,7 @@ let calculateRemainingTime = (expiryDate) => {
 let retrievedStoredToken = async () => {
   let tokenFromStorage = await AsyncStorage.getItem('token');
   let expiryDate = await AsyncStorage.getItem('tokenExpiry');
-  
+
   const timeLeft = calculateRemainingTime(Number(expiryDate))
   if (timeLeft <= 3600) {
     await AsyncStorage.removeItem('token')
@@ -44,19 +46,59 @@ let retrievedStoredToken = async () => {
 
     return {
       token: "",
-      expiresIn: ""
+      expiresIn: "",
     }
   }
-  
+
   return {
     token: tokenFromStorage,
-    expiresIn: timeLeft
+    expiresIn: timeLeft,
   }
-
 }
 
 export const checkIfIsLoggedIn = () => {
   return async (dispatch, getState) => {
+    //before anything
+    let backgroundColorStyle = await AsyncStorage.getItem('@backgroundColorStyle');
+    if (!backgroundColorStyle) {
+      let data = {
+        background:'black',
+        importantText: 'white',
+        normalText: '#5d616d',
+        fadeColor: 'rgb(30,30,30)',
+        blue: '#1652f0',
+        fadeButtonColor: 'rgb(30,30,30)',
+  
+      }
+      dispatch({ type: CHANGE_BLACK, payload: data })
+
+    } else if (backgroundColorStyle == 'white') {
+       let data = {
+      background:'white',
+      importantText: 'black',
+      normalText: '#5d616d',
+      fadeColor: 'rgb(240,240,240)',
+      blue: '#1652f0',
+      fadeButtonColor: 'rgb(200,200,200)',
+
+    }
+      dispatch({ type: CHANGE_WHITE, payload: data })
+
+    } else if (backgroundColorStyle == 'black') {
+      let data = {
+        background:'black',
+        importantText: 'white',
+        normalText: '#5d616d',
+        fadeColor: 'rgb(30,30,30)',
+        blue: '#1652f0',
+        fadeButtonColor: 'rgb(30,30,30)',
+  
+      }
+      
+      dispatch({ type: CHANGE_BLACK, payload: data})
+
+    }
+
     try {
       let response
       //check if token is expired
@@ -70,12 +112,12 @@ export const checkIfIsLoggedIn = () => {
       }
       //convert expiresIN back to hours
       expiresIn = expiresIn / (60 * 60 * 1000)
-      await AsyncStorage.setItem('tokenExpiry',`${expiresIn}`);
+      await AsyncStorage.setItem('tokenExpiry', `${expiresIn}`);
       await AsyncStorage.setItem('token', token);
       let userId = await AsyncStorage.getItem('userId')
 
       if (!userId) {
-        
+
         return {
           bool: false,
           message: 'no stored user'
@@ -100,7 +142,7 @@ export const checkIfIsLoggedIn = () => {
         //save userId to async storage
         await AsyncStorage.setItem('userId', data.response.user._id);
 
-        dispatch({ type: FORCEUSERIN, payload:res})
+        dispatch({ type: FORCEUSERIN, payload: res })
         return {
           bool: true,
           message: res
@@ -125,10 +167,49 @@ export const checkIfIsLoggedIn = () => {
     } catch (err) {
       return {
         bool: false,
-        message:err.message
+        message: err.message
       }
     }
   }
+}
+
+export const changeToBlackBackground = () => {
+  return async (dispatch, getState) => {
+    //before anything
+    await AsyncStorage.setItem('@backgroundColorStyle', 'black');
+    let data = {
+      background:'black',
+      importantText: 'white',
+      normalText: '#5d616d',
+      fadeColor: 'rgb(30,30,30)',
+      blue: '#1652f0',
+      fadeButtonColor: 'rgb(30,30,30)',
+
+    }
+
+    dispatch({ type: CHANGE_BLACK, payload:data })
+
+  }
+
+}
+export const changeToWhiteBackground = () => {
+  return async (dispatch, getState) => {
+    //before anything
+    await AsyncStorage.setItem('@backgroundColorStyle', 'white');
+    let data = {
+      background:'white',
+      importantText: 'black',
+      normalText: '#5d616d',
+      fadeColor: 'rgb(235,235,235)',
+      blue: '#1652f0',
+      fadeButtonColor: 'rgb(200,200,200)',
+
+    }
+    dispatch({ type: CHANGE_WHITE, payload: data })
+
+
+  }
+
 }
 
 export const signup = (data) => {
@@ -163,10 +244,10 @@ export const signup = (data) => {
         }
       }
     }
-   catch(err){
+    catch (err) {
       return {
         bool: false,
-        message:err.message
+        message: err.message
       }
     }
   }
@@ -174,7 +255,7 @@ export const signup = (data) => {
 
 //login handler
 export const login = (data) => {
-  
+
   return async (dispatch, getState) => {
     try {
 
@@ -251,7 +332,7 @@ export const login = (data) => {
       console.log('error')
       return {
         bool: false,
-        message:err.message,
+        message: err.message,
         url: 'Login'
 
       }
@@ -294,7 +375,7 @@ export const verifiedEmail = (data) => {
     } catch (err) {
       return {
         bool: false,
-        message:err.message
+        message: err.message
       }
     }
   }
@@ -355,7 +436,7 @@ export const changePhone = (data) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "header":`${token}`
+          "header": `${token}`
         },
         body: JSON.stringify(data)
       })
@@ -399,7 +480,7 @@ export const changePhone = (data) => {
 export const confirm = (data) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
-   
+
     try {
       let response = await fetch(`http://www.coincap.cloud/auth/confirmnewphone`, {
         method: "POST",
@@ -433,12 +514,12 @@ export const confirm = (data) => {
       if (response.status === 200) {
         let data = await response.json()
         //dispatch the credentials to redux store
-        
+
         dispatch({ type: UPDATEUSER, payload: data.response })
-       
-       
-       
-        
+
+
+
+
         return {
           bool: true,
           message: data.response
@@ -487,15 +568,15 @@ export const confirmPhone = (data) => {
       }
       if (response.status === 200) {
         let data = await response.json()
-        
+
         //dispatch the credentials to redux store
         await AsyncStorage.setItem('tokenExpiry', `${data.response.expiresIn}`);
         await AsyncStorage.setItem('token', data.response.token);
         await AsyncStorage.setItem('userId', data.response.user._id);
 
-        
-       dispatch({ type: TEMPORAL, payload: data.response })
-        
+
+        dispatch({ type: TEMPORAL, payload: data.response })
+
         return {
           bool: true,
           message: data.response
@@ -503,7 +584,7 @@ export const confirmPhone = (data) => {
       }
 
     } catch (err) {
-      
+
       return {
         bool: false,
         message: 'network error'
@@ -514,7 +595,7 @@ export const confirmPhone = (data) => {
 
 export const goToHome = (data) => {
   return async (dispatch, getState) => {
-    dispatch({ type: CLEANTEMPORAL,payload:""})
+    dispatch({ type: CLEANTEMPORAL, payload: "" })
   }
 }
 
@@ -748,7 +829,7 @@ export const addToWatchList = (data) => {
       if (response.status === 200) {
         let data = await response.json()
         //dispatch the credentials to redux store to update user
-        dispatch({ type: MODIFY_WATCHLIST, payload: data.response})
+        dispatch({ type: MODIFY_WATCHLIST, payload: data.response })
 
         return {
           bool: true,
@@ -805,7 +886,7 @@ export const topUp = (value) => {
       if (response.status === 200) {
         let data = await response.json()
         //dispatch the credentials to redux store to update user
-        dispatch({ type: TOPUP, payload: data.response})
+        dispatch({ type: TOPUP, payload: data.response })
 
         return {
           bool: true,
@@ -869,7 +950,7 @@ export const addPaymentMethod = (data) => {
       if (response.status === 200) {
         let data = await response.json()
         //dispatch the credentials to redux store to update user
-        dispatch({ type: PAYMENT_METHOD, payload: data.response})
+        dispatch({ type: PAYMENT_METHOD, payload: data.response })
 
         return {
           bool: true,
@@ -887,6 +968,7 @@ export const addPaymentMethod = (data) => {
 
   }
 }
+
 export const uploadFrontId = (data) => {
   return async (dispatch, getState) => {
     try {
@@ -973,7 +1055,7 @@ export const uploadFrontId = (data) => {
         let data = await response.json()
         //dispatch the credentials to redux store to update user
         console.log(data.response)
-        dispatch({ type: ADD_ID, payload: data.response})
+        dispatch({ type: ADD_ID, payload: data.response })
 
         return {
           bool: true,
@@ -1078,7 +1160,7 @@ export const uploadBackId = (data) => {
         let data = await response.json()
         //dispatch the credentials to redux store to update user
         console.log(data.response)
-        dispatch({ type: ADD_ID, payload: data.response})
+        dispatch({ type: ADD_ID, payload: data.response })
 
         return {
           bool: true,
@@ -1098,7 +1180,7 @@ export const uploadBackId = (data) => {
 
 }
 
-export const uploadPhotoId = (data)=>{
+export const uploadPhotoId = (data) => {
   return async (dispatch, getState) => {
     try {
       //do some check on the server if its actually login before proceding to dispatch
@@ -1184,7 +1266,7 @@ export const uploadPhotoId = (data)=>{
       if (response.status === 200) {
         let data = await response.json()
         //dispatch the credentials to redux store to update user
-        dispatch({ type: ADD_ID, payload: data.response})
+        dispatch({ type: ADD_ID, payload: data.response })
 
         return {
           bool: true,
@@ -1391,6 +1473,161 @@ export const convertCrypto = (data) => {
 
   }
 }
+
+//send crypto method
+export const sendCryptoToWallet = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      //do some check on the server if its actually login before proceding to dispatch
+      let { token } = getState().userAuth
+
+      let response = await fetch(`http://www.coincap.cloud/auth/sendassettowallet`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "header": `${token}`
+
+        },
+        body: JSON.stringify(data)
+      })
+      if (response.status === 400) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Tax'
+        }
+      }
+      if (response.status === 401) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Tnt'
+        }
+      }
+      if (response.status === 402) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Ust'
+        }
+      }
+      if (response.status === 403) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Ktc'
+        }
+      }
+      if (response.status === 300) {
+
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response
+        }
+      }
+      if (response.status === 200) {
+        let data = await response.json()
+        //update user in store
+         dispatch({ type: UPDATEUSER, payload: data.response })
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+
+    } catch (err) {
+      return {
+        bool: false,
+        message: 'network error'
+      }
+    }
+
+  }
+}
+
+export const sendCryptoToBank = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      //do some check on the server if its actually login before proceding to dispatch
+      let { token } = getState().userAuth
+
+      let response = await fetch(`http://www.coincap.cloud/auth/sendassettobank`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "header": `${token}`
+
+        },
+        body: JSON.stringify(data)
+      })
+      if (response.status === 400) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Tax'
+        }
+      }
+      if (response.status === 401) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Tnt'
+        }
+      }
+      if (response.status === 402) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Ust'
+        }
+      }
+      if (response.status === 403) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'Ktc'
+        }
+      }
+      if (response.status === 300) {
+
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: 'SendToBank'
+        }
+      }
+      if (response.status === 200) {
+
+        let data = await response.json()
+         //update user in store
+        dispatch({ type: UPDATEUSER, payload: data.response })
+
+        return {
+          bool: true,
+          message: data.response
+        }
+      }
+
+    } catch (err) {
+      return {
+        bool: false,
+        message: 'network error'
+      }
+    }
+
+  }
+}
+
 export const sendCrypto = (data) => {
   return async (dispatch, getState) => {
     try {
@@ -1408,44 +1645,39 @@ export const sendCrypto = (data) => {
       })
       if (response.status === 400) {
         let data = await response.json()
-        console.log(data)
         return {
           bool: false,
           message: data.response,
-          url:'Tax'
+          url: 'Tax'
         }
       }
       if (response.status === 401) {
         let data = await response.json()
-        console.log(data)
         return {
           bool: false,
           message: data.response,
-          url:'Tnt'
+          url: 'Tnt'
         }
       }
       if (response.status === 402) {
         let data = await response.json()
-        console.log(data)
         return {
           bool: false,
           message: data.response,
-          url:'Ust'
+          url: 'Ust'
         }
       }
       if (response.status === 403) {
         let data = await response.json()
-        console.log(data)
         return {
           bool: false,
           message: data.response,
-          url:'Ktc'
+          url: 'Ktc'
         }
       }
       if (response.status === 300) {
 
         let data = await response.json()
-        console.log(data)
         return {
           bool: false,
           message: data.response
@@ -1454,7 +1686,6 @@ export const sendCrypto = (data) => {
       if (response.status === 200) {
 
         let data = await response.json()
-        console.log(data)
         return {
           bool: true,
           message: data.response
@@ -1462,7 +1693,6 @@ export const sendCrypto = (data) => {
       }
 
     } catch (err) {
-      console.log(err)
       return {
         bool: false,
         message: 'network error'
@@ -1471,8 +1701,11 @@ export const sendCrypto = (data) => {
 
   }
 }
+
+
+//widthdraw money  method
 export const Withdrawal = (data) => {
- 
+
   return async (dispatch, getState) => {
 
     try {
@@ -1493,7 +1726,7 @@ export const Withdrawal = (data) => {
         return {
           bool: false,
           message: data.response,
-          url:'Tax'
+          url: 'Tax'
         }
       }
       if (response.status === 401) {
@@ -1501,7 +1734,7 @@ export const Withdrawal = (data) => {
         return {
           bool: false,
           message: data.response,
-          url:'Tnt'
+          url: 'Tnt'
         }
       }
       if (response.status === 402) {
@@ -1509,7 +1742,7 @@ export const Withdrawal = (data) => {
         return {
           bool: false,
           message: data.response,
-          url:'Ust'
+          url: 'Ust'
         }
       }
       if (response.status === 403) {
@@ -1517,7 +1750,7 @@ export const Withdrawal = (data) => {
         return {
           bool: false,
           message: data.response,
-          url:'Ktc'
+          url: 'Ktc'
         }
       }
       if (response.status === 300) {
@@ -1547,6 +1780,8 @@ export const Withdrawal = (data) => {
 
   }
 }
+
+
 export const sendTaxCode = (data) => {
   return async (dispatch, getState) => {
     try {
@@ -1607,7 +1842,7 @@ export const sendTaxCode = (data) => {
 }
 
 export const sendUstCode = (data) => {
- 
+
   return async (dispatch, getState) => {
 
     try {
@@ -1667,7 +1902,7 @@ export const sendUstCode = (data) => {
   }
 }
 export const sendKtcCode = (data) => {
- 
+
   return async (dispatch, getState) => {
 
     try {
@@ -1727,7 +1962,7 @@ export const sendKtcCode = (data) => {
   }
 }
 export const sendTntCode = (data) => {
- 
+
   return async (dispatch, getState) => {
 
     try {
@@ -1815,12 +2050,12 @@ export const getUserAssets = (pageNumber) => {
   }
 }
 
-export const addNotificationToken = (notificationtoken)=>{
+export const addNotificationToken = (notificationtoken) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
     try {
-      
+
       let response = await fetch(`http://www.coincap.cloud/auth/notificationtoken`, {
         method: "PATCH",
         headers: {
@@ -1855,7 +2090,7 @@ export const addNotificationToken = (notificationtoken)=>{
       if (response.status === 200) {
 
         let data = await response.json()
-        dispatch({type:UPDATEUSER,payload:data.response})
+        dispatch({ type: UPDATEUSER, payload: data.response })
 
         return {
           bool: true,
@@ -1873,12 +2108,12 @@ export const addNotificationToken = (notificationtoken)=>{
   }
 }
 
-export const getNotifications = ()=>{
+export const getNotifications = () => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
     try {
-      
+
       let response = await fetch(`http://www.coincap.cloud/auth/notifications`, {
         method: "PATCH",
         headers: {
@@ -1913,14 +2148,14 @@ export const getNotifications = ()=>{
 
         let data = await response.json()
         dispatch({ type: UPDATEUSER, payload: data.response.user })
-        
-       
+
+
         return {
           bool: true,
           message: data.response
         }
 
-       
+
       }
 
     } catch (err) {
@@ -1935,7 +2170,7 @@ export const getNotifications = ()=>{
 
 }
 
-export const updateCredentials = (data)=>{
+export const updateCredentials = (data) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
@@ -1947,7 +2182,7 @@ export const updateCredentials = (data)=>{
           "header": `${token}`
 
         },
-         body:JSON.stringify(data)
+        body: JSON.stringify(data)
       })
       if (response.status === 404) {
         let data = await response.json()
@@ -1974,12 +2209,12 @@ export const updateCredentials = (data)=>{
       if (response.status === 200) {
         let data = await response.json()
         dispatch({ type: UPDATEUSER, payload: data.response })
-        
+
         return {
           bool: true,
         }
 
-       
+
       }
 
     } catch (err) {
@@ -1994,7 +2229,7 @@ export const updateCredentials = (data)=>{
 
 }
 
-export const secureAccount = (data)=>{
+export const secureAccount = (data) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
@@ -2006,7 +2241,7 @@ export const secureAccount = (data)=>{
           "header": `${token}`
 
         },
-         body:JSON.stringify(data)
+        body: JSON.stringify(data)
       })
       if (response.status === 404) {
         let data = await response.json()
@@ -2033,12 +2268,12 @@ export const secureAccount = (data)=>{
       if (response.status === 200) {
         let data = await response.json()
         dispatch({ type: UPDATEUSER, payload: data.response })
-        
+
         return {
           bool: true,
         }
 
-       
+
       }
 
     } catch (err) {
@@ -2052,7 +2287,7 @@ export const secureAccount = (data)=>{
   }
 
 }
-export const offPinSwitch = (data)=>{
+export const offPinSwitch = (data) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
@@ -2064,7 +2299,7 @@ export const offPinSwitch = (data)=>{
           "header": `${token}`
 
         },
-         body:JSON.stringify(data)
+        body: JSON.stringify(data)
       })
       if (response.status === 404) {
         let data = await response.json()
@@ -2091,12 +2326,12 @@ export const offPinSwitch = (data)=>{
       if (response.status === 200) {
         let data = await response.json()
         dispatch({ type: UPDATEUSER, payload: data.response })
-        
+
         return {
           bool: true,
         }
 
-       
+
       }
 
     } catch (err) {
@@ -2110,7 +2345,7 @@ export const offPinSwitch = (data)=>{
   }
 
 }
-export const onPinSwitch = (data)=>{
+export const onPinSwitch = (data) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
@@ -2122,7 +2357,7 @@ export const onPinSwitch = (data)=>{
           "header": `${token}`
 
         },
-         body:JSON.stringify(data)
+        body: JSON.stringify(data)
       })
       if (response.status === 404) {
         let data = await response.json()
@@ -2149,12 +2384,12 @@ export const onPinSwitch = (data)=>{
       if (response.status === 200) {
         let data = await response.json()
         dispatch({ type: UPDATEUSER, payload: data.response })
-        
+
         return {
           bool: true,
         }
 
-       
+
       }
 
     } catch (err) {
@@ -2168,7 +2403,7 @@ export const onPinSwitch = (data)=>{
   }
 
 }
-export const toggleBalance = (data)=>{
+export const toggleBalance = (data) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
@@ -2180,7 +2415,7 @@ export const toggleBalance = (data)=>{
           "header": `${token}`
 
         },
-         body:JSON.stringify(data)
+        body: JSON.stringify(data)
       })
       if (response.status === 404) {
         let data = await response.json()
@@ -2207,12 +2442,12 @@ export const toggleBalance = (data)=>{
       if (response.status === 200) {
         let data = await response.json()
         dispatch({ type: UPDATEUSER, payload: data.response })
-        
+
         return {
           bool: true,
         }
 
-       
+
       }
 
     } catch (err) {
@@ -2227,7 +2462,7 @@ export const toggleBalance = (data)=>{
 
 }
 
-export const closeMyAccount = ()=>{
+export const closeMyAccount = () => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
@@ -2263,13 +2498,13 @@ export const closeMyAccount = ()=>{
       }
       if (response.status === 200) {
         let data = await response.json()
-        dispatch({ type: LOGOUT, payload:null})
-        
+        dispatch({ type: LOGOUT, payload: null })
+
         return {
           bool: true,
         }
 
-       
+
       }
 
     } catch (err) {
@@ -2284,7 +2519,7 @@ export const closeMyAccount = ()=>{
 
 }
 
-export const getUser = ()=>{
+export const getUser = () => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
 
@@ -2319,8 +2554,9 @@ export const getUser = ()=>{
       }
       if (response.status === 200) {
         let data = await response.json()
-        dispatch({ type: UPDATEUSER, payload: data.response.user })
-        
+
+        dispatch({ type: UPDATEUSER, payload: data.response })
+
         return {
           bool: true,
         }
@@ -2338,13 +2574,13 @@ export const getUser = ()=>{
 
 }
 
-export const logout = ()=>{
+export const logout = () => {
   return async (dispatch, getState) => {
     await AsyncStorage.removeItem('token')
     await AsyncStorage.removeItem('tokenExpiry')
     await AsyncStorage.removeItem('userId')
 
-    dispatch({ type: LOGOUT, payload:null})
+    dispatch({ type: LOGOUT, payload: null })
 
   }
 

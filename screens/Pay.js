@@ -17,8 +17,7 @@ const Pay = ({ navigation }) => {
     let [isLoading, setIsLoading] = useState(true)
     let [text, setText] = useState('')
     let [focus, setFocus] = useState(false)
-    let { user} = useSelector(state => state.userAuth)
-
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
     const navigateToRecieve = () => {
         navigation.navigate('Recieve')
@@ -27,8 +26,8 @@ const Pay = ({ navigation }) => {
         navigation.navigate('PaymentChoice')
     }
 
-     //preventing memory leak
-     useEffect(() => {
+    //preventing memory leak
+    useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
                 e.preventDefault();
@@ -53,23 +52,23 @@ const Pay = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={{ display: 'flex', width: '100%' }}>
-                    <View style={{ ...styles.headerContainer, backgroundColor: '#fff', }}>
+                    <View style={{ ...styles.headerContainer, backgroundColor: background, }}>
                         <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                            <Entypo name="menu" size={24} color="black" />
+                            <Entypo name="menu" size={24} color={background === 'white' ? "black" : "white"} />
 
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.giftContainer}>
-                            <Text style={styles.giftText}>Pay </Text>
+                            <Text style={{ ...styles.giftText, color: importantText }}>Pay </Text>
 
                         </TouchableOpacity>
 
 
                         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                            <Ionicons name="notifications" size={30} color="black" />
+                            <Ionicons name="notifications" size={30} color={background === 'white' ? "black" : "white"} />
                             <View style={styles.notification}>
                                 <View style={styles.notificationTextContainer}>
                                     <Text style={styles.notificationText}>{user.notifications.length}</Text>
@@ -86,13 +85,13 @@ const Pay = ({ navigation }) => {
 
                 <View style={styles.cryptogiftContainer}>
                     <View style={styles.cryptogiftContent}>
-                        <Text style={styles.cryptogiftContentHeader}>Crypto gifts.</Text>
-                        <Text style={styles.cryptogiftContentText}>Give crypto to your friends and family</Text>
+                        <Text style={{ ...styles.cryptogiftContentHeader, color: importantText }}>Crypto gifts.</Text>
+                        <Text style={{ ...styles.cryptogiftContentText, color: normalText }}>Give crypto to your friends and family</Text>
 
                     </View>
                     <View style={styles.cryptogiftImage}>
                         <Image
-                            source={require('../assets/icons/pay.jpg')}
+                            source={require('../assets/icons/pay.png')}
                             style={{ width: 90, height: 90 }} />
 
                     </View>
@@ -100,15 +99,17 @@ const Pay = ({ navigation }) => {
                 </View>
 
 
-
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: 'rgb(240,240,240)' }} onPress={navigateToRecieve}>
-                        <Text style={{ ...styles.buttonText, color: 'black' }}>
+                <View style={{
+                    ...styles.buttonContainer,
+                    borderColor: background === 'white' ? 'rgb(180,180,180)' : fadeColor,
+                }}>
+                    <TouchableOpacity style={{ ...styles.button, backgroundColor: fadeColor }} onPress={navigateToRecieve}>
+                        <Text style={{ ...styles.buttonText, color: importantText }}>
                             Recieve
                         </Text>
 
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: '#1652f0' }} onPress={navigateToSend}>
+                    <TouchableOpacity style={{ ...styles.button, backgroundColor: blue }} onPress={navigateToSend}>
                         <Text style={{ ...styles.buttonText }}>
                             Send
                         </Text>
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
         paddingBottom: 150
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',
@@ -163,8 +164,8 @@ const styles = StyleSheet.create({
         marginRight: 20
     },
     notificationTextContainer: {
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         backgroundColor: 'red',
         position: 'absolute',
         bottom: 35,
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: "center",
         justifyContent: 'center',
-        borderRadius: 20
+        borderRadius: 25
     },
     notificationText: {
         color: '#fff',
@@ -211,7 +212,6 @@ const styles = StyleSheet.create({
 
     buttonContainer: {
         borderTopWidth: .5,
-        borderColor: 'rgb(180,180,180)',
         width: '100%',
         display: 'flex',
         flexDirection: 'row',

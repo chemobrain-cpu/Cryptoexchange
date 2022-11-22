@@ -32,7 +32,7 @@ const ConvertCalculator = ({ navigation }) => {
     const [cryptoQuantity, setCryptoQuantity] = useState(0)
 
     const dispatch = useDispatch()
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
     let {
         fromImage,
@@ -268,15 +268,15 @@ const ConvertCalculator = ({ navigation }) => {
 
     let fromQuantityUi = (data) => {
         if (!data) {
-            return <Text style={{ ...styles.fromCoinText, fontSize: 18 }}>0 {fromSymbol} = </Text>
+            return <Text style={{ ...styles.fromCoinText, fontSize: 18,color:background =='white'?normalText:'#1652f0' }}>0 {fromSymbol} = </Text>
         }
 
-        return <Text style={{ ...styles.fromCoinText, fontSize: 18 }}>{data} {fromSymbol} = </Text>
+        return <Text style={{ ...styles.fromCoinText, fontSize: 18,color:background =='white'?normalText:'#1652f0' }}>{data} {fromSymbol} = </Text>
     }
 
 
     let toQuantityUi = (data, toName, truncate) => {
-        return <Text style={{ ...styles.toCoinText, fontSize: 18 }}>{data} {toSymbol}</Text>
+        return <Text style={{ ...styles.toCoinText, fontSize: 18,color:background =='white'?normalText:'#1652f0' }}>{data} {toSymbol}</Text>
 
 
 
@@ -299,19 +299,19 @@ const ConvertCalculator = ({ navigation }) => {
     return (<>
         <CalculatorModal modalVisible={modalVisible} changeVisibility={changeVisibility} navigateToCard={navigateToCard} modalTopic={modalTopic} modalText={modalText} />
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <SafeAreaView style={{ backgroundColor: background, flex: 1 }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={styles.headerOuterCon}>
-                    <View style={styles.headerContainer}>
+                    <View style={{...styles.headerContainer,backgroundColor:background}}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerContainerIcon} >
-                            <AntDesign name="close" size={23} />
+                            <AntDesign name="close" size={23} color={background==='white'?"black":"white"} />
                         </TouchableOpacity>
 
 
                         <TouchableOpacity style={styles.headerContainerTitle} >
-                            <Text style={styles.title}>Enter amount</Text>
+                            <Text style={{...styles.title,color:importantText}}>Enter amount</Text>
 
-                            <Text style={styles.balance}> {cryptoQuantity} of {fromSymbol} available </Text>
+                            <Text style={{...styles.balance,color:normalText}}> {cryptoQuantity} of {fromSymbol} available </Text>
 
 
                         </TouchableOpacity>
@@ -325,7 +325,6 @@ const ConvertCalculator = ({ navigation }) => {
                 <View style={styles.priceContainer}>
                     <View style={styles.fromCoinContainer}>
                         {fromQuantityUi(value)}
-
                     </View>
                     {<View style={styles.toCoinContainer}>
                         {toQuantityUi((conversionRate.toFixed(3) * value), toName)}
@@ -342,58 +341,58 @@ const ConvertCalculator = ({ navigation }) => {
                 <View >
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('1')}>
-                            <Text style={styles.number}>1</Text>
+                            <Text style={{...styles.number,color:importantText}}>1</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('2')}>
-                            <Text style={styles.number}>2</Text>
+                            <Text style={{...styles.number,color:importantText}}>2</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('3')}>
-                            <Text style={styles.number}>3</Text>
+                            <Text style={{...styles.number,color:importantText}}>3</Text>
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('4')}>
-                            <Text style={styles.number}>4</Text>
+                            <Text style={{...styles.number,color:importantText}}>4</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('5')}>
-                            <Text style={styles.number}>5</Text>
+                            <Text style={{...styles.number,color:importantText}}>5</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('6')}>
-                            <Text style={styles.number}>6</Text>
+                            <Text style={{...styles.number,color:importantText}}>6</Text>
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('7')}>
-                            <Text style={styles.number}>7</Text>
+                            <Text style={{...styles.number,color:importantText}}>7</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('8')}>
-                            <Text style={styles.number}>8</Text>
+                            <Text style={{...styles.number,color:importantText}}>8</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('9')}>
-                            <Text style={styles.number}>9</Text>
+                            <Text style={{...styles.number,color:importantText}}>9</Text>
                         </TouchableOpacity>
 
                     </View>
 
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => point(".")}>
-                            <Text style={styles.number}>.</Text>
+                            <Text style={{...styles.number,color:importantText}}>.</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('0')}>
-                            <Text style={styles.number}>0</Text>
+                            <Text style={{...styles.number,color:importantText}}>0</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => deleteHandler()}>
-                            <Feather name="arrow-left" size={22} color="rgb(44, 44, 44)" />
+                            <Feather name="arrow-left" size={22} color={background==='white'?"black":"white"} />
                         </TouchableOpacity>
 
                     </View>
@@ -427,19 +426,24 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         marginBottom: 45,
         alignItems: 'center',
-        backgroundColor: '#fff'
+        width: '100%'
     },
     headerContainerIcon: {
-        flex: 1
-
+        width:'10%',
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'flex-start'
     },
     headerContainerTitle: {
-        flex: 5,
+        width:'90%',
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'flex-start'
     },
 
     title: {
@@ -512,7 +516,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     numberButton: {
-        width: 40,
+        width: 60,
         height: 60,
         display: 'flex',
         alignItems: 'center',
@@ -535,14 +539,14 @@ const styles = StyleSheet.create({
     button: {
         width: '100%',
         backgroundColor: '#1652f0',
-        paddingVertical: 17,
+        paddingVertical: 18,
         borderRadius: 30,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 18,
+        fontSize: 20,
         fontFamily: "ABeeZee",
         color: '#fff',
 

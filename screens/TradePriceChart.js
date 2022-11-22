@@ -55,9 +55,8 @@ const PriceChart = ({ navigation }) => {
 
 
   const route = useRoute();
-  let { user } = useSelector(state => state.userAuth)
+  let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
 
-  let isWatched = true
 
    //preventing memory leak
     useEffect(() => {
@@ -373,17 +372,17 @@ const PriceChart = ({ navigation }) => {
       updateVisibility={updateVisibility} navigateHandler={navigateHandler}
       coinName={name} />
 
-    <SafeAreaView style={{ paddingHorizontal: 10, backgroundColor: '#fff', flex: 1 }}>
+    <SafeAreaView style={{ paddingHorizontal: 10, backgroundColor: background, flex: 1 }}>
       <ScrollView style={styles.chartCon} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]} onScroll={scrollHandler}>
 
         {header ? <View >
-          <View style={{ ...styles.scrollNavigationHeader }}>
+          <View style={{ ...styles.scrollNavigationHeader,backgroundColor: background,borderBottomColor: fadeColor}}>
 
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-              <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
+              <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
             </TouchableOpacity>
 
-            <Text style={{ ...styles.headerName }}>{name}</Text>
+            <Text style={{ ...styles.headerName,color: importantText }}>{name}</Text>
 
             <View style={styles.favouriteContainer}>
               <Pressable onPress={addAssetToWatchList}>
@@ -392,7 +391,7 @@ const PriceChart = ({ navigation }) => {
               </Pressable>
 
               <Pressable>
-                <AntDesign name="download" size={22} fontWeight='Poppins' color="rgb(44, 44, 44)" />
+              <AntDesign name="download" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
 
               </Pressable>
 
@@ -411,9 +410,9 @@ const PriceChart = ({ navigation }) => {
         >
 
           {header ? <></> : <View style={{ ...styles.priceContainer, opacity: header ? 0 : 1 }}>
-            <View style={styles.navigationHeader}>
+            <View style={{...styles.navigationHeader,backgroundColor: background,}}>
               <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
-                <AntDesign name="arrowleft" size={22} fontWeight='Poppins' color="rgb(44, 44, 44)" />
+                <AntDesign name="arrowleft" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"}  />
               </TouchableOpacity>
 
 
@@ -422,21 +421,21 @@ const PriceChart = ({ navigation }) => {
 
 
             <View>
-              <Text style={styles.name}>{name}</Text>
+              <Text style={{...styles.name,color: importantText,}}>{name}</Text>
               <View style={styles.favoriteContainer}>
                 <LineChart.PriceText
                   format={formatCurrency}
-                  style={styles.currentPrice}
+                  style={{...styles.currentPrice,color: importantText,}}
                 />
 
 
                 <View style={styles.favorite}>
-                  <Pressable style={styles.favoriteIcon} onPress={addAssetToWatchList}>
-                    <MaterialIcons name="star" size={22} fontWeight='Poppins' color={isWatchList(coinId, user.watchList) ? "#1652f0" : "rgb(44, 44, 44)"} />
+                  <Pressable style={{...styles.favoriteIcon,backgroundColor: fadeColor}} onPress={addAssetToWatchList}>
+                    <MaterialIcons name="star" size={22} fontWeight='Poppins' color={isWatchList(coinId, user.watchList) ? "#1652f0" : "black"} />
                   </Pressable>
 
-                  <Pressable style={styles.favoriteIcon} >
-                    <AntDesign name="download" size={22} fontWeight='Poppins' color="rgb(44, 44, 44)" />
+                  <Pressable style={{...styles.favoriteIcon,backgroundColor: fadeColor}} >
+                    <AntDesign name="download" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"}/>
                   </Pressable>
                 </View>
 
@@ -541,13 +540,12 @@ const PriceChart = ({ navigation }) => {
 
           </View>
         </LineChart.Provider>
-
-        <View style={styles.aboutContainer}>
-          <Text style={styles.aboutHead}>About {name}</Text>
-          <Text style={styles.aboutText}>{truncate(coin.description.en, 400)}</Text>
+        <View style={{...styles.aboutContainer,borderTopColor: importantText,borderBottomColor: importantText,}}>
+          <Text style={{...styles.aboutHead,color:importantText}}>About {name}</Text>
+          <Text style={{...styles.aboutText,color: normalText}}>{truncate(coin.description.en, 400)}</Text>
         </View>
-        <View style={styles.marketContainer}>
-          <Text style={styles.aboutHead}>Market stats</Text>
+        <View style={{...styles.marketContainer,borderTopColor: importantText,borderBottomColor: importantText,}}>
+          <Text style={{...styles.aboutHead,color: importantText}}>Market stats</Text>
 
 
           <View style={styles.listContainer}>
@@ -558,7 +556,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Market cap</Text>
+                <Text style={{...styles.logoText,color: normalText}}>Market cap</Text>
 
               </View>
 
@@ -566,7 +564,7 @@ const PriceChart = ({ navigation }) => {
 
             </View>
             <View style={styles.rightListConCon}>
-              <Text style={styles.rightListText}>{millify(market_cap)}</Text>
+              <Text style={{...styles.rightListText,color: normalText}}>{millify(market_cap)}</Text>
 
 
             </View>
@@ -580,7 +578,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Volume</Text>
+                <Text style={{...styles.logoText,color: normalText}}>Volume</Text>
 
               </View>
 
@@ -595,7 +593,7 @@ const PriceChart = ({ navigation }) => {
               </View>
               <View style={styles.volumeListCon}>
 
-                <Text style={{ ...styles.volumeListText, fontSize: 18, color: percentage < 0 ? 'red' : 'black' }}>{percentage < 0 ? <Feather name="arrow-down-right" size={20} color="red" /> : <Feather name="arrow-up-right" size={20} color="green" />}{Math.abs(percentage)?.toFixed(2)}%</Text>
+                <Text style={{ ...styles.volumeListText, fontSize: 18, color: percentage < 0 ? 'red' : 'green' }}>{percentage < 0 ? <Feather name="arrow-down-right" size={20} color="red" /> : <Feather name="arrow-up-right" size={20} color="green" />}{Math.abs(percentage)?.toFixed(2)}%</Text>
 
               </View>
 
@@ -611,7 +609,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Circulating supply</Text>
+                <Text style={{...styles.logoText,color: normalText}}>Circulating supply</Text>
 
               </View>
 
@@ -619,7 +617,7 @@ const PriceChart = ({ navigation }) => {
 
             </View>
             <View style={styles.rightListConCon}>
-              <Text style={styles.rightListText}>{millify(market_cap)}</Text>
+              <Text style={{...styles.rightListText,color: normalText}}>{millify(market_cap)}</Text>
 
 
             </View>
@@ -633,7 +631,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={styles.logoText}>Popularity</Text>
+                <Text style={{...styles.logoText,color: normalText}}>Popularity</Text>
 
               </View>
 
@@ -641,7 +639,7 @@ const PriceChart = ({ navigation }) => {
 
             </View>
             <View style={styles.popularityListCon}>
-              <Text style={styles.rightListText}>#{market_cap_rank}</Text>
+              <Text style={{...styles.rightListText,color: normalText}}>#{market_cap_rank}</Text>
 
 
             </View>
@@ -650,11 +648,13 @@ const PriceChart = ({ navigation }) => {
 
 
         </View>
+
+        
       </ScrollView>
 
 
 
-      <View style={styles.buttonCon} >
+      <View style={{...styles.buttonCon,backgroundColor: background,}} >
         <TouchableOpacity style={styles.button} onPress={tradeCrypto}>
           <Text style={styles.buttonText}>trade</Text>
         </TouchableOpacity>
@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomColor: 'rgb(197, 197, 197)',
     borderBottomWidth: .5,
-    paddingTop: 20,
+    paddingTop: 15,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

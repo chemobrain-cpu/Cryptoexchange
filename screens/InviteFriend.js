@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, SafeAreaView, ScrollView, Pressable, StyleSheet, Image, Dimensions, TextInput, Linking, Share } from 'react-native'
-import { Feather, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons, Ionicons,FontAwesome, AntDesign  } from '@expo/vector-icons';
 import Loader from '../loaders/Loader';
 
 import * as Clipboard from 'expo-clipboard';
@@ -14,7 +14,7 @@ const InviteFriend = ({ navigation }) => {
     let [isLoading, setIsLoading] = useState(true)
     //the user link will be gotten from redux
     const [link, setLink] = useState('')
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
     
     //preventing memory leak
     useEffect(() => {
@@ -109,20 +109,27 @@ const InviteFriend = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollViewContainer} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
 
-                <View style={{ ...styles.navigationHeader }}>
-                    <Pressable onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                        <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
-                        <Text style={{ ...styles.headerName }}>Invite Friends</Text>
-                    </Pressable>
+            <View style={{ display: 'flex', width: '100%' }}>
+                    <View style={{...styles.navigationHeader,backgroundColor:background}}>
+
+                        <Pressable onPress={() => navigation.goBack()} style={styles.headerContainerIcon} >
+                            <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
+                        </Pressable>
+
+                        <Pressable style={{ ...styles.headerContainerTitle }} >
+                            <Text style={{ ...styles.title, color: importantText }}>Invite Friends</Text>
+                        </Pressable>
+
+                    </View>
                 </View>
 
                 <Pressable style=
                     {styles.card}>
                     <Image
-                        source={require('../assets/icons/box.jpeg')}
+                        source={require('../assets/icons/box.png')}
                         style={{ width: 70, height: 70, marginBottom: 35 }} />
 
                     <View style={styles.textContainer}>
@@ -134,15 +141,15 @@ const InviteFriend = ({ navigation }) => {
 
                 </Pressable>
 
-                <Text style={styles.promiseText}>you'll both get rewarded when your friend trades $ 100.00 in crypto.</Text>
+                <Text style={{...styles.promiseText,color:importantText}}>you'll both get rewarded when your friend trades $ 100.00 in crypto.</Text>
                 <Text style={styles.termsText}>Terms Apply</Text>
 
                 <View style={styles.sharableLinkContainer}>
-                    <Text style={styles.actionText}>Share your link</Text>
+                    <Text style={{...styles.actionText,color:importantText}}>Share your link</Text>
 
                     <View style={styles.form}>
                         <TextInput
-                            style={styles.input}
+                            style={{ ...styles.input, color: importantText, borderColor: fadeColor, }}
                             editable={false}
                             value={truncate(link, 12)}
                         />
@@ -154,27 +161,27 @@ const InviteFriend = ({ navigation }) => {
                 </View>
 
                 <View style={styles.sharableSocialLinkContainer}>
-                    <Text style={styles.actionText}>More ways to share</Text>
+                    <Text style={{...styles.actionText,color:importantText}}>More ways to share</Text>
 
                     <View style={styles.socialContainer}>
-                        <Card style={styles.messageCard} onPress={shareToMessage}>
+                        <Card style={{...styles.messageCard,backgroundColor:background,borderColor:fadeColor,borderWidth:.5}} onPress={shareToMessage}>
                             <Pressable style={styles.messageContainer} onPress={shareToMessage}>
                                 <MaterialCommunityIcons name="message-text-outline" size={24} color="#fff"
                                     style={styles.messageIcon} />
 
 
                             </Pressable>
-                            <Text style={styles.messageText}>Messages</Text>
+                            <Text style={{...styles.messageText,color:importantText}}>Messages</Text>
 
 
                         </Card>
-                        <Card style={styles.whatsappCard} onPress={shareToWhatsapp}>
+                        <Card style={{...styles.whatsappCard,backgroundColor:background,borderColor:fadeColor,borderWidth:.5}} onPress={shareToWhatsapp}>
                             <Pressable onPress={shareToWhatsapp} style={styles.whatsappContainer}>
                                 <Ionicons name="md-logo-whatsapp" size={24} color="#fff" style={styles.whatsappIcon} />
 
 
                             </Pressable>
-                            <Text style={styles.whatsappText}>whatsapp</Text>
+                            <Text style={{...styles.whatsappText,color:importantText}}>whatsapp</Text>
 
 
                         </Card>
@@ -185,28 +192,28 @@ const InviteFriend = ({ navigation }) => {
 
                     </View>
 
-                    <Card style={styles.shareContainer}>
-                        <Pressable style={styles.shareIconContainer} onPress={share}>
-                            <Feather name="share" size={20} color="black" />
+                    <Card style={{...styles.shareContainer,backgroundColor:background,borderColor:fadeColor,borderWidth:.5}}>
+                        <Pressable style={{...styles.shareIconContainer,backgroundColor:fadeColor}} onPress={share}>
+                            <Feather name="share" size={20} color={background === 'white' ? "black" : "white"} />
 
 
 
                         </Pressable>
 
-                        <Text style={styles.shareText}>Share</Text>
+                        <Text style={{...styles.shareText,color:importantText}}>Share</Text>
 
                     </Card>
 
                     <Pressable onPress={() => navigateToCryptoCalculator()}>
-                        <Card style={styles.cryptogiftContainer} >
+                        <Card style={{...styles.cryptogiftContainer,backgroundColor:background,borderColor:fadeColor,borderWidth:.5}} >
                             <View style={styles.cryptogiftContent}>
-                                <Text style={styles.cryptogiftContentHeader}>Crypto gifts.</Text>
-                                <Text style={styles.cryptogiftContentText}>Give crypto to your friends and family</Text>
+                                <Text style={{...styles.cryptogiftContentHeader,color:importantText}}>Crypto gifts.</Text>
+                                <Text style={{...styles.cryptogiftContentText,color:normalText}}>Give crypto to your friends and family</Text>
 
                             </View>
                             <View style={styles.cryptogiftImage}>
                                 <Image
-                                    source={require('../assets/icons/pay.jpg')}
+                                    source={require('../assets/icons/pay.png')}
                                     style={{ width: 90, height: 90 }} />
 
                             </View>
@@ -230,7 +237,6 @@ const InviteFriend = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff"
     },
     scrollViewContainer: {
         paddingBottom: 100,
@@ -240,22 +246,42 @@ const styles = StyleSheet.create({
     },
     navigationHeader: {
         paddingBottom: 10,
-        backgroundColor: '#fff',
         zIndex: 10,
         width: '100%',
         borderBottomColor: 'rgb(197, 197, 197)',
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
 
 
     },
-    headerName: {
+    headerContainer: {
+        paddingTop: 15,
+        display: "flex",
+        flexDirection: "row",
+        marginBottom: 45,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    headerContainerIcon: {
+        width: '10%',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: 'flex-start'
+
+    },
+    headerContainerTitle: {
+        width: '90%',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: 'center'
+
+    },
+    title: {
+        fontSize: 22,
         fontFamily: 'ABeeZee',
-        fontSize: 20,
-        marginLeft: '20%',
-        fontFamily: 'Poppins'
+        textAlign: 'center'
 
     },
     goback: {

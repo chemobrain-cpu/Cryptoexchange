@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
 
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',

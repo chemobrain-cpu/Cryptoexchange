@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, ActivityIndicator,KeyboardAvoidingView } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, ActivityIndicator, KeyboardAvoidingView, Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { changePhone } from "../store/action/appStorage";
@@ -13,9 +13,9 @@ const NewPhone = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
     const [isUrl, setIsUrl] = useState("")
     let dispatch = useDispatch()
-    let { user, notifications } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
-     //preventing memory leak
+    //preventing memory leak
     useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
@@ -63,7 +63,7 @@ const NewPhone = ({ navigation }) => {
     const updateAuthError = () => {
 
         setIsAuthError(prev => !prev)
-        if(isUrl){
+        if (isUrl) {
             navigation.navigate(isUrl)
         }
     }
@@ -78,21 +78,23 @@ const NewPhone = ({ navigation }) => {
         return <Loader />
     }
 
-
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
 
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
 
             <View style={styles.navigationHeader}>
-                <Ionicons name="arrow-back" size={22} fontWeight={100} color="rgb(44, 44, 44)" onPress={gobackHandler} />
-                <Text style={styles.headerText}>
-                    Enter new Phone
-                </Text >
+                <Pressable style={styles.headerIconCon}>
+                    <Ionicons name="arrow-back" size={22} fontWeight={100} color={background === 'white' ? "black" : "white"} />
+                </Pressable>
 
-
-
+                <Pressable style={styles.headerTextCon}>
+                    <Text style={{ ...styles.headerText, color: importantText }}>
+                        Enter new phone
+                    </Text >
+                </Pressable>
             </View>
+
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
 
 
@@ -102,12 +104,13 @@ const NewPhone = ({ navigation }) => {
                     <View style={styles.CodeCon}>
 
                         <TextInput
-                            style={styles.input}
+                            style={{ ...styles.input, color: importantText, borderColor: fadeColor, }}
                             onChangeText={changeNumber}
                             value={isChangeNumber}
                             placeholder='+1 212 555 0123'
                             keyboardType='phone-pad'
                             maxLength={15}
+                            placeholderTextColor={normalText}
                         />
 
                     </View>
@@ -137,8 +140,6 @@ const NewPhone = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
-        paddingTop: 20,
         paddingHorizontal: '5%',
     },
 
@@ -149,38 +150,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         zIndex: 10,
         borderColor: '#fff',
-
+        paddingTop: 15,
     },
-    progress: {
+    headerIconCon: {
+        width: '20%',
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
-        height: '100%',
-        paddingLeft: 40,
-        justifyContent: 'space-around'
-
+        alignItems: 'flex-start',
     },
-    progressbar: {
-        paddingLeft: 8
-
-    },
-    close: {
+    headerTextCon: {
+        width: '80%',
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
-
+        alignItems: 'flex-start',
 
     },
-    body: {
-        paddingTop: 20,
-        display: 'flex',
-        flexDirection: 'column'
-    },
+
     headerText: {
         fontSize: 20,
         color: 'rgb(44, 44, 44)',
-        fontFamily: 'Poppins',
-        marginLeft: 30
+        fontFamily: 'Poppins'
 
     },
 

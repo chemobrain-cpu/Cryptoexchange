@@ -22,7 +22,7 @@ const RecieveCrypto = ({ navigation }) => {
     let [walletAddress,setWalletAddress] = useState('')
     let [copyActionStyle,setCopyActionStyle] = useState('')
 
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
 
     let timer 
 
@@ -72,18 +72,18 @@ const RecieveCrypto = ({ navigation }) => {
         return <Loader/>
     }
 
-    return (<SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return (<SafeAreaView style={{ flex: 1, backgroundColor:background }}>
         <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
             <View style={{ display: 'flex', width: '100%' }}>
-                <View style={{ ...styles.headerContainer, backgroundColor: '#fff', }}>
+                <View style={{ ...styles.headerContainer, backgroundColor: background, }}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Ionicons name="close" size={24} color="black" />
+                        <Ionicons name="close" size={24} color={background==='white'?"black":"white"} />
 
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.giftContainer}>
 
-                        <Text style={styles.giftText}>Recieve</Text>
+                        <Text style={{...styles.giftText,color:importantText}}>Recieve</Text>
 
 
 
@@ -92,7 +92,7 @@ const RecieveCrypto = ({ navigation }) => {
 
 
                     <TouchableOpacity >
-                        <Feather name="share" size={20} color="black" />
+                        <Feather name="share" size={20} color={background==='white'?"black":"white"} />
 
 
                     </TouchableOpacity>
@@ -103,39 +103,39 @@ const RecieveCrypto = ({ navigation }) => {
 
             <View style={styles.selectorContainer}>
                 <TouchableOpacity style={styles.selector} onPress={navigateToAssets}>
-                    <Text style={styles.selectorText}>
+                    <Text style={{...styles.selectorText,color:importantText}}>
                         {user.currentWallet.id}
                     </Text>
-                    <MaterialIcons name="keyboard-arrow-down" size={28} color="black" />
+                    <MaterialIcons name="keyboard-arrow-down" size={28} color={background==='white'?"black":"white"} />
 
                 </TouchableOpacity>
-                <Text style={styles.walletText}>{user.currentWallet.symbol}</Text>
+                <Text style={{...styles.walletText,color:normalText}}>{user.currentWallet.symbol}</Text>
 
             </View>
 
 
-            <Card style={styles.qrcard}>
+            <Card style={{...styles.qrcard,backgroundColor:background}}>
                 <View style={styles.qr}>
                     <QRCode
                         value={user.currentWallet.coinAddress}
                         size={210}
                         color='black'
-                        backgroundColor='#fff'
+                        backgroundColor={background ==='black'?importantText:'white'}
                         logo={{
                             uri:user.currentWallet.url
                         }}
                         logoSize={50}
                         logoMargin={3}
                         logoBorderRadius={1}
-                        logoBackgroundColor='#fff'
+                        logoBackgroundColor={background}
 
                     />
                 </View>
 
-                <View style={styles.qraddress}>
+                <View style={{...styles.qraddress,borderColor:background==='white'? 'rgb(180,180,180)':fadeColor}}>
                     <View style={styles.address}>
-                        <Text style={styles.coinTitle}>{user.currentWallet.symbol} address</Text>
-                        <Text style={styles.coinAddress}> {truncate(user.currentWallet.address, 12)}</Text>
+                        <Text style={{...styles.coinTitle,color:importantText}}>{user.currentWallet.symbol} address</Text>
+                        <Text style={{...styles.coinAddress,color:normalText}}> {truncate(user.currentWallet.address, 12)}</Text>
 
                     </View>
                     <TouchableOpacity style={{...styles.copyButton,backgroundColor:copyActionStyle?'green':'#1652f0'}}  onPress={copyToClipboard}>
@@ -148,13 +148,13 @@ const RecieveCrypto = ({ navigation }) => {
             </Card>
 
 
-            <View style={styles.warningContainer}>
+            <View style={{...styles.warningContainer,backgroundColor:fadeColor}}>
                 <View style={styles.warning}>
                     <Text style={styles.warningText}>i</Text>
 
                 </View>
 
-                <Text style={styles.warningInfo}>Only send {truncate(user.currentWallet.id,6)} ({user.currentWallet.symbol}) to this address</Text>
+                <Text style={{...styles.warningInfo,color:normalText}}>Only send {truncate(user.currentWallet.id,6)} ({user.currentWallet.symbol}) to this address</Text>
             </View>
 
         </ScrollView>
@@ -166,11 +166,11 @@ const styles = StyleSheet.create({
     scrollContainer: {
         paddingBottom: 100,
         width: Dimensions.get('window').width,
-        paddingHorizontal: 25
+        paddingHorizontal: '7%'
 
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',

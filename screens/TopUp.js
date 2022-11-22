@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import { Feather, AntDesign } from '@expo/vector-icons';
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import Error from "../component/errorComponent";
 import { useRoute } from "@react-navigation/native";
 import { topUp } from "../store/action/appStorage";
@@ -26,6 +26,7 @@ const TopUp = ({ navigation }) => {
     const [isAuthError, setIsAuthError] = useState(false)
     const [authInfo, setAuthInfo] = useState("")
     const [modalVisible, setModalVisible] = useState("")
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
     const dispatch = useDispatch()
 
@@ -126,16 +127,16 @@ const TopUp = ({ navigation }) => {
         {/* modal for proceeding*/}
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={changeVisibility} message={authInfo} />}
 
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={styles.headerOuterCon}>
                     <View style={styles.headerContainer}>
                         <Pressable onPress={() => navigation.goBack()} style={styles.headerContainerIcon} >
-                            <AntDesign name="close" size={23} />
+                            <AntDesign name="close" size={23}  color={background === 'white' ? "black" : "white"} />
                         </Pressable>
 
                         <Pressable style={styles.headerContainerTitle} >
-                            <Text style={styles.title}>Top Up Account</Text>
+                            <Text style={{...styles.title,color:importantText}}>Top Up Account</Text>
 
                         </Pressable>
 
@@ -175,58 +176,58 @@ const TopUp = ({ navigation }) => {
                 <View style={styles.calculatorCon}>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('1')}>
-                            <Text style={styles.number}>1</Text>
+                            <Text style={{...styles.number,color:importantText}}>1</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('2')}>
-                            <Text style={styles.number}>2</Text>
+                            <Text style={{...styles.number,color:importantText}}>2</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('3')}>
-                            <Text style={styles.number}>3</Text>
+                            <Text style={{...styles.number,color:importantText}}>3</Text>
                         </Pressable>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('4')}>
-                            <Text style={styles.number}>4</Text>
+                            <Text style={{...styles.number,color:importantText}}>4</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('5')}>
-                            <Text style={styles.number}>5</Text>
+                            <Text style={{...styles.number,color:importantText}}>5</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('6')}>
-                            <Text style={styles.number}>6</Text>
+                            <Text style={{...styles.number,color:importantText}}>6</Text>
                         </Pressable>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('7')}>
-                            <Text style={styles.number}>7</Text>
+                            <Text style={{...styles.number,color:importantText}}>7</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('8')}>
-                            <Text style={styles.number}>8</Text>
+                            <Text style={{...styles.number,color:importantText}}>8</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('9')}>
-                            <Text style={styles.number}>9</Text>
+                            <Text style={{...styles.number,color:importantText}}>9</Text>
                         </Pressable>
 
                     </View>
 
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => point(".")}>
-                            <Text style={styles.number}>.</Text>
+                            <Text style={{...styles.number,color:importantText}}>.</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('0')}>
-                            <Text style={styles.number}>0</Text>
+                            <Text style={{...styles.number,color:importantText}}>0</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => deleteHandler()}>
-                            <Feather name="arrow-left" size={22} color="rgb(44, 44, 44)" />
+                            <Feather name="arrow-left" size={22} color={background === 'white' ? "black" : "white"} />
                         </Pressable>
 
                     </View>
@@ -251,7 +252,6 @@ const TopUp = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen:{ 
         flex: 1, 
-        backgroundColor: '#fff' 
     },
 
     scrollContainer: {
@@ -263,12 +263,11 @@ const styles = StyleSheet.create({
         width: '100%' 
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         marginBottom: 45,
         alignItems: 'center',
-        backgroundColor: '#fff'
     },
     headerContainerIcon: {
       

@@ -1,7 +1,10 @@
-import React from 'react'
-import {View,Text,Pressable,StyleSheet} from "react-native"
+import React from 'react';
+import {View,Text,Pressable,StyleSheet,Dimensions} from "react-native";
+import { useSelector } from "react-redux"
 
 const Button = ({text,pressHandler,children})=>{
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
     return <Pressable 
     style={styles.actionInnerContainer}
     onPress={()=>pressHandler(`${text}`)}>
@@ -9,10 +12,11 @@ const Button = ({text,pressHandler,children})=>{
         {children}
 
     </View>
-    <Text style={styles.actionText}>{text}</Text>
+    <Text style={{...styles.actionText,color:importantText}}>{text}</Text>
 
 </Pressable>
 }
+const deviceWidth = Dimensions.get('window').width
 
 const styles = StyleSheet.create({
     actionInnerContainer: {
@@ -21,9 +25,9 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     action: {
-        width: 45,
-        height: 45,
-        borderRadius: 45,
+        width:deviceWidth < 450?50:65,
+        height:deviceWidth < 450?50:65,
+        borderRadius: deviceWidth < 450?50:65,
         backgroundColor: '#1652f0',
         display: 'flex',
         alignItems: 'center',

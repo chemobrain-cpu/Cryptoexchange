@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, Image, Dimensions,FlatList } from 'react-native'
-import { FontAwesome, } from '@expo/vector-icons'
-import { useDispatch, } from "react-redux"
-import CryptoCard from '../component/currencyContainer'
-import { loadCoins } from "../store/action/appStorage";
-import Error from '../component/errorComponent'
-import SplashLoader from '../loaders/splashLoader'
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, Image, Dimensions, FlatList } from 'react-native';
+import { FontAwesome, } from '@expo/vector-icons';
+import { useDispatch, useSelector } from "react-redux";
+import CryptoCard from '../component/currencyContainer';
+import { loadCoins,changeToBlackBackground,changeToWhiteBackground} from "../store/action/appStorage";
+import Error from '../component/errorComponent';
+import SplashLoader from '../loaders/splashLoader';
+
 
 
 let Welcome = ({ navigation }) => {
@@ -17,6 +18,11 @@ let Welcome = ({ navigation }) => {
     const [tradable, setTradable] = useState(true)
     const [refetch, setRefetch] = useState(true)
     const [pageNumber, setPageNumber] = useState(1)
+    //let [backgroundColorInit,setBackgroundColorInit] = useState('')
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
+    
+
 
 
     useEffect(() => {
@@ -50,18 +56,16 @@ let Welcome = ({ navigation }) => {
                 setCoins(selectedCoin);
                 setTimeout(() => {
                     setIsLoading(false)
-
                 }, 10000)
-
             }
         })
-
-   //removing all subscription
+        
+        //removing all subscription
         return () => {
             isSuscribe = false
         }
 
-    }, [dispatch, pageNumber, loadCoins, refetch]);
+    }, [dispatch, pageNumber, loadCoins, refetch,background]);
 
     useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
@@ -71,12 +75,9 @@ let Welcome = ({ navigation }) => {
     }, [navigation]);
 
 
-
-
     let navigationHandler = (coin) => {
         navigation.navigate('PriceChart', { price: coin.current_price, percentage: parseFloat(coin.price_change_percentage_24h).toFixed(3), name: coin.id, market_cap: coin.market_cap, total_volume: coin.total_volume, circulating_supply: coin.circulating_supply, market_cap_rank: coin.market_cap_rank })
     }
-
 
 
 
@@ -87,9 +88,9 @@ let Welcome = ({ navigation }) => {
 
     const refetchData = useCallback(() => {
         setRefetch(prev => !prev)
-    },[])
+    }, [])
 
-    
+
 
     const changeTradable = useCallback((data) => {
         setIsLoading(true)
@@ -97,11 +98,23 @@ let Welcome = ({ navigation }) => {
         setTimeout(() => {
             setIsLoading(false)
         }, 3000)
-    },[])
+    }, [])
+
+    const navigateToLogin = async () => {
+        //await dispatch(changeToWhiteBackground())
+        navigation.navigate('Login')
+
+
+    }
+    const navigateToSignup = async () => {
+        //await dispatch(changeToBlackBackground())
+        navigation.navigate('Signup')
+
+    }
 
 
     if (isLoading) {
-        return <SplashLoader/>
+        return <SplashLoader />
     }
 
     if (error) {
@@ -112,12 +125,12 @@ let Welcome = ({ navigation }) => {
         if (index == 0) {
             return <View>
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>Over 89 million people trust us to trade crypto</Text>
+                    <Text style={{ ...styles.headerText, color: importantText }}>Over 89 million people trust us to trade crypto</Text>
                     <Text style={styles.terms}>*Terms Apply</Text>
                 </View>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/starter.jpg')}
+                        source={require('../assets/icons/starter.png')}
                         style={{ width: 250, height: 250, }} />
 
 
@@ -129,32 +142,32 @@ let Welcome = ({ navigation }) => {
 
         }
         if (index == 1) {
-            return <View style={styles.headerContainer}>
+            return <View style={{ ...styles.headerContainer, backgroundColor: background }}>
                 <View style={styles.assetsheaderCon}>
                     <TouchableOpacity style={{
                         padding: tradable ? 0 : 10,
                         borderRadius: tradable ? 0 : 8,
-                        backgroundColor: tradable ? "" : 'rgb(240,240,240)'
+                        backgroundColor: tradable ? "" : fadeColor
                     }} onPress={() => changeTradable(false)} >
-                        <Text style={{ ...styles.tradableText }}>Tradable </Text>
+                        <Text style={{ ...styles.tradableText, color: importantText }}>Tradable </Text>
 
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         padding: tradable ? 10 : 0,
                         borderRadius: tradable ? 8 : 0,
-                        backgroundColor: tradable ? 'rgb(240,240,240)' : ''
+                        backgroundColor: tradable ? fadeColor : ''
                     }} onPress={() => changeTradable(true)}>
-                        <Text style={{ ...styles.assetText, color: 'black' }}>
+                        <Text style={{ ...styles.assetText,color: importantText}}>
                             All Assets
                         </Text>
 
 
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.searchIconContainer} onPress={() => {
+                    <TouchableOpacity style={{ ...styles.searchIconContainer, backgroundColor: fadeColor }} onPress={() => {
                         navigation.navigate('SearchSplash')
                     }}>
-                        <FontAwesome name="search" size={18} color="rgb(44, 44, 44)" />
+                        <FontAwesome name="search" size={18} color={importantText} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -170,7 +183,7 @@ let Welcome = ({ navigation }) => {
 
 
 
-    return <SafeAreaView style={styles.screen}>
+    return <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
         <FlatList
             stickyHeaderIndices={[1]}
             data={coins}
@@ -182,13 +195,13 @@ let Welcome = ({ navigation }) => {
 
         />
 
-        <View style={styles.bottomsection} >
-            <TouchableOpacity style={styles.bottombuttonsignup} onPress={() => navigation.navigate('Signup')}>
-                <Text style={styles.bottombuttonsignupText}>Sign up</Text>
+        <View style={{ ...styles.bottomsection, backgroundColor: background, borderTopColor: fadeColor }} >
+            <TouchableOpacity style={{ ...styles.bottombuttonsignup, backgroundColor: fadeColor }} onPress={navigateToSignup}>
+                <Text style={{ ...styles.bottombuttonsignupText, color: importantText }}>Sign up</Text>
 
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bottombuttonsignin} onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.bottombuttonsigninText}>Sign in</Text>
+            <TouchableOpacity style={{ ...styles.bottombuttonsignin, backgroundColor: blue }} onPress={navigateToLogin}>
+                <Text style={{ ...styles.bottombuttonsigninText, color:'#fff' }}>Sign in</Text>
 
             </TouchableOpacity>
 
@@ -198,10 +211,12 @@ let Welcome = ({ navigation }) => {
 
 }
 
+
+
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "rgb(249,249,249)"
+
 
     },
     container: {
@@ -213,7 +228,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text: {
-        color: '#fff',
         fontSize: 35,
         fontFamily: 'ABeeZee'
 
@@ -221,7 +235,7 @@ const styles = StyleSheet.create({
 
     header: {
         paddingVertical: 60,
-        paddingTop:50,
+        paddingTop: 50,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -234,7 +248,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight: '600',
         width: '80%',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     terms: {
         fontSize: 15,
@@ -248,28 +262,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    middlesection: {
-        backgroundColor: '#fff',
-        paddingBottom: 200
-    },
+
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        backgroundColor: '#fff',
         zIndex: 10,
         paddingVertical: 20,
-        paddingTop: 20,
-        paddingHorizontal: 15
+        paddingTop: 15,
+        paddingHorizontal: 15,
 
     },
     searchIconContainer: {
         width: 50,
         height: 50,
         borderRadius: 50,
-        backgroundColor: 'rgb(240,240,240)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -287,13 +296,14 @@ const styles = StyleSheet.create({
     tradableContainer: {
         padding: 10,
         borderRadius: 8,
-        backgroundColor: 'rgb(240,240,240)'
 
     },
     assetText: {
         fontSize: 16,
         fontFamily: 'Poppins',
+        
     },
+
     tradableText: {
         fontSize: 16,
         fontFamily: 'Poppins',
@@ -307,13 +317,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     }
-
-
-
-
-
-
-
     ,
     /* styling bottom section */
     bottomsection: {
@@ -322,8 +325,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '15%',
         borderTopWidth: 1,
-        borderTopColor: 'rgb(240,240,240)',
-        backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -333,7 +334,6 @@ const styles = StyleSheet.create({
     bottombuttonsignin: {
         paddingVertical: 17,
         borderRadius: 25,
-        backgroundColor: 'rgb(240,240,240)',
         width: '42%',
         display: 'flex',
         flexDirection: 'row',
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     bottombuttonsignup: {
         paddingVertical: 17,
         borderRadius: 25,
-        backgroundColor: '#1652f0',
+
         width: '42%',
         display: 'flex',
         flexDirection: 'row',
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
     },
     bottombuttonsigninText: {
         fontFamily: 'ABeeZee',
-        fontSize: 20
+        fontSize: 20,
 
     },
 

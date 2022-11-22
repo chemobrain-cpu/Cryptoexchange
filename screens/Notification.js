@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, SafeAreaView, ScrollView, Pressable, StyleSheet, Dimensions } from 'react-native'
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { useDispatch} from "react-redux";
+import { useDispatch,useSelector} from "react-redux";
 import GiftNotification from '../component/giftnotification';
 import Error from '../component/errorComponent'
 import Loader from '../loaders/Loader'
@@ -14,6 +14,7 @@ const Notification = ({ navigation }) => {
     let [isLoading, setIsLoading] = useState(true)
     let [notifications, setNotifications] = useState(true)
     let dispatch = useDispatch()
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
     
      //preventing memory leak
      useEffect(() => {
@@ -79,19 +80,21 @@ const Notification = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        <SafeAreaView style={{ backgroundColor: background, flex: 1 }}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollViewContainer} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
 
-                <View style={styles.navigationHeader}>
+                <View style={{...styles.navigationHeader,backgroundColor:background,borderBottomColor: fadeColor,}}>
                     <Pressable style={{ ...styles.goback }} >
                         <Pressable onPress={() => navigation.goBack()}>
-                            <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
+                            <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
 
                         </Pressable>
 
-                        <Text style={{ ...styles.headerName }}>Notifications</Text>
+                        <Text style={{ ...styles.headerName,color:importantText }}>Notifications</Text>
+
+
                         <Pressable onPress={setting}>
-                            <Ionicons name="settings" size={24} color="black" />
+                            <Ionicons name="settings" size={24} color={background === 'white' ? "black" : "white"} />
 
                         </Pressable>
 
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
     scrollViewContainer: {
         paddingBottom: 100,
         width: Dimensions.get('window').width,
-
+        paddingHorizontal: 10,
 
     },
     navigationHeader: {
@@ -127,13 +130,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         zIndex: 10,
         width: '100%',
-        borderBottomColor: 'rgb(240, 240, 240)',
+        
         borderBottomWidth: 2,
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 10,
         justifyContent: 'space-between'
 
     },
@@ -147,7 +149,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 10
 
     }
 

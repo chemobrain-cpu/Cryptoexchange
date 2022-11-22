@@ -1,19 +1,21 @@
 import React from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView,Dimensions, Image } from 'react-native';
-import { useRoute} from "@react-navigation/native";
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Image } from 'react-native';
+import { useRoute } from "@react-navigation/native";
 import { AntDesign } from '@expo/vector-icons';
-import * as Progress from 'react-native-progress'
+import * as Progress from 'react-native-progress';
+import {  useSelector } from "react-redux";
 
 
-
-const Secure = ({navigation}) => {
+const Secure = ({ navigation }) => {
     const route = useRoute();
-const {
+    const {
         email
     } = route.params
-    
 
-    const continueHandler =()=>{
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
+
+    const continueHandler = () => {
         navigation.navigate('Number', {
             email: email
         })
@@ -21,11 +23,11 @@ const {
 
     }
 
-    return (<SafeAreaView style={styles.screen}>
+    return (<SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
         <View style={styles.container}>
-            <View style={styles.navigationHeader}>
+            <View style={{ ...styles.navigationHeader, backgroundColor: background, borderColor: background }}>
                 <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
-                    <AntDesign name="close" size={22} fontWeight={100} color="rgb(44, 44, 44)" style={{ fontWeight: '200' }} />
+                    <AntDesign name="close" size={22} fontWeight={100} color={normalText} style={{ fontWeight: '200' }} />
                 </TouchableOpacity>
 
                 <View style={styles.progress}>
@@ -49,68 +51,68 @@ const {
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
                 <View style={styles.imageContainer}>
-                <Image
-                        source={require('../assets/icons/padlock.jpg')}
+                    <Image
+                        source={require('../assets/icons/padlock.png')}
                         style={{ width: 300, height: 300, }} />
                 </View>
 
-                <Text style={styles.headerText}>Let's secure your account</Text>
+                <Text style={{ ...styles.headerText, color: importantText }}>Let's secure your account</Text>
 
                 <View style={styles.listContainer}>
                     <View style={styles.actionCon}>
-                        <View style={{...styles.numberCon}}>
-                            <Text style={{...styles.number}}>1</Text>
+                        <View style={{ ...styles.numberCon }}>
+                            <Text style={{ ...styles.number }}>1</Text>
                         </View>
                         <View style={styles.actionTextCon}>
-                            <Text style={styles.actionText}>Let's secure your account</Text>
-                            
+                            <Text style={{ ...styles.actionText, color: normalText }}>Let's secure your account</Text>
+
                         </View>
 
                     </View>
                     <View style={styles.durationCon}>
-                        <Text style={styles.durationText}>Completed</Text>
-                        
+                        <Text style={{ ...styles.durationText, color: normalText }}>Completed</Text>
+
                     </View>
-                  
+
 
                 </View>
 
                 <View style={styles.listContainer}>
                     <View style={styles.actionCon}>
-                        <View style={{...styles.numberCon}}>
-                            <Text style={{...styles.number}}>2</Text>
+                        <View style={{ ...styles.numberCon }}>
+                            <Text style={{ ...styles.number }}>2</Text>
                         </View>
                         <View style={styles.actionTextCon}>
-                            <Text style={styles.actionText}>Secure your account</Text>
-                            <Text style={{color:'rgb(100,100,100)',fontFamily:'ABeeZee'}}>2-step verification</Text>
+                            <Text style={{ ...styles.actionText, color: normalText }}>Secure your account</Text>
+                            <Text style={{ color: 'rgb(100,100,100)', fontFamily: 'ABeeZee' }}>2-step verification</Text>
                         </View>
 
                     </View>
                     <View style={styles.durationCon}>
-                        <Text style={styles.durationText}>1 min</Text>
-                        
+                        <Text style={{ ...styles.durationText, color: normalText }}>1 min</Text>
+
                     </View>
-                  
+
 
                 </View>
 
 
                 <View style={styles.listContainer}>
                     <View style={styles.actionCon}>
-                        <View style={{...styles.numberCon,backgroundColor:"rgb(240,240,240)"}}>
-                            <Text style={{...styles.number,color:'rgb(100,100,100)',fontFamily:'ABeeZee'}}>3</Text>
+                        <View style={{ ...styles.numberCon, backgroundColor: "rgb(240,240,240)" }}>
+                            <Text style={{ ...styles.number, color: 'rgb(100,100,100)', fontFamily: 'ABeeZee' }}>3</Text>
                         </View>
                         <View style={styles.actionTextCon}>
-                            <Text style={styles.actionText}>Verify your Identity</Text>
-                            <Text style={{color:'rgb(100,100,100)',fontFamily:'ABeeZee'}}>Required by financial regulations</Text>
+                            <Text style={{ ...styles.actionText, color: normalText }}>Verify your Identity</Text>
+                            <Text style={{ color: 'rgb(100,100,100)', fontFamily: 'ABeeZee' }}>Required by financial regulations</Text>
                         </View>
 
                     </View>
                     <View style={styles.durationCon}>
-                        <Text style={styles.durationText}>5 min</Text>
-                        
+                        <Text style={{ ...styles.durationText, color: normalText }}>5 min</Text>
+
                     </View>
-                   
+
 
                 </View>
 
@@ -118,15 +120,15 @@ const {
 
 
                 <View>
-                <TouchableOpacity style={styles.button} onPress={continueHandler}>
-                    <Text style={styles.buttonText}>
-                        Continue
-                    </Text>
-                    
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={continueHandler}>
+                        <Text style={styles.buttonText}>
+                            Continue
+                        </Text>
+
+                    </TouchableOpacity>
                 </View>
 
-                
+
 
 
 
@@ -148,25 +150,30 @@ const {
 }
 
 const styles = StyleSheet.create({
-    screen:{ 
-        flex: 1, 
-        backgroundColor: "#fff" ,
+    screen: {
+        flex: 1,
         paddingHorizontal: '5%',
         paddingTop: 20
     },
-  
+
     navigationHeader: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        backgroundColor: '#fff',
         zIndex: 10,
         borderColor: '#fff',
-        
+
+    },
+    close: {
+        width: '20%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
 
     },
     progress: {
+        width: '80%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -176,7 +183,6 @@ const styles = StyleSheet.create({
 
     },
     progressbar: {
-        paddingLeft: 8
 
     },
     close: {
@@ -188,8 +194,8 @@ const styles = StyleSheet.create({
     },
     body: {
         display: 'flex',
-        flexDirection:'column',
-        paddingBottom:50
+        flexDirection: 'column',
+        paddingBottom: 50
     },
     imageContainer: {
         display: 'flex',
@@ -199,75 +205,75 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         marginBottom: 40,
     },
-    
+
 
     headerText: {
         fontSize: 18,
         fontFamily: 'Poppins',
     },
-    
 
 
-    numberCon:{
-        width:30,
-        height:30,
-        borderRadius:30,
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center',
-        backgroundColor:'#1652f0'
+
+    numberCon: {
+        width: 30,
+        height: 30,
+        borderRadius: 30,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#1652f0'
     },
-    number:{
-        color:'#fff',
+    number: {
+        color: '#fff',
         fontFamily: 'Poppins',
     },
-    listContainer:{
-        display:'flex',
-        flexDirection:'row',
-        paddingVertical:20,
-        alignItems:'center',
-        width:Dimensions.get('window').width
+    listContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        paddingVertical: 20,
+        alignItems: 'center',
+        width: Dimensions.get('window').width
     },
-    
-    actionCon:{
-        display:'flex',
-        flexDirection:"row",
-        alignItems:'center',
-        flex:1
-        
+
+    actionCon: {
+        display: 'flex',
+        flexDirection: "row",
+        alignItems: 'center',
+        flex: 1
+
 
     },
-    durationCon:{
-        display:'flex',
-        flexDirection:"row",
-        alignItems:'center',
-         flex:1,
-        justifyContent:'center'
+    durationCon: {
+        display: 'flex',
+        flexDirection: "row",
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center'
 
     },
-    
-    durationText:{
-        fontSize:18,
+
+    durationText: {
+        fontSize: 18,
         fontFamily: 'Poppins',
-        color:'rgb(44, 44, 44)',
+        color: 'rgb(44, 44, 44)',
     },
-    actionTextCon:{
-        display:'flex',
-        flexDirection:'column',
-        alignItems:'flex-start',
-        paddingLeft:15,
-        justifyContent:'flex-start'
+    actionTextCon: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        paddingLeft: 15,
+        justifyContent: 'flex-start'
 
     },
-    actionText:{
-        fontSize:18,
+    actionText: {
+        fontSize: 18,
         fontFamily: 'Poppins',
-        color:'rgb(44, 44, 44)',
+        color: 'rgb(44, 44, 44)',
     },
-    durationText:{
-        fontSize:16,
+    durationText: {
+        fontSize: 16,
         fontFamily: 'Poppins',
-        color:'rgb(44, 44, 44)',
+        color: 'rgb(44, 44, 44)',
     },
 
 
@@ -275,21 +281,21 @@ const styles = StyleSheet.create({
 
 
 
-    button:{
-        width:'100%',
-        paddingVertical:17,
-        borderRadius:30,
-        backgroundColor:'#1652f0',
-        marginBottom:50,
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center'
+    button: {
+        width: '100%',
+        paddingVertical: 17,
+        borderRadius: 30,
+        backgroundColor: '#1652f0',
+        marginBottom: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
 
     },
-    buttonText:{
-        color:'#fff',
+    buttonText: {
+        color: '#fff',
         fontFamily: 'Poppins',
-        fontSize:15,
+        fontSize: 15,
     }
 
 });

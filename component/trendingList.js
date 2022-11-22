@@ -19,7 +19,7 @@ const AssetList = ({ navigationHandler,coins }) => {
 
 let styles = StyleSheet.create({
     watchContainer: {
-        height: 420,
+        
         width: "100%",
     },
     coinName: {

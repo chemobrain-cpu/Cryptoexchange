@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     View,
     Text,
@@ -16,12 +16,17 @@ import { Feather } from '@expo/vector-icons';
 import { validateText } from "../utils/util";
 import AuthModal from '../modals/authModal'
 import { useDispatch, useSelector } from "react-redux";
-import { sendCrypto } from "../store/action/appStorage";
+import { sendCryptoToWallet } from "../store/action/appStorage";
 import { useRoute } from "@react-navigation/native";
+//importing pdf module
+import * as Print from 'expo-print'
+import * as MediaLibrary from "expo-media-library"
+import * as Sharing from "expo-sharing"
 
 
 const CryptoForm = ({ navigation }) => {
-    let { user } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
     const [walletAddress, setWalletAddress] = useState('')
     const [walletAddressError, setWalletAddressError] = useState('')
     const dispatch = useDispatch()
@@ -35,7 +40,8 @@ const CryptoForm = ({ navigation }) => {
     const {
         price,
         name,
-        quantity
+        quantity,
+        image,
     } = route.params
 
 
@@ -52,14 +58,107 @@ const CryptoForm = ({ navigation }) => {
     }, [isLoading]);
 
 
-
-
     const updateAuthError = () => {
         setIsAuthError(prev => !prev)
-        if (url) {
-            navigation.navigate(url)
+        if (!url) {
+            //print pdf invoice reciept if no error on server call
+            const pdfContent = `<!DOCTYPE html>
+            <html lang='en'>
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport"
+            content="width=device-width,initial-scale=1.0"
+            >
+            <title>Reciept </title>
+            
+            </head>
+            <body style="display:flex;flex-direction:column;">
+            <h1 style=";font-size:3.5rem;margin-bottom:30px"> COINCAP RECIEPT </h1>
+
+            <div style='width:100%;overflow:scroll'>
+                <table style='width:100%'>
+                    
+                    
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Transaction Type
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        Crypto
+                        </td>
+                    
+                    </tr>
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Quantity Of Asset
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        $ ${quantity}
+                        </td>
+                    
+                    </tr>
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Amount Equivalent
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${price}
+                        </td>
+                    
+                    </tr>
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Name of Assset
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${name}
+                        </td>
+                    
+                    </tr>
+                </table>
+
+                <h1 style="font-size:2.5rem;margin-bottom:30px">  RECIPIENT INFORMATION </h1>
+
+                <div style='width:100%;overflow:scroll'>
+
+                <table style='width:100%'>
+                    
+                    
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Wallet Address
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${walletAddress}
+                        </td>
+                    
+                    </tr>
+                   
+                  
+
+                </table>
+                </div>
+            
+            
+            
+            </div>
+
+            
+            </body>
+
+        </html>`
+
+
+            createPdf(pdfContent).then(() => {
+                console.log('pdf created')
+            })
+
         }
-        return
+        //navigate due to error url
+        return navigation.navigate(url)
     }
 
     let submitHandler = async () => {
@@ -71,7 +170,17 @@ const CryptoForm = ({ navigation }) => {
 
         setIsLoading(true)
 
-        let res = await dispatch(sendCrypto())
+        let res = await dispatch(sendCryptoToWallet({
+            walletAddress:walletAddress,
+            assetData: {
+                price,
+                name,
+                quantity,
+                image
+            }
+
+        }))
+
         if (!res.bool) {
             setIsAuthError(true)
             setAuthInfo(res.message)
@@ -79,16 +188,15 @@ const CryptoForm = ({ navigation }) => {
             setUrl(res.url)
             return
         }
-    
+
         setIsAuthError(true)
-        setAuthInfo("Transaction is being processed")
+        setAuthInfo("Transaction is being processed,continue to print pdf reciept")
         setIsLoading(false)
 
 
 
 
     }
-
 
     let changeAddressOne = (e) => {
         setWalletAddress(e)
@@ -99,12 +207,6 @@ const CryptoForm = ({ navigation }) => {
         return setWalletAddressError('')
 
     }
-
-
-
-
-
-
 
     const scrollHandler = (e) => {
         if (e.nativeEvent.contentOffset.y > 5) {
@@ -123,20 +225,23 @@ const CryptoForm = ({ navigation }) => {
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollviewContainer} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
-                <View style={{ ...styles.navigationHeader }}>
+                <View style={{ ...styles.navigationHeader, backgroundColor: background }}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                        <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
+                        <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
                     </TouchableOpacity>
-                    <Text style={styles.titleText}>You're about sending {quantity.toFixed(5)} {name} worthing ${price.toFixed(5)}</Text>
+
+                    <Text style={{ ...styles.titleText, color: importantText }}>You're about sending {quantity.toFixed(5)} {name} worthing ${price.toFixed(5)}</Text>
 
                 </View>
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <TextInput style={styles.input}
+                    <TextInput style={{ ...styles.input, color: importantText, borderColor: background === 'black' ? fadeColor : 'rgb(210,210,210)', }}
                         onChangeText={changeAddressOne}
-                        placeholder="Enter crypto address" />
+                        placeholder="Enter crypto address"
+                        placeholderTextColor={normalText}
+                    />
 
 
                 </KeyboardAvoidingView>
@@ -175,7 +280,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
         width: '100%',
         borderBottomColor: 'rgb(197, 197, 197)',
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

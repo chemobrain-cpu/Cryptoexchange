@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable,Image } from 'react-native'
 import { Feather,Ionicons } from '@expo/vector-icons';
-import moment from 'moment'
+import moment from 'moment';
+import { useSelector, useDispatch } from "react-redux"
 
 
 const GiftNotification = ({ topic,date,text,price,trade }) => {
     const [header, setHeader] = useState(false);
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
 
-    return (<View style={styles.notificationContainer}>
+    return (<View style={{...styles.notificationContainer,backgroundColor:background,borderBottomColor:fadeColor}}>
         <Pressable onPress={()=>trade()} style={styles.innerLeft}>
             <View style={styles.topicContainer}>
-                <Text style={styles.topic}><Ionicons name="notifications" size={24} color="rgb(100,100,100)" /></Text>
-                <Text style={styles.time}>{moment(date).from(moment())}</Text>
+                <Text style={styles.topic}><Ionicons name="notifications" size={24} color={background === 'white' ? "black" : "white"} /></Text>
+                <Text style={{...styles.time,color:importantText}}>{moment(date).from(moment())}</Text>
 
             </View>
             <View style={styles.aboutTextCon}>
@@ -21,7 +23,7 @@ const GiftNotification = ({ topic,date,text,price,trade }) => {
                 <View style={styles.aboutTextCon}>
 
             
-                    <Text style={styles.aboutBottomText}>
+                    <Text style={{...styles.aboutBottomText,color:normalText}}>
                     {text}
 
                     </Text>
@@ -29,9 +31,9 @@ const GiftNotification = ({ topic,date,text,price,trade }) => {
                 </View>
 
             </View>
-            <TouchableOpacity style={styles.actionButton} onPress={()=>trade()}>
-                <Text style={styles.buttonText}>Start trading</Text>
-                <Feather name="arrow-right" size={24} color="rgb(44, 44, 44)" />
+            <TouchableOpacity style={{...styles.actionButton,backgroundColor:fadeColor}} onPress={()=>trade()}>
+                <Text style={{...styles.buttonText,color:importantText}}>Start trading</Text>
+                <Feather name="arrow-right" size={24} color={background === 'white' ? "black" : "white"}  />
 
             </TouchableOpacity>
 
@@ -54,7 +56,6 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         paddingVertical: 25,
         borderBottomWidth:.5,
-        borderBottomColor:'rgb(230,230,230)',
         paddingVertical:35
 
     },

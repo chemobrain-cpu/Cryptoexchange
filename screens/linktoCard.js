@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, SafeAreaView, StyleSheet, Pressable, Dimensions } from 'react-native';
-
+import { useSelector } from "react-redux";
 //importing modals
 import { Feather} from '@expo/vector-icons'
 import Loader from '../loaders/Loader';
@@ -8,6 +8,7 @@ import Loader from '../loaders/Loader';
 
 
 const LinkToCard = ({ navigation }) => {
+    let {background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
     const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
@@ -26,11 +27,11 @@ const LinkToCard = ({ navigation }) => {
 
 
 
-    return (<SafeAreaView style={styles.screen}>
+    return (<SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
 
     <Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderCon}>
-            <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
-            <Text style={styles.assetsText}>Add a payment method</Text>
+            <Feather name="arrow-left" size={25} color={background === 'white' ? "black" : "white"} />
+            <Text style={{...styles.assetsText,color:importantText}}>Add a payment method</Text>
 
     </Pressable>
 
@@ -40,9 +41,9 @@ const LinkToCard = ({ navigation }) => {
 
             </View>
             <View style={styles.infoRight}>
-                <Text style={styles.firstheaderText}> Credit/Debit Card</Text>
-                <Text style={styles.secondheaderText}>Buy and cash out </Text>
-                <Text style={styles.text}>Use any debit or credit card(Visa or Mastercard) to buy Crypto</Text>
+                <Text style={{...styles.firstheaderText,color:importantText}}> Credit/Debit Card</Text>
+                <Text style={{...styles.secondheaderText,color:normalText}}>Buy and cash out </Text>
+                <Text style={{...styles.text,color:normalText}}>Use any debit or credit card(Visa or Mastercard) to buy Crypto</Text>
             </View>
 
         </Pressable>
@@ -60,7 +61,8 @@ const LinkToCard = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     screen: {
-        paddingTop: 20,
+        flex:1,
+        paddingTop: 15,
         paddingHorizontal: 20,
         width: Dimensions.get('window').width
     },

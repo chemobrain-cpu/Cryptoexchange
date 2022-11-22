@@ -29,10 +29,6 @@
       },
       "package": "com.chemobrain857380.coincap",
       "googleServicesFile": "./google-services.json",
-      "useNextNotificationsApi":true,
-      "config": {
-        "googleMobileAdsAppId": "ca-app-pub-xxxxxx"
-      }
     },
     "plugins": [
       [
@@ -40,10 +36,13 @@
         {
           "icon": "./assets/coincap.png",
           "color": "#ffffff",
-          "sounds": ["./assets/Coin-drop.mp3"]
+          "sounds": [
+            "./assets/coin.mp3"
+          ]
         }
       ]
     ],
+
     "web": {},
     "extra": {
       "eas": {

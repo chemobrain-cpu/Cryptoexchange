@@ -2,72 +2,57 @@ import React from "react"
 import ContentLoader, { Rect} from "react-content-loader/native"
 import { View,SafeAreaView, ScrollView, TouchableOpacity, StyleSheet,Dimensions} from 'react-native'
 import { Entypo,Ionicons } from '@expo/vector-icons';
+import { useSelector } from "react-redux"
 
 
 let ContentLoaders = () => {
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
     
-    return <SafeAreaView style={styles.screen}>
-    <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}  stickyHeaderIndices={[0]}>
+    return <SafeAreaView style={{...styles.screen,backgroundColor: background,}}>
+    <ScrollView contentContainerStyle={{...styles.scrollContainer,backgroundColor: background,}} showsVerticalScrollIndicator={false}  stickyHeaderIndices={[0]}>
         <View >
-            <View style={{ ...styles.headerContainer }}>
+            <View style={{ ...styles.headerContainer,backgroundColor: background, }}>
                 <TouchableOpacity>
-                    <Entypo name="menu" size={24} color="black" />
+                    <Entypo name="menu" size={24} color={background==='white'?"black":"white"} />
                 </TouchableOpacity>
 
                 
 
-
                 <TouchableOpacity onPress={() => alert('notification')}>
-                    <Ionicons name="notifications" size={30} color="black" />
+                    <Ionicons name="notifications" size={30} color={background==='white'?"black":"white"} />
                 </TouchableOpacity>
 
             </View>
 
         </View>
 
-        <View style={styles.contentLoaderCon}>
+        <View style={{...styles.contentLoaderCon,backgroundColor:background}}>
 
-            <ContentLoader backgroundColor="#f3f3f3"
-                foregroundColor="#fff" height={50} duration={1000}>
+            <ContentLoader backgroundColor={fadeColor}
+                foregroundColor={background} height={50} duration={1000}>
 
                 <Rect x="0" y="20" rx="5" ry="5" width="100" height="100%" />
 
 
 
             </ContentLoader>
-            <ContentLoader backgroundColor="#f3f3f3"
-                foregroundColor="#fff" height={100} duration={1000}>
+            <ContentLoader backgroundColor={fadeColor}
+                foregroundColor={background} height={100} duration={1000}>
 
                 <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
             </ContentLoader>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                <ContentLoader height={50} width='40%' duration={200} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+                <ContentLoader height={50} width='40%' duration={200} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                 </ContentLoader>
-                <ContentLoader height={50} width='40%' duration={1000}>
-
-                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                </ContentLoader>
-
-            </View>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                <ContentLoader height={50} width='40%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
-
-                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                </ContentLoader>
-                <ContentLoader height={50} width='40%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+                <ContentLoader height={50} width='40%' duration={200} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -76,32 +61,15 @@ let ContentLoaders = () => {
 
             </View>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                <ContentLoader height={50} width='30%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+                <ContentLoader height={50} width='40%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                 </ContentLoader>
-                <ContentLoader height={50} width='40%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
-
-                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                </ContentLoader>
-
-            </View>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                <ContentLoader height={50} width='40%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
-
-                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
-
-
-                </ContentLoader>
-                <ContentLoader height={50} width='45%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+                <ContentLoader height={50} width='40%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -110,15 +78,15 @@ let ContentLoaders = () => {
 
             </View>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                <ContentLoader height={50} width='40%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+                <ContentLoader height={50} width='30%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                 </ContentLoader>
-                <ContentLoader height={50} width='40%' duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+                <ContentLoader height={50} width='40%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -126,29 +94,63 @@ let ContentLoaders = () => {
                 </ContentLoader>
 
             </View>
-            <ContentLoader height={80} duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                <ContentLoader height={50} width='40%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
+
+                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                </ContentLoader>
+                <ContentLoader height={50} width='45%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
+
+                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                </ContentLoader>
+
+            </View>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                <ContentLoader height={50} width='40%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
+
+                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                </ContentLoader>
+                <ContentLoader height={50} width='40%' duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
+
+                    <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
+
+
+                </ContentLoader>
+
+            </View>
+            <ContentLoader height={80} duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                 <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
             </ContentLoader>
-            <ContentLoader height={50} duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+            <ContentLoader height={50} duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                 <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
             </ContentLoader>
-            <ContentLoader height={60} duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+            <ContentLoader height={60} duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                 <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
             </ContentLoader>
-            <ContentLoader height={50} duration={1000} backgroundColor="#f3f3f3"
-                foregroundColor="#fff">
+            <ContentLoader height={50} duration={1000} backgroundColor={fadeColor}
+                foregroundColor={background}>
 
                 <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -168,30 +170,24 @@ const styles = StyleSheet.create({
     header: {
         display: 'flex',
         flexDirection: "row",
-
     },
     screen: {
         flex: 1,
         backgroundColor: "#fff",
-        
-
     },
     scrollContainer: {
         paddingBottom: 100,
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',
         position: 'relative',
-        backgroundColor: '#fff',
         paddingHorizontal: 15
-
     },
     contentLoaderCon:{ 
         flex: 1, 
-        backgroundColor: '#fff', 
         width: Dimensions.get('window').width, 
         height: Dimensions.get('window').height,paddingHorizontal:17, 
     },

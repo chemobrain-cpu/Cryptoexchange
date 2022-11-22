@@ -1,17 +1,20 @@
 import React  from 'react'
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native'
-import { Feather } from '@expo/vector-icons'
-import { Card } from "react-native-shadow-cards"
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { Card } from "react-native-shadow-cards";
+import { useSelector } from "react-redux"
 
 
 let CryptoCard = ({ navigationHandler, coin }) => {
     //destructuring the coin datastructure
     let { image, symbol, current_price, price_change_percentage_24h } = coin
 
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
 
     return <Pressable onPress={()=>navigationHandler(coin)}>
         <Card key={coin.id}
-            style={styles.cardContainer}>
+            style={{...styles.cardContainer,backgroundColor:background}}>
 
             <View>
                 <Image
@@ -20,8 +23,8 @@ let CryptoCard = ({ navigationHandler, coin }) => {
             </View>
 
             <View style={styles.priceContainer}>
-                <Text style={styles.symbol}>{symbol}</Text>
-                <Text style={styles.price}>${current_price.toFixed(2)}</Text>
+                <Text style={{...styles.symbol,color:importantText}}>{symbol}</Text>
+                <Text style={{...styles.price,color:normalText}}>${current_price.toFixed(2)}</Text>
             </View>
 
             <View style={styles.percentageContainer}>
@@ -46,6 +49,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginRight: 15,
         paddingHorizontal: 15,
+        
 
     },
     image: {

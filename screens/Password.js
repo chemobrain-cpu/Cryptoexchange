@@ -9,10 +9,10 @@ import {
     Dimensions,
 } from "react-native";
 
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { Feather, FontAwesome,AntDesign } from '@expo/vector-icons';
 import Loader from '../loaders/Loader';
 import AuthModal from '../modals/authModal';
-import {useSelector  } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Password = ({ navigation }) => {
     let [value, setValue] = useState("")
@@ -20,9 +20,10 @@ const Password = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState("")
     const [isAuthError, setIsAuthError] = useState(false)
     const [authInfo, setAuthInfo] = useState("")
-    let { user } = useSelector(state => state.userAuth)
 
-     //preventing memory leak
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
+    //preventing memory leak
     useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
@@ -50,19 +51,19 @@ const Password = ({ navigation }) => {
             arr.push(m)
         }
         return <View style={styles.dollarPriceInnerCon}>
-            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[0] ? <FontAwesome name="asterisk" size={25} color="black" /> : <Feather name="circle" size={25} color="black" />}</Text>
+            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[0] ? <FontAwesome name="asterisk" size={27} color={background === 'white' ? "black" : "white"} /> : <Feather name="circle" size={27} color={background === 'white' ? "black" : "white"} />}</Text>
 
-            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[1] ? <FontAwesome name="asterisk" size={25} color="black" /> : <Feather name="circle" size={25} color="black" />}</Text>
+            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[1] ? <FontAwesome name="asterisk" size={27} color={background === 'white' ? "black" : "white"} /> : <Feather name="circle" size={27} color={background === 'white' ? "black" : "white"} />}</Text>
 
-            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[2] ? <FontAwesome name="asterisk" size={25} color="black" /> : <Feather name="circle" size={25} color="black" />}</Text>
+            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[2] ? <FontAwesome name="asterisk" size={27} color={background === 'white' ? "black" : "white"} /> : <Feather name="circle" size={27} color={background === 'white' ? "black" : "white"} />}</Text>
 
-            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[3] ? <FontAwesome name="asterisk" size={25} color="black" /> : <Feather name="circle" size={25} color="black" />}</Text>
+            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[3] ? <FontAwesome name="asterisk" size={27} color={background === 'white' ? "black" : "white"} /> : <Feather name="circle" size={27} color={background === 'white' ? "black" : "white"} />}</Text>
 
-            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[4] ? <FontAwesome name="asterisk" size={25} color="black" /> : <Feather name="circle" size={25} color="black" />}</Text>
+            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[4] ? <FontAwesome name="asterisk" size={27} color={background === 'white' ? "black" : "white"} /> : <Feather name="circle" size={27} color={background === 'white' ? "black" : "white"} />}</Text>
 
-            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[5] ? <FontAwesome name="asterisk" size={25} color="black" /> : <Feather name="circle" size={25} color="black" />}</Text>
+            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[5] ? <FontAwesome name="asterisk" size={27} color={background === 'white' ? "black" : "white"} /> : <Feather name="circle" size={27} color={background === 'white' ? "black" : "white"} />}</Text>
 
-            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[6] ? <FontAwesome name="asterisk" size={25} color="black" /> : <Feather name="circle" size={25} color="black" />}</Text>
+            <Text style={{ ...styles.dollarPrice, fontSize: 25 }}>{arr[6] ? <FontAwesome name="asterisk" size={27} color={background === 'white' ? "black" : "white"} /> : <Feather name="circle" size={27} color={background === 'white' ? "black" : "white"} />}</Text>
 
         </View>
 
@@ -76,7 +77,7 @@ const Password = ({ navigation }) => {
     //button function
     let button = (num) => {
         setValue(prev => {
-            if (prev.length > 3) {
+            if (prev.length > 6) {
                 return prev
             }
             return prev + num
@@ -108,10 +109,8 @@ const Password = ({ navigation }) => {
 
     }
 
-
-
     let proceedHandler = async () => {
-        if(!value){
+        if (!value) {
             return
         }
         setIsLoading(true)
@@ -146,15 +145,16 @@ const Password = ({ navigation }) => {
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={changeVisibility} message={authInfo} />}
 
 
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={{ display: 'flex', width: '100%' }}>
                     <View style={styles.headerContainer}>
+                        <Pressable onPress={() => navigation.goBack()} style={styles.headerContainerIcon} >
+                            <AntDesign name="close" size={23} color={background === 'white' ? "black" : "white"} />
+                        </Pressable>
 
-
-                        <Pressable style={styles.headerContainerTitle} >
-                            <Text style={styles.title}>Enter password to continue</Text>
-
+                        <Pressable style={{ ...styles.headerContainerTitle }} >
+                            <Text style={{ ...styles.title, color: importantText }}>Enter password to continue</Text>
                         </Pressable>
 
 
@@ -163,8 +163,6 @@ const Password = ({ navigation }) => {
 
                     </View>
                 </View>
-
-
 
                 <View style={styles.priceContainer}>
 
@@ -177,68 +175,61 @@ const Password = ({ navigation }) => {
 
                 </View>
 
-
-
-
-
-
-
-
                 <View style={styles.calculatorCon}>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('1')}>
-                            <Text style={styles.number}>1</Text>
+                            <Text style={{...styles.number,color:importantText}}>1</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('2')}>
-                            <Text style={styles.number}>2</Text>
+                            <Text style={{...styles.number,color:importantText}}>2</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('3')}>
-                            <Text style={styles.number}>3</Text>
+                            <Text style={{...styles.number,color:importantText}}>3</Text>
                         </Pressable>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('4')}>
-                            <Text style={styles.number}>4</Text>
+                            <Text style={{...styles.number,color:importantText}}>4</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('5')}>
-                            <Text style={styles.number}>5</Text>
+                            <Text style={{...styles.number,color:importantText}}>5</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('6')}>
-                            <Text style={styles.number}>6</Text>
+                            <Text style={{...styles.number,color:importantText}}>6</Text>
                         </Pressable>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('7')}>
-                            <Text style={styles.number}>7</Text>
+                            <Text style={{...styles.number,color:importantText}}>7</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('8')}>
-                            <Text style={styles.number}>8</Text>
+                            <Text style={{...styles.number,color:importantText}}>8</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('9')}>
-                            <Text style={styles.number}>9</Text>
+                            <Text style={{...styles.number,color:importantText}}>9</Text>
                         </Pressable>
 
                     </View>
 
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => point(".")}>
-                            <Text style={styles.number}>.</Text>
+                            <Text style={{...styles.number,color:importantText}}>.</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('0')}>
-                            <Text style={styles.number}>0</Text>
+                            <Text style={{...styles.number,color:importantText}}>0</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => deleteHandler()}>
-                            <Feather name="arrow-left" size={22} color="rgb(44, 44, 44)" />
+                            <Feather name="arrow-left" size={22} color={background === 'white' ? "black" : "white"} />
                         </Pressable>
 
                     </View>
@@ -264,7 +255,6 @@ const Password = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff'
     },
 
     scrollContainer: {
@@ -272,7 +262,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         marginBottom: 45,
@@ -280,13 +270,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     headerContainerIcon: {
+        width:'10%',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: 'flex-start'
 
+    },
+    headerContainerTitle: {
+        width:'90%',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: 'center'
 
     },
 
-
     title: {
-        fontSize: 20,
+        fontSize: 22,
         fontFamily: 'ABeeZee',
         textAlign: 'center'
 
@@ -333,89 +332,9 @@ const styles = StyleSheet.create({
         fontFamily: 'ABeeZee'
 
     },
-    moneyCon: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
 
 
-    },
-    money: {
-        fontSize: 40,
-        color: '#1652f0',
-        fontFamily: 'Poppins'
 
-    },
-    maxButtonCon: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        backgroundColor: 'rgb(240,240,240)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-
-    },
-    maxText: {
-        fontSize: 16,
-        fontFamily: 'Poppins',
-
-    },
-    invertButtonCon: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        backgroundColor: 'rgb(240,240,240)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-
-    },
-    card: {
-        height: 80,
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        marginBottom: 35
-    },
-    cryptoCon: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    cryptoWorth: {
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        paddingRight: 15,
-        justifyContent: 'center'
-    },
-    cryptoWorthCash: {
-        fontSize: 17,
-        fontFamily: 'ABeeZee'
-
-    },
-    cryptoWorthText: {
-        fontSize: 17,
-        fontFamily: 'ABeeZee'
-
-    },
-    image: {
-        width: 30,
-        height: 30
-
-    },
-    cryptoNameCon: {
-        marginLeft: 10
-
-    },
-    cryptoName: {
-        fontSize: 17,
-        fontFamily: 'Poppins'
-    },
     calculatorCon: {
         width: '100%',
     },
@@ -425,7 +344,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     numberButton: {
-        width: 40,
+        width: 60,
         height: 60,
         display: 'flex',
         alignItems: 'center',
@@ -433,7 +352,7 @@ const styles = StyleSheet.create({
 
     },
     number: {
-        fontSize: 30,
+        fontSize: 35,
         fontFamily: 'ABeeZee'
     },
 
@@ -449,14 +368,14 @@ const styles = StyleSheet.create({
     button: {
         width: '95%',
         backgroundColor: '#1652f0',
-        paddingVertical: 17,
+        paddingVertical: 18,
         borderRadius: 30,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 18,
+        fontSize: 20,
         fontFamily: "ABeeZee",
         color: '#fff',
 

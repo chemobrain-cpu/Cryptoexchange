@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     zIndex: 10,
-    paddingTop: 20,
+    paddingTop: 15,
     paddingHorizontal: 15
   },
   assetsheaderCon: {

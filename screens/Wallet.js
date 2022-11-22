@@ -42,7 +42,7 @@ const Wallet = ({ navigation }) => {
 
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/wallet.jpg')}
+                        source={require('../assets/icons/wallet.png')}
                         style={{ width: 250, height: 125, }} />
                 </View>
 
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
         width: '100%',
         borderBottomColor: 'rgb(197, 197, 197)',
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

@@ -17,7 +17,7 @@ let AddressFromList = ({ navigation }) => {
     let [coins, setCoins] = useState([])
     let [filteredCoins, setFilteredCoins] = useState([])
     let [isLoading, setIsLoading] = useState(true)
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
     let [error, setError] = useState(false)
     let [isRefreshing, setIsRefreshing] = useState(false)
     let dispatch = useDispatch()
@@ -142,21 +142,21 @@ let AddressFromList = ({ navigation }) => {
     }
 
 
-    return <SafeAreaView style={styles.screen}>
-        <View style={styles.headerContainer}>
+    return <SafeAreaView style={{...styles.screen,backgroundColor:background}}>
+        <View style={{...styles.headerContainer,backgroundColor:background}}>
             <View style={styles.assetsheaderCon}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerIconCon}>
-                    <Feather name="arrow-left" size={25} color={"rgb(44,44,44)"} />
+                    <Feather name="arrow-left" size={25} color={focus ? blue : normalText} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.headerTextCon} onPress={() => navigation.goBack()}>
-                    <Text style={styles.headerText}>Select an asset</Text>
+                    <Text style={{...styles.headerText,color:importantText}}>Select an asset</Text>
                 </TouchableOpacity>
 
 
             </View>
             <View style={styles.searchCon}>
-                <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
+                <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: blue } : { ...styles.inputContainer, borderColor:importantText , }}>
                     <FontAwesome name="search" size={18} color={focus ? "#1652f0" : "grey"} />
 
                     <TextInput
@@ -164,6 +164,7 @@ let AddressFromList = ({ navigation }) => {
                         onChangeText={changeText}
                         value={text}
                         placeholder="Search"
+                        placeholderTextColor={normalText}
                     />
                 </KeyboardAvoidingView>
 
@@ -188,19 +189,15 @@ let AddressFromList = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
-        paddingHorizontal: 10,
+        paddingHorizontal: '5%',
     },
     headerContainer: {
         display: 'flex',
         flexDirection: 'column',
-
         alignItems: 'center',
         width: '100%',
-        backgroundColor: '#fff',
         zIndex: 10,
-        paddingTop: 20,
-
+        paddingTop: 15,
         height: Dimensions.get('window').height / 5
 
     },
@@ -235,32 +232,36 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
 
     },
+  
+
     inputContainer: {
-        width: '100%',
+        width: '95%',
         borderRadius: 25,
-        borderWidth: 1,
+        borderWidth: .5,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 15,
-        borderColor: 'rgb(180,180,180)',
-        height: 50
-
-    },
-    input: {
+        paddingHorizontal: 18,
+        borderColor: 'black',
+        paddingVertical: 5,
+        alignSelf: 'center'
+    
+    
+      },
+      input: {
         height: 45,
-        fontFamily: 'ABeeZee',
-        marginBottom: 5,
+        paddingHorizontal: 10,
+        fontFamily: 'Poppins',
         alignSelf: 'stretch',
-        width: '100%',
-        fontSize: 17,
-
-    },
+        width: '90%',
+        fontSize: 19,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
     /*end of header section style*/
-    middlesection: {
-        backgroundColor: '#fff',
-    },
+  
     trending: {
         fontSize: 25,
         fontFamily: 'Poppins'

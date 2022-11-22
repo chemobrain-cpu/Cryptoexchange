@@ -1,29 +1,30 @@
-import React, { useState,useEffect} from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, ActivityIndicator,KeyboardAvoidingView } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, ActivityIndicator, KeyboardAvoidingView,Pressable } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { confirm } from "../store/action/appStorage";
 import AuthModal from '../modals/authModal';
 
 const ConfirmNewPhone = ({ navigation }) => {
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
     let [confirmationCode, setConfirmationCode] = useState('')
     const [isAuthError, setIsAuthError] = useState(false)
     const [authInfo, setAuthInfo] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     let dispatch = useDispatch()
 
-      //preventing memory leak
-      useEffect(() => {
+    //preventing memory leak
+    useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
-            if(isLoading){
+            if (isLoading) {
                 e.preventDefault();
-            }else{
+            } else {
                 //can go back
             }
         });
         return focus
     }, [isLoading]);
-  
+
 
 
     let changeConfirmationCode = (e) => {
@@ -35,14 +36,14 @@ const ConfirmNewPhone = ({ navigation }) => {
     }
 
     let continueHandler = async () => {
-        
-        if(!confirmationCode || isLoading){
+
+        if (!confirmationCode || isLoading) {
             return
         }
         setIsLoading(true)
-        let res = await dispatch(confirm({confirmationCode}))
-        if(!res.bool){
-            
+        let res = await dispatch(confirm({ confirmationCode }))
+        if (!res.bool) {
+
             setAuthInfo(res.message)
             setIsAuthError(true)
             return
@@ -50,7 +51,7 @@ const ConfirmNewPhone = ({ navigation }) => {
         }
         setIsLoading(false)
         navigation.navigate('ProfileSetting')
-        
+
     }
 
 
@@ -62,32 +63,39 @@ const ConfirmNewPhone = ({ navigation }) => {
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
 
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
 
-            <View style={styles.navigationHeader}>
-                <Ionicons name="arrow-back" size={22} fontWeight={100} color="rgb(44, 44, 44)" />
-                <Text style={styles.headerText}>
-                    Confirm phone
-                </Text >
+            <View style={{ ...styles.navigationHeader, backgroundColor: background }}>
+                <Pressable style={styles.headerIconCon}>
+                    <Ionicons name="arrow-back" size={22} fontWeight={100} color={background === 'white' ? "black" : "white"} />
+                </Pressable>
+
+                <Pressable style={styles.headerTextCon}>
+                    <Text style={{...styles.headerText,color:importantText}}>
+                        Confirm phone
+                    </Text >
+                </Pressable>
 
 
 
             </View>
+
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
 
-                <Text style={styles.text}>Enter the 7-digit code we just texted to your phone number, +234 09071991647.</Text>
+                <Text style={{...styles.text,color:normalText}}>Enter the 7-digit code we just texted to your phone number, XXXXXXXXXXX</Text>
 
                 <View style={styles.formContainer}>
 
                     <KeyboardAvoidingView style={styles.CodeCon}>
 
                         <TextInput
-                            style={styles.input}
+                            style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
                             onChangeText={changeConfirmationCode}
                             value={confirmationCode}
                             placeholder='7-digit code from SMS'
                             keyboardType='phone-pad'
                             maxLength={7}
+                            placeholderTextColor={normalText}
                         />
 
                     </KeyboardAvoidingView>
@@ -103,8 +111,8 @@ const ConfirmNewPhone = ({ navigation }) => {
                         </Text>}
 
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonResend} onPress={gobackHandler}>
-                        <Text style={styles.buttonResendText}>
+                    <TouchableOpacity style={{...styles.buttonResend,backgroundColor:fadeColor}} onPress={gobackHandler}>
+                        <Text style={{...styles.buttonResendText,color:importantText}}>
                             Resend
                         </Text>
 
@@ -113,6 +121,7 @@ const ConfirmNewPhone = ({ navigation }) => {
 
 
             </ScrollView>
+
         </SafeAreaView>
     </>)
 }
@@ -120,8 +129,6 @@ const ConfirmNewPhone = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
-        paddingTop: 20,
         paddingHorizontal: '5%',
     },
 
@@ -131,39 +138,27 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         zIndex: 10,
-        borderColor: '#fff',
+        paddingTop: 15,
 
     },
-    progress: {
+    headerIconCon:{
+        width: '20%',
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
-        height: '100%',
-        paddingLeft: 40,
-        justifyContent: 'space-around'
-
+        alignItems: 'flex-start',
     },
-    progressbar: {
-        paddingLeft: 8
-
-    },
-    close: {
+    headerTextCon:{
+        width: '80%',
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
-
-
+        alignItems: 'flex-start',
+        
     },
-    body: {
-        paddingTop: 20,
-        display: 'flex',
-        flexDirection: 'column'
-    },
+
     headerText: {
         fontSize: 20,
         color: 'rgb(44, 44, 44)',
-        fontFamily: 'Poppins',
-        marginLeft: 30
+        fontFamily: 'Poppins'
 
     },
     text: {

@@ -1,8 +1,11 @@
 import React from 'react'
-import { View, Pressable, StyleSheet, Modal, Dimensions,Text } from 'react-native'
-import { Octicons, Entypo } from '@expo/vector-icons'
+import { View, Pressable, StyleSheet, Modal, Dimensions,Text } from 'react-native';
+import { Octicons, Entypo } from '@expo/vector-icons';
+import { useSelector } from "react-redux"
 
-const LoginModal = ({ modalVisible, updateVisibility, navigateHandler ,coinName}) => {
+const tradeModal = ({ modalVisible, updateVisibility, navigateHandler ,coinName}) => {
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
     return (
         <Modal
             animationType="slide"
@@ -10,19 +13,19 @@ const LoginModal = ({ modalVisible, updateVisibility, navigateHandler ,coinName}
             visible={modalVisible}
             onRequestClose={updateVisibility}
         >
-            <View style={styles.modalBackground}>
-                <View style={styles.modalTop}>
-
+            <View style={{...styles.modalBackground,backgroundColor: background === 'black' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.5)'}}>
+                <View style={{...styles.modalTop,backgroundColor:background==='white'? fadeColor:importantText}}>
                 </View>
-                <View style={styles.modalView}>
+
+                <View style={{...styles.modalView,backgroundColor: background,borderColor: fadeColor}}>
                     <Pressable style={styles.modalButtonCon} onPress={()=>navigateHandler('sell')}>
                         <View style={styles.modalButtonIcon}>
-                            <Entypo name="plus" size={24} color="black" />
+                            <Entypo name="plus" size={24} color={background === 'white' ? "black" : "white"} />
 
                         </View>
                         <View style={styles.modalButtonTextCon}>
-                            <Text style={styles.topText}>Sell {coinName}</Text>
-                            <Text style={styles.bottomText}>Sell {coinName.toUpperCase()} for cash</Text>
+                            <Text style={{...styles.topText,color:importantText}}>Sell {coinName}</Text>
+                            <Text style={{...styles.bottomText,color:normalText}}>Sell {coinName.toUpperCase()} for cash</Text>
 
                         </View>
 
@@ -32,16 +35,14 @@ const LoginModal = ({ modalVisible, updateVisibility, navigateHandler ,coinName}
                     <Pressable style={styles.modalButtonCon} onPress={()=>navigateHandler('convert')}>
 
                         <View style={styles.modalButtonIcon}>
-                            <Octicons name="sync" size={24} color="black" />
+                            <Octicons name="sync" size={24} color={background === 'white' ? "black" : "white"} />
 
                         </View>
                         <View style={styles.modalButtonTextCon}>
-                            <Text style={styles.topText}>Convert {coinName}</Text>
-                            <Text style={styles.bottomText}>Convert {coinName.toUpperCase()} to another...</Text>
+                            <Text style={{...styles.topText,color:importantText}}>Convert {coinName}</Text>
+                            <Text style={{...styles.bottomText,color:normalText}}>Convert {coinName.toUpperCase()} to another...</Text>
 
                         </View>
-
-
 
                     </Pressable>
 
@@ -56,14 +57,13 @@ const LoginModal = ({ modalVisible, updateVisibility, navigateHandler ,coinName}
 const styles = StyleSheet.create({
     modalBackground: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)'
     },
     modalTop: {
         height: 4,
         width: '20%',
         backgroundColor: 'rgb(225,225,225)',
         position: 'absolute',
-        top: '67%',
+        top: '65%',
         alignSelf: 'center',
         borderRadius: 5
     },
@@ -72,16 +72,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 20,
         alignItems: "center",
-
         position: 'absolute',
         backgroundColor: '#fff',
         width: Dimensions.get('window').width,
-        top: '70%',
-        height: '30%',
+        top: '68%',
         display: 'flex',
         flexDirection: 'column',
-        borderTopColor: 'rgb(240,240,240)',
-        borderTopWidth: 1
+        borderWidth:.5,
+        padding:10
 
 
 
@@ -130,4 +128,4 @@ const styles = StyleSheet.create({
 
 
 
-export default LoginModal
+export default tradeModal

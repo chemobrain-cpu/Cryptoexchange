@@ -22,7 +22,7 @@ const CameraFun = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState('')
     const [permissionStatus, setPermissionStatus] = useState('')
     const [url, setUrl] = useState('')
-    let { user } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
     let camera
 
     const route = useRoute()
@@ -41,11 +41,11 @@ const CameraFun = ({ navigation }) => {
     }, [isLoading]);
 
     //initialling asking for permission
-    useEffect(()=>{
+    useEffect(() => {
         askPermission()
-    },[askPermission])
+    }, [askPermission])
 
-    let askPermission = async()=>{
+    let askPermission = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync()
         setPermissionStatus(status)
 
@@ -53,7 +53,7 @@ const CameraFun = ({ navigation }) => {
 
     const updateAuthError = () => {
         setIsAuthError(prev => !prev)
-        if(url){
+        if (url) {
             navigation.navigate(url)
         }
     }
@@ -109,12 +109,21 @@ const CameraFun = ({ navigation }) => {
 
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
-        <SafeAreaView style={styles.screen}>
 
+
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
             <View style={styles.assetsheader}>
                 < Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderTextCon}>
-                    <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
-                    <Text style={styles.assetsText}>ID Verification </Text>
+
+                    <Pressable style={styles.assetsIcon}>
+                        <Feather name="arrow-left" size={25} color={background === 'white' ? "black" : "white"} />
+
+                    </Pressable>
+                    <Pressable style={styles.assetsTextCon}>
+                         <Text style={{...styles.assetsText,color:importantText}}>ID Verification </Text>
+
+                    </Pressable>
+                   
 
                 </ Pressable>
 
@@ -123,7 +132,7 @@ const CameraFun = ({ navigation }) => {
 
             < Pressable onPress={() => navigation.goBack()} style={styles.infoCon}>
 
-                <Text style={styles.infoText}>Please upload photo of the back section of your driver's license or state ID </Text>
+                <Text style={{...styles.infoText,color:normalText}}>Please upload photo of the back section of your driver's license or state ID </Text>
 
             </ Pressable>
 
@@ -149,13 +158,13 @@ const CameraFun = ({ navigation }) => {
 
                 </ Pressable>
 
-                < Pressable style={styles.rbtn_2} onPress={uploadPictureHandler}>
-                    <Text style={{ ...styles.resend, color: 'black' }}>upload photo</Text>
+                < Pressable style={{...styles.rbtn_2,backgroundColor:fadeColor}} onPress={uploadPictureHandler}>
+                    <Text style={{ ...styles.resend, color:importantText }}>upload photo</Text>
 
                 </ Pressable>
 
             </View> : < Pressable style={styles.btn} onPress={takePictureHandler}>
-                <Text style={styles.resend}>Take photo</Text>
+                <Text style={{...styles.resend,color:importantText}}>Take photo</Text>
 
             </ Pressable>}
 
@@ -171,8 +180,9 @@ const CameraFun = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     screen: {
-        paddingTop: 20,
-        paddingHorizontal: 20,
+        flex:1,
+        paddingTop: 15,
+        paddingHorizontal: '5%',
         width: Dimensions.get('window').width
     },
     assetsheaderCon: {
@@ -181,7 +191,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        paddingLeft: '5%',
 
 
     },
@@ -204,29 +213,44 @@ const styles = StyleSheet.create({
 
 
     },
+    assetsIcon: {
+        width:'20%',
+        display:'flex',
+        flexDirection:'row',
+        justifyContent: 'flex-start',
+
+    },
+
+    assetsTextCon: {
+        width:'80%',
+        display:'flex',
+        flexDirection:'row',
+        justifyContent: 'flex-start',
+        
+    },
+
     assetsText: {
         fontSize: 22,
         fontFamily: 'Poppins',
-        paddingLeft: '10%',
         textAlign: 'center',
         alignSelf: 'flex-end',
-        marginTop:3,
+        marginTop: 3,
     },
 
-     infoCon:{
+    infoCon: {
         marginBottom: 30
 
     },
-    infoText:{
+    infoText: {
         fontSize: 17,
         fontFamily: 'ABeeZee',
-        color:'rgb(120,120,120)',
-        textAlign:'left'
+        color: 'rgb(120,120,120)',
+        textAlign: 'left'
 
     },
     camera: {
         height: Dimensions.get('window').height / 2.5,
-        width:'100%',
+        width: '100%',
         marginBottom: 50,
         borderRadius: Dimensions.get('window').height / 2.5,
         backgroundColor: 'rgb(0,0,0)',

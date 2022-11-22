@@ -2,48 +2,45 @@ import React from "react"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { View, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 import { Entypo, Ionicons } from '@expo/vector-icons';
-
+import { useSelector } from "react-redux"
 
 let AssetsLoader = () => {
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
-    return <SafeAreaView style={styles.screen}>
+    return <SafeAreaView style={{...styles.screen,backgroundColor: background,}}>
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
             <View >
-                <View style={{ ...styles.headerContainer }}>
+                <View style={{ ...styles.headerContainer,backgroundColor: background, }}>
                     <TouchableOpacity >
-                        <Entypo name="menu" size={24} color="black" />
+                        <Entypo name="menu" size={24}  color={background==='white'?"black":"white"} />
                     </TouchableOpacity>
 
 
-
-
                     <TouchableOpacity >
-                        <Ionicons name="notifications" size={30} color="black" />
+                        <Ionicons name="notifications" size={30} color={background==='white'?"black":"white"} />
                     </TouchableOpacity>
 
                 </View>
 
             </View>
 
-            <View style={styles.contentContainer}>
+            <View style={{...styles.contentLoaderCon,backgroundColor:background}}>
 
-                <ContentLoader backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" height={50} duration={1000}>
+                <ContentLoader backgroundColor={fadeColor}
+                    foregroundColor={background} height={50} duration={1000}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100" height="100%" />
 
-
-
                 </ContentLoader>
-                <ContentLoader backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" height={80} duration={1000}>
+                <ContentLoader backgroundColor={fadeColor}
+                    foregroundColor={background} height={80} duration={1000}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100" height="100%" />
                 </ContentLoader>
 
                 <View style={styles.contentLoaderContainer}>
-                    <ContentLoader height={100} width={200} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" >
+                    <ContentLoader height={100} width={200} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background} >
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -54,8 +51,8 @@ let AssetsLoader = () => {
                 </View>
 
                 <View style={styles.contentLoaderContainer}>
-                    <ContentLoader height={100} width={200} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" >
+                    <ContentLoader height={100} width={200} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background} >
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -66,8 +63,8 @@ let AssetsLoader = () => {
                 </View>
 
 
-                <ContentLoader height={30} width={300} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" >
+                <ContentLoader height={30} width={300} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background} >
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -75,8 +72,8 @@ let AssetsLoader = () => {
 
 
                 </ContentLoader>
-                <ContentLoader height={40} width={'100%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" >
+                <ContentLoader height={40} width={'100%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background} >
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -84,16 +81,16 @@ let AssetsLoader = () => {
                 </ContentLoader>
 
 
-                <ContentLoader height={60} width={'100%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" >
+                <ContentLoader height={60} width={'100%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background} >
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                 </ContentLoader>
 
-                <ContentLoader height={120} width={'100%'} duration={1000} borderRadius={40}backgroundColor="#f3f3f3"
-                    foregroundColor="#fff" >
+                <ContentLoader height={120} width={'100%'} duration={1000} borderRadius={40}backgroundColor={fadeColor}
+                    foregroundColor={background} >
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -109,24 +106,22 @@ let AssetsLoader = () => {
 }
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+    },
     header: {
         display: 'flex',
         flexDirection: "row",
-    },
-    screen: {
-        flex: 1,
-        backgroundColor: "#fff",
     },
     scrollContainer: {
         paddingBottom: 10,
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',
         position: 'relative',
-        backgroundColor: '#fff',
         paddingHorizontal: 15
 
     },

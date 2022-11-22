@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput,Pressable,KeyboardAvoidingView } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, Pressable, KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons'
 import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
 import { loadCoins } from "../store/action/appStorage";
 import Error from '../component/errorComponent'
-import { useDispatch, } from "react-redux"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { OptimizedFlatList } from 'react-native-optimized-flatlist'
 import FooterLoader from '../loaders/listFooterLoader'
 
@@ -19,19 +18,19 @@ let TradeList = ({ navigation }) => {
   let [isLoading, setIsLoading] = useState(true)
   let [error, setError] = useState(false)
   let dispatch = useDispatch()
-  let { user } = useSelector(state => state.userAuth)
+  let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
-   //preventing memory leak
-    useEffect(() => {
-        let focus = navigation.addListener('beforeRemove', (e) => {
-            if (isLoading) {
-                e.preventDefault();
-            } else {
-                //can go back
-            }
-        });
-        return focus
-    }, [isLoading]);
+  //preventing memory leak
+  useEffect(() => {
+    let focus = navigation.addListener('beforeRemove', (e) => {
+      if (isLoading) {
+        e.preventDefault();
+      } else {
+        //can go back
+      }
+    });
+    return focus
+  }, [isLoading]);
 
   //destructuring from param
 
@@ -95,9 +94,9 @@ let TradeList = ({ navigation }) => {
 
   }, [loadCoins])
 
-   let onEndFetch = async (pageNumber) => {
+  let onEndFetch = async (pageNumber) => {
     // You can await here
-   
+
     let response = await dispatch(loadCoins(pageNumber))
     if (!response.bool) {
 
@@ -121,7 +120,7 @@ let TradeList = ({ navigation }) => {
 
   }
 
-   let Footer = () => {
+  let Footer = () => {
     return <FooterLoader />
   }
 
@@ -142,14 +141,13 @@ let TradeList = ({ navigation }) => {
     return <Error tryAgain={fetchData} navigation={navigation} />
   }
 
-  return <SafeAreaView style={styles.screen}>
-    <View style={styles.headerContainer}>
-
+  return <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
+    <View style={{ ...styles.headerContainer, backgroundColor: background }}>
 
       <View style={styles.assetsheaderText}>
         <Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderTextCon}>
-          <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
-          <Text style={styles.assetsText}>Trade an asset</Text>
+          <Feather name="arrow-left" size={25} color={background === 'white' ? "black" : "white"} />
+          <Text style={{ ...styles.assetsText, color: importantText }}>Trade an asset</Text>
 
         </Pressable>
 
@@ -158,13 +156,14 @@ let TradeList = ({ navigation }) => {
 
       <View style={styles.assetsheaderCon}>
 
-        <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
-          <FontAwesome name="search" size={18} color={focus ? "#1652f0" : "black"} />
+        <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: blue } : { ...styles.inputContainer, borderColor: importantText, }}>
+          <FontAwesome name="search" size={18} color={focus ? blue : normalText} />
           <TextInput
-            style={{ ...styles.input, borderColor: 'orange' }}
+            style={{ ...styles.input }}
             onChangeText={changeText}
             value={text}
             placeholder="Search"
+            placeholderTextColor={normalText}
             onFocus={() => {
               setFocus(true);
             }}
@@ -181,7 +180,7 @@ let TradeList = ({ navigation }) => {
     </View>
 
 
-    <View style={styles.middlesection}>
+    <View style={{ ...styles.middlesection, backgroundColor: background }}>
       <OptimizedFlatList
         showsVerticalScrollIndicator={false}
         data={filteredCoins}
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     zIndex: 10,
-    paddingTop: 20,
+    paddingTop: 15,
     paddingHorizontal: 15
   },
   assetsheaderCon: {
@@ -246,8 +245,7 @@ const styles = StyleSheet.create({
 
   },
   inputContainer: {
-    width: '80%',
-    marginRight: 15,
+    width: '90%',
     borderRadius: 25,
     borderWidth: 1,
     display: 'flex',

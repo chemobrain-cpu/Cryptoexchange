@@ -32,8 +32,9 @@ const EarnAsset = ({ navigation }) => {
 
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/earn.jpg')}
-                        style={{ width: 330, height: '100%', marginRight: 15 }} />
+                        source={require('../assets/icons/earn.png')}
+                        style={{ width: 330, height: '100%', marginRight: 15 }}
+                         />
                 </View>
 
 
@@ -62,7 +63,7 @@ const EarnAsset = ({ navigation }) => {
                         </View>
                         <View style={styles.walletImageContainer}>
                             <Image
-                                source={require('../assets/icons/explore.jpg')}
+                                source={require('../assets/icons/explore.png')}
                                 style={styles.walletImage} />
 
                         </View>
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
         width: '100%',
         borderBottomColor: 'rgb(197, 197, 197)',
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',

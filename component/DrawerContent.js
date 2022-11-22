@@ -2,14 +2,14 @@ import React from 'react';
 import {
     DrawerContentScrollView,
 } from '@react-navigation/drawer';
-
 import * as WebBrowser from 'expo-web-browser';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable } from "react-native";
 import { MaterialIcons, Ionicons, Octicons, FontAwesome,Entypo } from '@expo/vector-icons';
 import { truncate } from "../utils/util"
 
 
-function CustomDrawerContent({ navigation, user }) {
+function CustomDrawerContent({ navigation,user,background, importantText, normalText, fadeColor}) {
+    
 
     let navigateToBrowser = async (data) => {
 
@@ -37,15 +37,15 @@ function CustomDrawerContent({ navigation, user }) {
 
 
     return (
-        <DrawerContentScrollView >
+        <DrawerContentScrollView style={{flex:1,backgroundColor:background}}>
             <View style={styles.drawerContainer}>
 
-                {user.photo ? <Pressable style={styles.profileContainer} onPress={pictureHandler}>
+                {user.photo ? <Pressable style={{...styles.profileContainer,backgroundColor:fadeColor}} onPress={pictureHandler}>
                     <Image source={{ uri: user.identity }} style={{ width: 100, height: 100, borderRadius: 100 }} />
-                </Pressable> : <Pressable style={styles.profileContainer} onPress={pictureHandler}>
-                    <Ionicons name="person" size={80} color="#fff" style={{ paddingTop: 10 }} />
+                </Pressable> : <Pressable style={{...styles.profileContainer,backgroundColor:fadeColor}} onPress={pictureHandler}>
+                    <Ionicons name="person" size={80} color={background === 'white' ? "black" : "white"} style={{ paddingTop: 10 }} />
                     <Pressable style={styles.photo}>
-                        <FontAwesome name="camera" size={30} color="black" />
+                        <FontAwesome name="camera" size={30} color={background === 'white' ? "black" : "white"} />
                     </Pressable>
 
 
@@ -56,21 +56,19 @@ function CustomDrawerContent({ navigation, user }) {
 
 
                 <TouchableOpacity style={styles.usernameCon}>
-                    <Text style={styles.username}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
+                    <Text style={{...styles.username,color:importantText}}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ProfileSetting')}>
-                    <Text style={styles.buttonText}>Profile & Settings</Text>
+                <TouchableOpacity style={{...styles.button,backgroundColor:fadeColor}} onPress={() => navigation.navigate('ProfileSetting')}>
+                    <Text style={{...styles.buttonText,color:importantText}}>Profile & Settings</Text>
                 </TouchableOpacity>
-
-
 
 
                 <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('LearnEarn')}>
 
-                    <MaterialIcons name="add-task" size={21} style={{ paddingTop: 10 }} />
+                    <MaterialIcons name="add-task" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"}/>
 
-                    <Text style={styles.text}>Learn and Earn
+                    <Text style={{...styles.text,color:normalText}}>Learn and Earn
                     </Text>
                 </TouchableOpacity>
 
@@ -78,31 +76,25 @@ function CustomDrawerContent({ navigation, user }) {
 
                 <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('InviteFriend')}>
 
-                    <MaterialIcons name="person-add-alt" size={21} style={{ paddingTop: 10 }} />
+                    <MaterialIcons name="person-add-alt" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"} />
 
-                    <Text style={styles.text}>invite friends</Text>
+                    <Text style={{...styles.text,color:normalText}}>invite friends</Text>
                 </TouchableOpacity>
 
 
 
                 <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('Send')}>
-                    <Octicons name="gift" size={21} style={{ paddingTop: 10 }} />
+                    <Octicons name="gift" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"}/>
 
-                    <Text style={styles.text}>send a gift</Text>
+                    <Text style={{...styles.text,color:normalText}}>send a gift</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.content} onPress={() => navigateToBrowser('support')}>
                     
-                    <Entypo name="chat" size={21} style={{ paddingTop: 10 }} />
+                    <Entypo name="chat" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"} />
 
-                    <Text style={styles.text}>contact support</Text>
+                    <Text style={{...styles.text,color:normalText}}>contact support</Text>
                 </TouchableOpacity>
-
-
-
-
-
-
 
 
 
@@ -114,7 +106,7 @@ function CustomDrawerContent({ navigation, user }) {
 
 
                     <TouchableOpacity onPress={() => navigateToBrowser('privacy')}>
-                        <Text style={{ fontSize: 16, color: 'black', paddingLeft: 12, paddingTop: 10, textDecorationLine: 'underline' }}>Legal & Privacy</Text>
+                        <Text style={{ fontSize: 16, color:importantText, paddingLeft: 12, paddingTop: 10, textDecorationLine: 'underline' }}>Legal & Privacy</Text>
 
                     </TouchableOpacity>
 
@@ -138,7 +130,7 @@ const styles = StyleSheet.create({
     drawerContainer: {
         display: 'flex',
         paddingTop: 10,
-        marginHorizontal: 20
+        marginHorizontal: 20,
     },
     profileContainer: {
         width: 120,

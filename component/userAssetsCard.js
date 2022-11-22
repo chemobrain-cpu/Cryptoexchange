@@ -2,10 +2,11 @@ import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import {truncate} from "../utils/util"
+import { useDispatch, useSelector } from "react-redux";
 
 
 let UserAssetCard = ({ navigationHandler, coin,user }) => {
-   
+    let {background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
     //destructuring the coin datastructure
     
     let { image, name, id, symbol,current_price } = coin
@@ -14,7 +15,7 @@ let UserAssetCard = ({ navigationHandler, coin,user }) => {
     
    
     return <TouchableOpacity 
-    key={id} style={{ ...styles.cryptoContainer, backgroundColor: user.currentWallet.id == symbol ? 'rgb(240,240,240)' : '#fff' }}
+    key={id} style={{ ...styles.cryptoContainer, backgroundColor: user.currentWallet.id == symbol ? fadeColor : background }}
      onPress={(user)=>navigationHandler({id:id,user:user,symbol:symbol,url:image})}  
      >
         <View style={styles.containerLeft} >
@@ -23,8 +24,8 @@ let UserAssetCard = ({ navigationHandler, coin,user }) => {
                 style={styles.imageLogo}
             />
             <View style={styles.nameContainer}>
-                <Text style={styles.nameText}>{truncate(name, 7)}</Text>
-                <Text style={styles.symbolText}>{symbol.toUpperCase()}</Text>
+                <Text style={{...styles.nameText,color:importantText}}>{truncate(name, 7)}</Text>
+                <Text style={{...styles.symbolText,color:normalText}}>{symbol.toUpperCase()}</Text>
 
             </View>
         </View>
@@ -32,8 +33,8 @@ let UserAssetCard = ({ navigationHandler, coin,user }) => {
         <View style={styles.containerRight}>
             <View style={styles.innerContainerRight}>
                
-                {user.currentWallet.id === id.toLowerCase()?<Text style={styles.priceText}>$0.00</Text>:<Text style={styles.priceText}>$0.00</Text>}
-                <Text style={{ ...styles.iconText, color: 'rgb(100,100,100)' }}>{symbol.toUpperCase()}</Text>
+                {user.currentWallet.id === id.toLowerCase()?<Text style={{...styles.priceText,color:importantText}}>$0.00</Text>:<Text style={{...styles.priceText,color:importantText}}>$0.00</Text>}
+                <Text style={{ ...styles.iconText, color: normalText }}>{symbol.toUpperCase()}</Text>
 
             </View>
 
@@ -90,21 +91,21 @@ const styles = StyleSheet.create({
         paddingLeft: 10
     },
     nameText: {
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: 'Poppins'
     },
     symbolText: {
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: 'Poppins',
         color: "#5d616d"
     },
     priceText: {
-        fontSize: 18,
+        fontSize: 20,
         fontFamily: 'Poppins',
         alignSelf: 'flex-end'
     },
     iconText: {
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: 'Poppins',
         color: "#5d616d",
         alignSelf: 'flex-end'

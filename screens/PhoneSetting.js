@@ -4,9 +4,11 @@ import { MaterialIcons, Feather } from '@expo/vector-icons';
 import { hashFun } from "../utils/util"
 import { useSelector } from "react-redux";
 import Loader from '../loaders/Loader';
+import { Ionicons } from '@expo/vector-icons';
 
 const PhoneSetting = ({ navigation }) => {
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
     let [isLoading, setIsLoading] = useState(true)
     
      //preventing memory leak
@@ -36,62 +38,80 @@ const PhoneSetting = ({ navigation }) => {
         return <Loader />
     }
 
-    return (<SafeAreaView style={styles.screen}>
+    return (<SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
 
         <View style={styles.navigationHeader}>
+        <Pressable style={styles.headerIconCon}>
+                    <Ionicons name="arrow-back" size={22} fontWeight={100} color={background === 'white' ? "black" : "white"} />
+                </Pressable>
 
-            <Pressable onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                <Feather name="arrow-left" size={23} color="rgb(44, 44, 44)" />
-                <Text style={styles.headerName}>Phone numbers</Text>
-            </Pressable>
+                <Pressable style={styles.headerTextCon}>
+                    <Text style={{...styles.headerText,color:importantText}}>
+                        Phone numbers
+                    </Text >
+                </Pressable>
 
 
         </View>
 
         <View style={styles.phoneContainer}>
             <View style={styles.phoneIcon}>
-                <MaterialIcons name="phone-android" size={24} color="black" />
+                <MaterialIcons name="phone-android" size={24} color={background === 'white' ? "black" : "white"} />
 
             </View>
 
-            <Text style={styles.phoneNumber}>
+            <Text style={{...styles.phoneNumber,color:importantText}}>
                 {hashFun(user.number)}
 
             </Text>
 
         </View>
 
-        <Pressable style={styles.changePhone} onPress={changePhoneHandler}>
-            <Text style={styles.changePhoneText}>Change phone number</Text>
+        <Pressable style={{...styles.changePhone,backgroundColor:fadeColor}} onPress={changePhoneHandler}>
+            <Text style={{...styles.changePhoneText,color:importantText}}>Change phone number</Text>
         </Pressable>
 
     </SafeAreaView>
     )
-
-
-
 
 }
 
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
         paddingHorizontal: '5%',
-        paddingTop: 20
     },
     /* styling header */
     navigationHeader: {
         paddingBottom: 10,
-        backgroundColor: '#fff',
         zIndex: 10,
         width: '100%',
-        borderBottomColor: 'rgb(197, 197, 197)',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 30
+        marginBottom: 30,
+        paddingTop: 20
 
+
+    },
+    headerIconCon: {
+        width: '20%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+    },
+    headerTextCon: {
+        width: '80%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+
+    },
+
+    headerText: {
+        fontSize: 20,
+        color: 'rgb(44, 44, 44)',
+        fontFamily: 'Poppins'
 
     },
     headerName: {
@@ -123,8 +143,6 @@ const styles = StyleSheet.create({
     changePhone: {
         width: '90%',
         paddingVertical: 18,
-        backgroundColor: 'rgb(240,240,240)',
-        borderColor: 'rgb(230,230,230)',
         borderRadius: 35,
         display: 'flex',
         alignItems: 'center',

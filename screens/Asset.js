@@ -6,7 +6,7 @@ import {useSelector } from "react-redux";
 
 const Assets = ({navigation}) => {
     let [isLoading, setIsLoading] = useState(true)
-    let { user} = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
    
    
@@ -34,12 +34,12 @@ const Assets = ({navigation}) => {
         return <AssetsLoaders/>
     }
     return (
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{...styles.screen,backgroundColor:background}}>
             <ScrollView stickyHeaderIndices={[0]} contentContainerStyle={styles.scrollContainer}>
                 <View style={{ display: 'flex', width: '100%' }}>
-                    <View style={styles.headerContainer}>
+                    <View style={{...styles.headerContainer,backgroundColor: background,}}>
                         <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                            <Entypo name="menu" size={24} color="black" />
+                            <Entypo name="menu" size={24} color={background==='white'?"black":"white"} />
 
                         </TouchableOpacity>
 
@@ -52,7 +52,7 @@ const Assets = ({navigation}) => {
 
 
                         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                        <Ionicons name="notifications"  size={30} color="black" />
+                        <Ionicons name="notifications"  size={30} color={background==='white'?"black":"white"} />
                             <View style={styles.notification}>
                                 <View style={styles.notificationTextContainer}>
                                     <Text style={styles.notificationText}>{user.notifications.length}</Text>
@@ -68,9 +68,9 @@ const Assets = ({navigation}) => {
                 </View>
 
                 <View style={styles.balanceContainer}>
-                    {user.isHideBalance?<Text style={styles.balanceText}></Text>:<Text style={styles.balanceText}>Your balance</Text>}
+                    {user.isHideBalance?<Text style={styles.balanceText}></Text>:<Text style={{...styles.balanceText,color:normalText}}>Your balance</Text>}
 
-                    {user.isHideBalance ?<Text style={styles.balanceAmount}></Text>:<Text style={styles.balanceAmount}>$ {Number(user.accountBalance).toFixed(2)}</Text>}
+                    {user.isHideBalance ?<Text></Text>:<Text style={{...styles.balanceAmount,color:importantText}}>$ {Number(user.accountBalance).toFixed(2)}</Text>}
 
 
                 </View>
@@ -78,46 +78,44 @@ const Assets = ({navigation}) => {
 
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/graphics9.jpg')}
+                        source={require('../assets/icons/graphics9.png')}
                         style={{ width: 100, height: 100 }} />
-
                 </View>
+
                 <View style={styles.starterContainer}>
 
-                    <Text style={styles.starterHead}>Get started with crypto</Text>
+                    <Text style={{...styles.starterHead,color:importantText}}>Get started with crypto</Text>
 
-                    <Text style={styles.starterInfo}>Purchase crypto to earn.</Text>
+                    <Text style={{...styles.starterInfo,color:importantText}}>Purchase crypto to earn.</Text>
 
-                    <TouchableOpacity style={styles.buttonContainer} onPress={navigateToAsset}>
-                        <Text style={styles.buttonText}>Your assets</Text>
+                    <TouchableOpacity style={{...styles.buttonContainer,backgroundColor:fadeColor}} onPress={navigateToAsset}>
+                        <Text style={{...styles.buttonText,color:importantText}}>Your assets</Text>
 
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.buyContainer}>
-                    <Text style={styles.buyHead}>Recurring buys</Text>
+                    <Text style={{...styles.buyHead,color:importantText}}>Recurring buys</Text>
                     <View style={styles.buySubContainer}>
                         <View style={styles.subImageContainer}>
                         <Image
-                            source={require('../assets/icons/graphics8.jpg')}
+                            source={require('../assets/icons/graphics8.png')}
                             style={styles.subImage} />
 
                         </View>
                         
 
                         <View style={styles.subHeadContainer}>
-                            <Text style={styles.subHead}> Learn more about recurring buys</Text>
-                            <Text style={styles.subText}>Invest daily,weekly, or monthly </Text>
+                            <Text style={{...styles.subHead,color:importantText}}> Learn more about recurring buys</Text>
+                            <Text style={{...styles.subText,color:importantText}}>Invest daily,weekly, or monthly </Text>
                         </View>
 
                         
 
-
-
                     </View>
 
-                    <TouchableOpacity style={styles.buttonContainer} onPress={buyAssetHandler}>
-                        <Text style={styles.buttonText}>Buy assets</Text>
+                    <TouchableOpacity style={{...styles.buttonContainer,backgroundColor:fadeColor}} onPress={buyAssetHandler}>
+                        <Text style={{...styles.buttonText,color:importantText}}>Buy assets</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -135,21 +133,19 @@ const Assets = ({navigation}) => {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
-        backgroundColor: "#fff",
+        flex: 1
     },
     scrollContainer: {
         paddingBottom: 100,
-        paddingHorizontal: 15,
-
+        paddingHorizontal: '5%',
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',
         position: 'relative',
-        backgroundColor: '#fff',
+        
 
     },
     giftContainer: {
@@ -174,8 +170,8 @@ const styles = StyleSheet.create({
         marginRight: 20
     },
     notificationTextContainer: {
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         backgroundColor: 'red',
         position: 'absolute',
         bottom: 35,
@@ -183,7 +179,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: "center",
         justifyContent: 'center',
-        borderRadius: 20
+        borderRadius: 25
 
     },
     notificationText: {
@@ -234,7 +230,6 @@ const styles = StyleSheet.create({
     buttonContainer: {
         paddingVertical: 17,
         borderRadius: 30,
-        backgroundColor: 'rgb(240,240,240)',
         width: '95%',
         display: 'flex',
         alignItems: "center",

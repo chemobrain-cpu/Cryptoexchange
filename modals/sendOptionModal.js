@@ -8,12 +8,14 @@ import {
     Modal,
 } from "react-native";
 //import truncate
-import {truncate} from "../utils/util"
+import {truncate} from "../utils/util";
+import { useSelector } from "react-redux"
 
 
 
 
-const SendCryptoModal = ({ modalVisible, changeVisibility, walletNavigationHandler,bankNavigationHandler,currencyName }) => {
+const SendCryptoModal = ({ modalVisible, changeVisibility, navigationHandler_2,navigationHandler_1,asset,option_1,option_2}) => {
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
     return (<Modal
         animationType="slide"
@@ -23,21 +25,21 @@ const SendCryptoModal = ({ modalVisible, changeVisibility, walletNavigationHandl
             changeVisibility;
         }}
     >
-        <View style={styles.modalBackground}>
-            <View style={styles.modalTop}>
+        <View style={{ ...styles.modalBackground, backgroundColor: background === 'black' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.5)', }}>
+            <View style={{ ...styles.modalTop, backgroundColor: background === 'white' ? fadeColor : importantText }}>
             </View>
 
-            <View style={styles.modalView}>
-                <Text style={styles.modalText}>Send {truncate(currencyName,7)} to ??</Text>
+            <View style={{ ...styles.modalView, backgroundColor: background, borderColor: fadeColor }}>
+                <Text style={{...styles.modalText,color:importantText}}>Send {truncate(asset,7)} to ??</Text>
 
-                <TouchableOpacity style={styles.modalTopButtonContainer} onPress={bankNavigationHandler}>
-                    <Text style={styles.modalTopButtonText}> Bank account</Text>
+                <TouchableOpacity style={styles.modalTopButtonContainer} onPress={navigationHandler_1}>
+                    <Text style={styles.modalTopButtonText}> {option_1}</Text>
                 </TouchableOpacity>
 
 
 
-                <TouchableOpacity style={styles.modalBottomButtonContainer} onPress={walletNavigationHandler}>
-                    <Text style={styles.modalBottomButtonText}> wallet address</Text>
+                <TouchableOpacity style={{...styles.modalBottomButtonContainer,backgroundColor:fadeColor}} onPress={navigationHandler_2}>
+                    <Text style={{...styles.modalBottomButtonText,color:importantText}}> {option_2}</Text>
                 </TouchableOpacity>
 
 
@@ -54,15 +56,13 @@ const SendCryptoModal = ({ modalVisible, changeVisibility, walletNavigationHandl
 const styles = StyleSheet.create({
     modalBackground: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)'
 
     },
     modalTop: {
         height: 4,
         width: '20%',
-        backgroundColor: 'rgb(225,225,225)',
         position: 'absolute',
-        top: '65%',
+        top: '62%',
         alignSelf: 'center',
         borderRadius: 5
 
@@ -72,12 +72,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: '#fff',
         width: Dimensions.get('window').width,
-        top: '68%',
-        height: 220,
+        top: '65%',
+        padding:10,
         display: 'flex',
         flexDirection: 'column',
-        borderTopColor: 'rgb(240,240,240)',
-        borderTopWidth: 1,
+        borderWidth: 1,
         paddingTop: 10,
         paddingHorizontal: 20
 

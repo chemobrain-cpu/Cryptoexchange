@@ -13,7 +13,7 @@ import { Feather, AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 
 const SendInfo = ({ navigation }) => {
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
 
     const navigateToSendCrypto = () => {
@@ -45,14 +45,14 @@ const SendInfo = ({ navigation }) => {
    
    
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={{ display: 'flex', width: '100%' }}>
-                    <View style={{ ...styles.headerContainer, backgroundColor: '#fff', }}>
+                    <View style={{ ...styles.headerContainer, backgroundColor:background, }}>
                         <TouchableOpacity onPress={() => navigation.goBack()}>
 
 
-                            <Feather name="arrow-left" size={25} color={"rgb(44,44,44)"} />
+                            <Feather name="arrow-left" size={25} color={background==='white'?"black":"white"} />
 
 
                         </TouchableOpacity>
@@ -62,7 +62,7 @@ const SendInfo = ({ navigation }) => {
 
                 <View style={styles.imageContainer}>
                     <Image
-                        source={require('../assets/icons/sendImage.jpg')}
+                        source={require('../assets/icons/sendImage.png')}
                         style={styles.image} />
 
                 </View>
@@ -73,25 +73,24 @@ const SendInfo = ({ navigation }) => {
 
                 <View style={styles.contentContainer}>
                     <View style={styles.contentIcon}>
-                        <AntDesign name="check" size={20} color="black" />
+                        <AntDesign name="check" size={20} color={background==='white'?"black":"white"} />
 
                     </View>
 
                     <View style={styles.content}>
-                        <Text style={styles.contentHeader}>Cashout Funds</Text>
+                        <Text style={{...styles.contentHeader,color:importantText}}>Cashout Funds</Text>
                         <Text style={styles.contentText}>You can withdraw funds directly to your bank account</Text>
                     </View>
                 </View>
 
                 <View style={styles.contentContainer}>
                     <View style={styles.contentIcon}>
-                        <AntDesign name="check" size={20} color="black" />
-
+                        <AntDesign name="check" size={20} color={background==='white'?"black":"white"} />
                     </View>
 
                     <View style={styles.content}>
-                        <Text style={styles.contentHeader}>Send Crypto</Text>
-                        <Text style={styles.contentText}>You can send a crypto gift to anyone with an asset wallet address</Text>
+                        <Text style={{...styles.contentHeader,color:importantText}}>Send Crypto</Text>
+                        <Text style={{...styles.contentText,color:normalText}}>You can send a crypto gift to anyone with an asset wallet address</Text>
                     </View>
                 </View>
 
@@ -104,8 +103,8 @@ const SendInfo = ({ navigation }) => {
 
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.secondButton} onPress={navigateToSendCrypto}>
-                    <Text style={styles.footerButtonSecondText}>Send crypto</Text>
+                <TouchableOpacity style={{...styles.secondButton,backgroundColor:fadeColor}} onPress={navigateToSendCrypto}>
+                    <Text style={{...styles.footerButtonSecondText,color:importantText}}>Send crypto</Text>
 
                 </TouchableOpacity>
 
@@ -123,7 +122,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',

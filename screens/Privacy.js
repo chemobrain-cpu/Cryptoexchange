@@ -2,90 +2,65 @@ import React from 'react'
 import { View, Text, SafeAreaView, StyleSheet, Pressable } from 'react-native'
 import { AntDesign, Feather } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
-
+import { useDispatch, useSelector } from "react-redux";
 
 const Privacy = ({ navigation }) => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
-
-    const continueHandler = async() => {
+    const continueHandler = async () => {
         //navigating to the browser
-         //navigate to password reset page
-         await WebBrowser.openBrowserAsync('http://www.coincap.cloud/policy')
-
-
+        //navigate to password reset page
+        await WebBrowser.openBrowserAsync('http://www.coincap.cloud/policy')
     }
 
-    return (<SafeAreaView style={styles.screen}>
+    return (<SafeAreaView style={{ flex: 1, backgroundColor: background }}>
         <View style={styles.container}>
-
-
-            <View style={styles.navigationHeader}>
-
+            <View style={{ ...styles.navigationHeader, backgroundColor: background, borderBottomColor: fadeColor }}>
                 <Pressable onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                    <Feather name="arrow-left" size={23} color="rgb(44, 44, 44)" />
-                    <Text style={styles.headerName}>Privacy</Text>
+                    <Feather name="arrow-left" size={23} color={background === 'white' ? "black" : "white"} />
+                    <Text style={{ ...styles.headerName, color: importantText }}>Privacy</Text>
                 </Pressable>
-
-
             </View>
 
-            <Pressable style={styles.settingContainer} onPress={()=>continueHandler('privacy')}>
+            <Pressable style={styles.settingContainer} onPress={() => continueHandler('privacy')}>
                 <View>
-                    <Text style={styles.settingText}>Privacy policy</Text>
+                    <Text style={{...styles.settingText,color:normalText}}>Privacy policy</Text>
                 </View>
-                <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
             </Pressable>
 
-            <Pressable style={styles.settingContainer} onPress={()=>continueHandler('cookie')}>
+            <Pressable style={styles.settingContainer} onPress={() => continueHandler('cookie')}>
                 <View>
-                    <Text style={styles.settingText}>Cookie policy</Text>
+                    <Text style={{...styles.settingText,color:normalText}}>Cookie policy</Text>
                 </View>
-                <AntDesign name="right" size={18} color="rgb(44, 44, 44)" />
+                <AntDesign name="right" size={18} color={background === 'white' ? "black" : "white"} />
 
             </Pressable>
-
-
-
-
-
-
-
-
-
-
-
-
         </View>
-
     </SafeAreaView>
     )
-
-
-
-
 }
 
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
         paddingHorizontal: '5%',
-        paddingTop: 20
+       
+    },
+    container:{
+        paddingHorizontal: '5%',
     },
     /* styling header */
     navigationHeader: {
         paddingBottom: 10,
-        backgroundColor: '#fff',
         zIndex: 10,
         width: '100%',
-        borderBottomColor: 'rgb(197, 197, 197)',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 30
-
-
+        marginBottom: 30,
+        paddingTop: 20,
     },
     headerName: {
         fontFamily: 'Poppins',

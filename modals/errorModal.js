@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
 
     },
     modalQuest: {
-        paddingTop: 20,
+        paddingTop: 15,
         fontSize: 20,
         fontFamily: 'Poppins',
         alignSelf: 'flex-start',
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 
     cancelBtn: {
         width: '100%',
-        paddingTop: 20,
+        paddingTop: 15,
         paddingBottom: 20,
         borderRadius: 50,
         backgroundColor: 'rgb(240,240,240)',

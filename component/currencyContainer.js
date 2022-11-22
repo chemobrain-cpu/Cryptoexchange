@@ -1,20 +1,28 @@
-import React, { memo } from 'react'
+import React, { memo,useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import {truncate} from "../utils/util"
+import { useDispatch,useSelector } from "react-redux"
 /*
 function arePropsEqual(prevProps, nextProps) {
     return prevProps.coin.id.toString() === nextProps.coin.id.toString()
 
     
   }*/
+
+  
+
+
+
+
 let CryptoCard = ({ navigationHandler, coin }) => {
     //destructuring the coin datastructure
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
+
+    
+
     let { image, name, id, symbol, current_price, price_change_percentage_24h } = coin
-
-
-
-   
 
 
     if(!coin){
@@ -31,14 +39,15 @@ let CryptoCard = ({ navigationHandler, coin }) => {
                 style={styles.imageLogo}
             />
             <View style={styles.nameContainer}>
-                <Text style={styles.nameText}>{truncate(name, 7)}</Text>
-                <Text style={styles.symbolText}>{symbol}</Text>
+                <Text style={{...styles.nameText,color:importantText}}>{truncate(name, 7)}</Text>
+                <Text style={{...styles.symbolText,color: normalText}}>{symbol}</Text>
 
             </View>
         </View>
 
         <View style={styles.containerRight}>
-            <Text style={styles.priceText}>${parseFloat(current_price).toFixed(3)}</Text>
+            <Text style={{...styles.priceText,
+        color:importantText}}>${parseFloat(current_price).toFixed(3)}</Text>
 
             <Text style={{ ...styles.iconText, color: price_change_percentage_24h < 0 ? 'red' : 'green' }}>
                 {price_change_percentage_24h < 0 ? <Feather name="arrow-down-right" size={20} color="red" /> : <Feather name="arrow-up-right" size={20} color="green" />}{Math.abs(price_change_percentage_24h)?.toFixed(3)}%
@@ -76,9 +85,9 @@ const styles = StyleSheet.create({
         width: '48%',
     },
     imageLogo: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
+        width: 34,
+        height: 34,
+        borderRadius: 18,
         borderWidth: 0.5,
         borderColor: "#ddd",
     },
@@ -87,23 +96,24 @@ const styles = StyleSheet.create({
         paddingLeft: 10
     },
     nameText: {
-        fontSize: 17,
-        fontFamily: 'Poppins'
+        fontSize: 19,
+        fontFamily: 'Poppins',
+        
+    
     },
     symbolText: {
-        fontSize: 17,
+        fontSize: 19,
         fontFamily: 'Poppins',
-        color: "#5d616d"
+        
     },
     priceText: {
-        fontSize: 18,
+        fontSize: 20,
         fontFamily: 'Poppins',
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
     },
     iconText: {
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: 'Poppins',
-        color: "#5d616d",
         alignSelf: 'flex-end'
     }
 

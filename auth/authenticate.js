@@ -1,10 +1,10 @@
-import React, { useState} from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, ActivityIndicator,KeyboardAvoidingView } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { confirmPhone } from "../store/action/appStorage";
-import { useRoute} from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import AuthModal from '../modals/authModal'
 
 const Authenticate = ({ navigation }) => {
@@ -13,12 +13,17 @@ const Authenticate = ({ navigation }) => {
     const [authInfo, setAuthInfo] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const route = useRoute();
-    let dispatch = useDispatch()
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
    
+    let dispatch = useDispatch()
+
 
     const {
         email
     } = route.params
+
+
 
     let changeConfirmationCode = (e) => {
         setConfirmationCode(e)
@@ -69,10 +74,10 @@ const Authenticate = ({ navigation }) => {
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
 
-        <SafeAreaView style={styles.screen}>
-            <View style={styles.navigationHeader}>
-                <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={22} fontWeight={100} color="rgb(44, 44, 44)" />
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
+            <View style={{ ...styles.navigationHeader, backgroundColor: background, borderColor: background }}>
+                <TouchableOpacity style={{...styles.close,color:normalText}} onPress={() => navigation.goBack()}>
+                    <Ionicons name="arrow-back" size={22} fontWeight={100} color={normalText} />
                 </TouchableOpacity>
 
                 <View style={styles.progress}>
@@ -93,19 +98,19 @@ const Authenticate = ({ navigation }) => {
                 </View>
 
             </View>
-            
+
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
-                <Text style={styles.headerText}>
+                <Text style={{ ...styles.headerText, color: importantText }}>
                     Enter authentication code
                 </Text >
-                <Text style={styles.text}>Enter the 7-digit code we just texted to your phone number, xxxxxxxxx.</Text>
+                <Text style={{ ...styles.text, color: normalText }}>Enter the 7-digit code we just texted to your phone number, xxxxxxxxx.</Text>
 
                 <View style={styles.formContainer}>
 
                     <KeyboardAvoidingView style={styles.CodeCon}>
                         <Text style={styles.CodeText}>Code</Text>
                         <TextInput
-                            style={styles.input}
+                            style={{ ...styles.input, color: importantText }}
                             onChangeText={changeConfirmationCode}
                             value={confirmationCode}
                             placeholder='7-digit code from SMS'
@@ -118,7 +123,7 @@ const Authenticate = ({ navigation }) => {
                 </View>
 
 
-                <View style={styles.buttonContainer}>
+                <View style={{ ...styles.buttonContainer }}>
                     <TouchableOpacity style={styles.buttonContinue} onPress={() => continueHandler(navigation)}>
 
                         {isLoading ? <ActivityIndicator color='#fff' size='large' /> : <Text style={styles.buttonContinueText}>
@@ -126,8 +131,11 @@ const Authenticate = ({ navigation }) => {
                         </Text>}
 
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonResend} onPress={gobackHandler}>
-                        <Text style={styles.buttonResendText}>
+                    <TouchableOpacity style={{
+                        ...styles.buttonResend,
+                        backgroundColor: fadeColor,
+                    }} onPress={gobackHandler}>
+                        <Text style={{ ...styles.buttonResendText, color: importantText }}>
                             Resend
                         </Text>
 
@@ -144,8 +152,7 @@ const Authenticate = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
-        paddingTop: 20,
+        paddingTop: 15,
         paddingHorizontal: '5%',
     },
 
@@ -154,12 +161,19 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        backgroundColor: '#fff',
         zIndex: 10,
         borderColor: '#fff',
 
     },
+    close: {
+        width: '20%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+
+    },
     progress: {
+        width: '80%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -169,7 +183,6 @@ const styles = StyleSheet.create({
 
     },
     progressbar: {
-        paddingLeft: 8
 
     },
     close: {
@@ -180,9 +193,9 @@ const styles = StyleSheet.create({
 
     },
     body: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     headerText: {
         marginBottom: 15,
@@ -261,7 +274,6 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingVertical: 17,
         borderRadius: 30,
-        backgroundColor: 'rgb(240,240,240)',
         marginBottom: 20,
         display: 'flex',
         justifyContent: 'center',

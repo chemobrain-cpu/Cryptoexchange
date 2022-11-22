@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, Dimensions,Pressable} from 'react-native';
 import { Entypo, MaterialIcons, MaterialCommunityIcons, Feather,FontAwesome } from '@expo/vector-icons';
-import * as WebBrowser from 'expo-web-browser'
+import * as WebBrowser from 'expo-web-browser';
+import { useSelector } from "react-redux";
 
 const HomeTimeline = ({data}) => {
     const {logo,title,action,topic,about,likeNo,url,browserUrl} = data
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
 
 //icon component
     let Icon = ()=>{
@@ -27,7 +29,7 @@ const HomeTimeline = ({data}) => {
         await WebBrowser.openBrowserAsync(browserUrl)
     }
 
-    return (<Pressable style={styles.container} onPress={browserHandler}>
+    return (<Pressable style={{...styles.container,borderColor: fadeColor}} onPress={browserHandler}>
         <View style={styles.headerSection}>
             <View style={styles.logoContainer}>
                 <View style={styles.logo}>
@@ -39,13 +41,11 @@ const HomeTimeline = ({data}) => {
 
                 <View style={styles.titleActionContainer}>
 
-                    <Text style={styles.titleText}>
+                    <Text style={{...styles.titleText,color:importantText}}>
                         {title}
-
                     </Text>
 
-
-                    <Text style={{ ...styles.actionText, color: 'rgb(100,100,100)' }}>
+                    <Text style={{ ...styles.actionText, color:background==="white"? 'rgb(100,100,100)':normalText }}>
                         {action}
 
                     </Text>
@@ -57,7 +57,7 @@ const HomeTimeline = ({data}) => {
             </View>
 
             <View style={styles.epsillomContainer}>
-                <MaterialCommunityIcons name="dots-vertical" size={24} color="rgb(100,100,100)" />
+                <MaterialCommunityIcons name="dots-vertical" size={24} color={normalText} />
 
             </View>
 
@@ -70,19 +70,19 @@ const HomeTimeline = ({data}) => {
         </View>
         <View style={styles.footerSection}>
             <View style={styles.topicContainer}>
-                <Text style={styles.topicText}>{topic}</Text>
+                <Text style={{...styles.topicText,color:importantText}}>{topic}</Text>
 
             </View>
             <View style={styles.aboutContainer}>
-                <Text style={styles.aboutText}>
+                <Text style={{...styles.aboutText,color:normalText}}>
                     {about}
                 </Text>
 
             </View>
             <View style={styles.likesContainer}>
-                <MaterialIcons name="favorite-outline" size={24} color="black" style={styles.likeIcon} />
+                <MaterialIcons name="favorite-outline" size={24} color={importantText} style={styles.likeIcon} />
                 <Text style={styles.likeText}>{likeNo}</Text>
-                <Feather name="upload" size={24} color="black" style={styles.likeIcon} />
+                <Feather name="upload" size={24} color={importantText} style={styles.likeIcon} />
 
             </View>
 
@@ -94,7 +94,7 @@ const HomeTimeline = ({data}) => {
 const styles = StyleSheet.create({
     container:{ 
         borderTopWidth: 1, 
-        borderColor: 'rgb(235,235,235)', borderBottomWidth: 1, 
+        borderBottomWidth: 1, 
         paddingTop: 15 
     },
      headerSection: {

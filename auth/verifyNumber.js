@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions,ActivityIndicator,KeyboardAvoidingView} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress'
-import { useDispatch} from "react-redux";
+import { useDispatch,useSelector} from "react-redux";
 import { phoneNumber } from "../store/action/appStorage";
 import AuthModal from '../modals/authModal'
 import { useRoute} from "@react-navigation/native";
@@ -16,9 +16,14 @@ const VerifyNumber = ({navigation}) => {
     const [isLoading,setIsLoading] = useState(false)
     const route = useRoute();
     let dispatch = useDispatch()
+    
     const {
         email
     } = route.params
+    
+
+   let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
     
    
     let changePhone = (e) => {
@@ -56,15 +61,13 @@ const VerifyNumber = ({navigation}) => {
             return
        } 
     }
-
-
     const updateAuthError = ()=>{
         setIsAuthError(prev=>!prev)
     }
 
     return (<>
      {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo}/>}
-     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+     <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
         <View style={styles.container}>
             <View style={styles.navigationHeader}>
                 <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
@@ -91,10 +94,10 @@ const VerifyNumber = ({navigation}) => {
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
-                <Text style={styles.headerText}>
+                <Text style={{ ...styles.headerText, color: importantText }}>
                     Set up 2-step verification
                 </Text >
-                <Text style={styles.text}>Enter your phone number so we can text you an authentication code</Text>
+                <Text style={{ ...styles.text, color: normalText }}>Enter your phone number so we can text you an authentication code</Text>
 
 
 
@@ -102,11 +105,12 @@ const VerifyNumber = ({navigation}) => {
 
                 <KeyboardAvoidingView style={styles.formContainer}>
                     <View style={styles.codeCon}>
-                        <Text style={styles.countryText}>Country</Text>
-                        <View style={styles.selectorContainer}>
+                        <Text style={{...styles.countryText,color:normalText}}>Country</Text>
+                        <View style={{...styles.selectorContainer,backgroundColor:background}}>
                         <Picker
-                            style={pickerSelectStyles}
+                            style={{ color: normalText }}
                             onValueChange={selectCountryHandler}
+                            selectedValue={country}
                             >
                                 <Picker.Item label="Afghanistan(+93)" value ="Afghanistan(+93)"  />
                                 <Picker.Item label="Albania(+355)"  value = "Albania(+355)"   />
@@ -186,7 +190,7 @@ const VerifyNumber = ({navigation}) => {
                                 <Picker.Item label="French Guiana(+594)"  value = "French Guiana(+594)"   />
                                 <Picker.Item label="French Polynesia(+689)"  value = "French Polynesia(+689)"  />
                                 <Picker.Item label="French Southern Territories(+262)"  value = "French Southern Territories(+262)"   />
-                                <Picker.Item label="Gabon()+241"  value = "Gabon()+241"   />
+                                <Picker.Item label="Gabon(+241)"  value = "Gabon(+241)"   />
                                 <Picker.Item label="Gambia(+220)"  value = "Gambia(+220)"   />
                                 <Picker.Item label="Georgia(+995)"  value = "Georgia(+995)"   />
                                 <Picker.Item label="Germany(+49)"  value = "Germany(+49)"   />
@@ -365,7 +369,7 @@ const VerifyNumber = ({navigation}) => {
                     <View style={styles.phoneCon}>
                         <Text style={styles.phoneText}>Phone</Text>
                         <TextInput
-                            style={styles.input}
+                            style={{...styles.input,color:normalText}}
                             onChangeText={changePhone}
                             value={phone}
                             placeholder='Phone Number'
@@ -394,29 +398,34 @@ const VerifyNumber = ({navigation}) => {
     </SafeAreaView>
     </>)
 
-
-
-
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: '90%',
-        marginHorizontal: '5%',
+    screen: {
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingHorizontal: '5%',
         paddingTop: 20
-
     },
+    
     navigationHeader: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        backgroundColor: '#fff',
         zIndex: 10,
         borderColor: '#fff',
 
     },
+    close: {
+        width: '20%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+
+    },
     progress: {
+        width: '80%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -426,7 +435,6 @@ const styles = StyleSheet.create({
 
     },
     progressbar: {
-        paddingLeft: 8
 
     },
     close: {
@@ -437,7 +445,7 @@ const styles = StyleSheet.create({
 
     },
     body: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         flexDirection: 'column'
     },
@@ -473,7 +481,6 @@ const styles = StyleSheet.create({
     select:{
         borderColor:'rgb(100,100,100)',
         borderWidth:1
-
 
     },
 

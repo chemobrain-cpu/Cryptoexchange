@@ -159,7 +159,7 @@ const Photo = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     screen: {
-        paddingTop: 20,
+        paddingTop: 15,
         paddingHorizontal: 20,
         width: Dimensions.get('window').width
     },

@@ -11,6 +11,7 @@ let Splash = ({ navigation }) => {
     const visibilityHandler = () => {
         setModalVisible(false)
     }
+    
 
     useEffect(() => {
         setTimeout(()=>{ fetchData()},5000)
@@ -21,8 +22,6 @@ let Splash = ({ navigation }) => {
         if (!res.bool) {
             return navigation.navigate('Splash_2')
         }
-        
-
     }
 
 

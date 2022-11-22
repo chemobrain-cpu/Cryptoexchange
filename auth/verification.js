@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, Linking, ScrollView, Dimensions, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress'
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { verifiedEmail } from "../store/action/appStorage";
 import { useRoute } from "@react-navigation/native";
 //importing modals
@@ -11,14 +11,18 @@ import AuthModal from '../modals/authModal'
 const Verification = ({ navigation }) => {
     const [isAuthError, setIsAuthError] = useState(false)
     const [authInfo, setAuthInfo] = useState("")
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
     const route = useRoute()
     let dispatch = useDispatch()
 
     //getting email from previous page
+     
     const {
         email
     } = route.params
+    
+
 
     //this handler check if user email has been verified
     const continueHandler = async () => {
@@ -47,7 +51,7 @@ const Verification = ({ navigation }) => {
 
 
     return (<>
-        {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}<SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}<SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
             <View style={styles.container}>
                 <View style={styles.navigationHeader}>
                     <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
@@ -75,18 +79,18 @@ const Verification = ({ navigation }) => {
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
                     <View style={styles.imageContainer}>
                         <Image
-                            source={require('../assets/icons/photo1(7).jpg')}
+                            source={require('../assets/icons/photo1(7).png')}
                             style={{ width: 250, height: 250, }} />
 
                     </View>
 
                     <View style={styles.verificationContainer}>
-                        <Text style={styles.headerText}>
+                        <Text style={{ ...styles.headerText, color: importantText }}>
                             Verify your email
                         </Text>
-                        <Text style={styles.verificationText}>
+                        <Text style={{...styles.verificationText,color:normalText}}>
                             We sent a verification email to
-                            <Text style={styles.email}> {email} </Text> Please tap the link inside that email to
+                            <Text style={{...styles.email,color:importantText}}> {email} </Text> Please tap the link inside that email to
 
                             continue
                         </Text>
@@ -100,8 +104,8 @@ const Verification = ({ navigation }) => {
                             </Text>
 
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.resendBtnContainer} onPress={continueHandler}>
-                            <Text style={styles.resend}>continue</Text>
+                        <TouchableOpacity style={{...styles.resendBtnContainer,backgroundColor:fadeColor}} onPress={continueHandler}>
+                            <Text style={{...styles.resend,color:importantText}}>continue</Text>
 
                         </TouchableOpacity>
 
@@ -125,25 +129,31 @@ const Verification = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: '90%',
-        marginHorizontal: '5%',
+    screen: {
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingHorizontal: '5%',
         paddingTop: 20
-
     },
+    
     navigationHeader: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        backgroundColor: '#fff',
         zIndex: 10,
         borderColor: '#fff',
 
-
+    },
+    close: {
+        width: '20%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
 
     },
     progress: {
+        width: '80%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -153,7 +163,6 @@ const styles = StyleSheet.create({
 
     },
     progressbar: {
-        paddingLeft: 8
 
     },
     close: {
@@ -164,7 +173,7 @@ const styles = StyleSheet.create({
 
     },
     body: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: 'flex',
         alignItems: 'center'
     },

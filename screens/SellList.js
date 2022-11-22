@@ -4,8 +4,7 @@ import { Feather, FontAwesome } from '@expo/vector-icons'
 import CryptoCard from '../component/currencyContainer'
 import WalletAssetLoader from "../loaders/walletAssetsLoader";
 import Error from '../component/errorComponent'
-import { useDispatch, } from "react-redux"
-import { useSelector } from "react-redux";
+import { useDispatch,useSelector  } from "react-redux"
 import { loadWatchList } from "../store/action/appStorage";
 import EmptyList from "../component/emptyList";
 
@@ -18,7 +17,8 @@ let SellList = ({ navigation }) => {
   let [isLoading, setIsLoading] = useState(true)
   let [error, setError] = useState(false)
   let dispatch = useDispatch()
-  let { user } = useSelector(state => state.userAuth)
+  
+  let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
 
   //preventing memory leak
   useEffect(() => {
@@ -35,7 +35,6 @@ let SellList = ({ navigation }) => {
   //destructuring from param
 
   let navigationHandler = (coin) => {
-    console.log(coin)
     navigation.navigate('TradePriceChart',
       {
         price: coin.price,
@@ -113,6 +112,7 @@ let SellList = ({ navigation }) => {
     fetchData()
   }, [])
 
+
   const renderItem = ({ item, index }) => {
     return <CryptoCard navigationHandler={() => navigationHandler(item)}
       key={item}
@@ -134,14 +134,14 @@ let SellList = ({ navigation }) => {
 
   }
 
-  return <SafeAreaView style={styles.screen}>
-    <View style={styles.headerContainer}>
+  return <SafeAreaView style={{ flex: 1, backgroundColor:background }}>
+    <View style={{ ...styles.headerContainer,backgroundColor:background }}>
 
 
       <View style={styles.assetsheaderText}>
         <Pressable onPress={() => navigation.goBack()} style={styles.assetsheaderTextCon}>
-          <Feather name="arrow-left" size={25} color={"rgb(44, 44, 44)"} />
-          <Text style={styles.assetsText}>Select asset to sell</Text>
+          <Feather name="arrow-left" size={25} color={background==='white'?"black":"white"} />
+          <Text style={{...styles.assetsText,color:importantText}}>Select asset to sell</Text>
 
         </Pressable>
 
@@ -150,13 +150,14 @@ let SellList = ({ navigation }) => {
 
       <View style={styles.assetsheaderCon}>
 
-        <KeyboardAvoidingView style={focus ? { ...styles.inputContainer, borderColor: '#1652f0' } : { ...styles.inputContainer }}>
-          <FontAwesome name="search" size={18} color={focus ? "#1652f0" : "rgb(44, 44, 44)"} />
+        <KeyboardAvoidingView  style={focus ? { ...styles.inputContainer, borderColor: blue } : { ...styles.inputContainer, borderColor:importantText , }}>
+          <FontAwesome name="search" size={18} color={focus ? blue : normalText}  />
           <TextInput
             style={{ ...styles.input, borderColor: 'orange' }}
             onChangeText={changeText}
             value={text}
             placeholder="Search"
+             placeholderTextColor={normalText}
             onFocus={() => {
               setFocus(true);
             }}
@@ -173,7 +174,7 @@ let SellList = ({ navigation }) => {
     </View>
 
 
-    <View style={styles.middlesection}>
+    <View style={{...styles.middlesection,backgroundColor:background}}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={filteredCoins}
@@ -187,18 +188,13 @@ let SellList = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   headerContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: '#fff',
     zIndex: 10,
-    paddingTop: 20,
+    paddingTop: 15,
     paddingHorizontal: 15
   },
   assetsheaderCon: {

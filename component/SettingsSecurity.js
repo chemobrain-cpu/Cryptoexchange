@@ -12,7 +12,7 @@ const SettingsSecurity = () => {
     return (
         <View style={{ marginBottom: 90 }}>
             <Text style={{ fontSize: 20,fontFamily: 'Poppins', paddingTop: 10 }}>Security</Text>
-            <View style={{ paddingTop: 20, flexDirection: "column" }}>
+            <View style={{ paddingTop: 15, flexDirection: "column" }}>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 40 }}>
                     <Text style={{ flexWrap: "wrap", fontSize: 17, letterSpacing: 0.5, fontWeight: "300" }}>Require PIN / Face ID</Text>
 
@@ -71,7 +71,7 @@ const SettingsSecurity = () => {
                         Support
                     </Text>
                     <Image
-                        source={require("../assets/icons/arrow.jpg")}
+                        source={require("../assets/icons/arrow.png")}
                         style={{ width: 10, height: 10 }}
                     />
                 </View>

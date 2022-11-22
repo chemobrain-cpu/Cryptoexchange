@@ -1,28 +1,32 @@
 import React from "react"
 import ContentLoader, { Rect } from "react-content-loader/native"
 import { View, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
-import { Entypo, MaterialIcons,Ionicons } from '@expo/vector-icons';
+import { Entypo,Ionicons } from '@expo/vector-icons';
+import { useSelector } from "react-redux"
 
 
 let PayLoader = () => {
-    return <SafeAreaView style={styles.screen}>
+    let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+
+
+    return <SafeAreaView style={{...styles.screen,backgroundColor: background,}}>
         <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
             <View >
-                <View style={{ ...styles.headerContainer }}>
+                <View style={{ ...styles.headerContainer,backgroundColor: background, }}>
                     <TouchableOpacity >
-                        <Entypo name="menu" size={24} color="black" />
+                        <Entypo name="menu" size={24} color={background==='white'?"black":"white"} />
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => alert('notification')}>
-                        <Ionicons name="notifications" size={30} color="black" />
+                        <Ionicons name="notifications" size={30} color={background==='white'?"black":"white"} />
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <View style={{ flex: 1, backgroundColor: '#fff', width: Dimensions.get('window').width, height: Dimensions.get('window').height, paddingHorizontal: 17, }}>
+            <View style={{ flex: 1, backgroundColor:background, width: Dimensions.get('window').width, height: Dimensions.get('window').height, paddingHorizontal: 17, }}>
 
-                <ContentLoader backgroundColor="#f3f3f3"
-                    foregroundColor="#fff"
+                <ContentLoader backgroundColor={fadeColor}
+                    foregroundColor={background}
                     height={150}
                     duration={1000}
                     width={'100%'}>
@@ -34,15 +38,15 @@ let PayLoader = () => {
                 </ContentLoader>
 
                 <View style={styles.container}>
-                    <ContentLoader height={40} width={'35%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                    <ContentLoader height={40} width={'35%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={30} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                    <ContentLoader height={30} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -54,29 +58,29 @@ let PayLoader = () => {
 
 
                 <View style={styles.container}>
-                    <ContentLoader height={35} width={'10%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                    <ContentLoader height={35} width={'10%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={35} width={'15%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                    <ContentLoader height={35} width={'15%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={35} width={'20%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                    <ContentLoader height={35} width={'20%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                     </ContentLoader>
-                    <ContentLoader height={35} width={'30%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                    <ContentLoader height={35} width={'30%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                         <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -90,16 +94,16 @@ let PayLoader = () => {
 
 
 
-                <ContentLoader height={60} width={150} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                <ContentLoader height={60} width={150} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
 
                 </ContentLoader>
-                <ContentLoader height={200} width={200} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                <ContentLoader height={200} width={200} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="60%" height="50%" />
                     <Rect x="0" y="50" rx="5" ry="5" width="100%" height="50%" />
@@ -108,16 +112,16 @@ let PayLoader = () => {
                 </ContentLoader>
 
 
-                <ContentLoader height={60} width={'100%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                <ContentLoader height={60} width={'100%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
 
                 </ContentLoader>
 
-                <ContentLoader height={120} width={'100%'} duration={1000} borderRadius={40} backgroundColor="#f3f3f3"
-                    foregroundColor="#fff">
+                <ContentLoader height={120} width={'100%'} duration={1000} borderRadius={40} backgroundColor={fadeColor}
+                    foregroundColor={background}>
 
                     <Rect x="0" y="20" rx="5" ry="5" width="100%" height="100%" />
 
@@ -144,12 +148,11 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     headerContainer: {
-        paddingTop: 20,
+        paddingTop: 15,
         display: "flex",
         flexDirection: "row",
         justifyContent: 'space-between',
         position: 'relative',
-        backgroundColor: '#fff',
         paddingHorizontal: 15
 
     },

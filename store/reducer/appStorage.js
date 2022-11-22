@@ -1,16 +1,52 @@
-import { FORCEUSERIN, COINS, LOGIN, CHANGE_WALLET, MODIFY_WATCHLIST, PAYMENT_METHOD, BUY_ASSET, CONVERT_ASSET, SELL_ASSET, TOPUP, TEMPORAL, CLEANTEMPORAL, READNOTIFICATION, ADD_ID, LOGOUT, UPDATEUSER } from "../action/appStorage";
+import { FORCEUSERIN, COINS, LOGIN, CHANGE_WALLET, MODIFY_WATCHLIST, PAYMENT_METHOD, BUY_ASSET, CONVERT_ASSET, SELL_ASSET, TOPUP, TEMPORAL, CLEANTEMPORAL, READNOTIFICATION, ADD_ID, LOGOUT, UPDATEUSER, CHANGE_BLACK,CHANGE_WHITE } from "../action/appStorage";
 
 const initialState = {
     token: "",
     expiresIn: "",
     user: {},
     notifications: [],
-    temporalObj: {}
+    temporalObj: {},
+    background: '',
+    importantText: '',
+    normalText: '',
+    fadeColor: '',
+    blue: '',
+    fadeButtonColor: '',
+
+    
+
 }
 
 
 export const userAuthReducer = (state = initialState, action) => {
     switch (action.type) {
+        case CHANGE_WHITE:
+            if (action.payload) {
+                return {
+                    ...state,
+                    background: action.payload.background,
+                    importantText: action.payload.importantText,
+                    normalText: action.payload.normalText,
+                    fadeColor: action.payload.fadeColor,
+                    blue: action.payload.blue,
+                    fadeButtonColor: action.payload.fadeButtonColor,
+                }
+            }
+            break;
+        case CHANGE_BLACK:
+            if (action.payload) {
+                return {
+                    ...state,
+                    background: action.payload.background,
+                    importantText: action.payload.importantText,
+                    normalText: action.payload.normalText,
+                    fadeColor: action.payload.fadeColor,
+                    blue: action.payload.blue,
+                    fadeButtonColor: action.payload.fadeButtonColor,
+                }
+            }
+            break;
+
         case FORCEUSERIN:
             if (action.payload) {
                 return {
@@ -18,7 +54,7 @@ export const userAuthReducer = (state = initialState, action) => {
                     token: action.payload.token,
                     expiresIn: action.payload.expiresIn,
                     user: action.payload.user,
-                    notifications:action.payload.notification,
+                    notifications: action.payload.notification,
                 }
             }
             break;
@@ -100,10 +136,10 @@ export const userAuthReducer = (state = initialState, action) => {
                 return {
                     ...state,
                     user: action.payload
-    
+
                 }
             }
-            
+
 
         case TEMPORAL:
             if (action.payload) {

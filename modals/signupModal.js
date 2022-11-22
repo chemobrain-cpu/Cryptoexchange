@@ -1,53 +1,68 @@
-import React from 'react'
-import { View, Text,TouchableOpacity, StyleSheet, Modal, Dimensions} from 'react-native'
+import React, { memo, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
+import { useDispatch, useSelector } from "react-redux"
 
-const SignupModal = ({modalVisible,updateVisibility,navigateHandler}) => {
+
+let background = 'black'
+let importantText
+let normalText
+let fadeColor
+let blue
+let fadeButtonColor
+
+
+
+
+const SignupModal = ({ modalVisible, updateVisibility, navigateHandler }) => {
+    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+
+
+
     return (<Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={()=>updateVisibility()}
-        >
-            <View style={styles.modalBackground}>
-                <View style={styles.modalTop}>
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => updateVisibility()}
+    >
+        <View style={{ ...styles.modalBackground, backgroundColor: background === 'black' ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.5)' }}>
+            <View style={{ ...styles.modalTop, backgroundColor: background === 'white' ? fadeColor : importantText }}>
+            </View>
+
+            <View style={{ ...styles.modalView, backgroundColor: background, borderColor: fadeColor, }}>
+                <Text style={{ ...styles.modalQuest, color: importantText }}>Are you sure you don't want to create a new account?</Text>
+
+                <Text style={styles.modalState}>you can always try again?</Text>
+
+                <View style={styles.modalButtonContainer}>
+                    <TouchableOpacity style={{ ...styles.acceptBtn, borderColor: fadeColor }} onPress={() => navigateHandler()} >
+                        <Text style={{ color: importantText }}>yes, i'm sure</Text>
+
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => updateVisibility()} style={{ ...styles.cancelBtn, backgroundColor: blue }}>
+                        <Text style={{ color: background == 'white' ? 'black' : 'white' }}>cancel</Text>
+
+                    </TouchableOpacity>
                 </View>
-
-                <View style={styles.modalView}>
-                    <Text style={styles.modalQuest}>Are you sure you don't want to create a new account?</Text>
-
-                    <Text style={styles.modalState}>you can always try again?</Text>
-
-                    <View style={styles.modalButtonContainer}>
-                        <TouchableOpacity style={styles.acceptBtn} onPress={() => navigateHandler()} >
-                            <Text>yes, i'm sure</Text>
-
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => updateVisibility()} style={styles.cancelBtn}>
-                            <Text>cancel</Text>
-
-                        </TouchableOpacity>
-                    </View>
-
-                </View>
-
 
             </View>
 
-        </Modal>
-    
+
+        </View>
+
+    </Modal>
+
     )
 }
 
 const styles = StyleSheet.create({
     modalBackground: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)'
+
     },
     modalTop: {
         height: 4,
         width: '20%',
-        backgroundColor: 'rgb(225,225,225)',
         position: 'absolute',
         top: '62%',
         alignSelf: 'center',
@@ -55,29 +70,27 @@ const styles = StyleSheet.create({
     },
 
     modalView: {
-        backgroundColor: "#fff",
         borderRadius: 20,
         alignItems: "center",
         position: 'absolute',
-        backgroundColor: '#fff',
         width: Dimensions.get('window').width,
         top: '65%',
         height: '35%',
         display: 'flex',
         flexDirection: 'column',
-        borderTopColor: 'rgb(240,240,240)',
-        borderTopWidth: 1
+        borderWidth: .5
 
 
 
 
     },
     modalQuest: {
-        paddingTop: 20,
+        paddingTop: 15,
         fontSize: 18,
         alignSelf: 'center',
         paddingHorizontal: 15,
         fontFamily: 'Poppins',
+
 
     },
     modalState: {
@@ -88,6 +101,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         alignSelf: 'flex-start',
         paddingHorizontal: 15,
+        color: 'grey',
 
     },
     modalButtonContainer: {
@@ -111,14 +125,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'ABeeZee',
         borderWidth: 1,
-        borderColor: 'rgb(240,240,240)',
+        borderColor: fadeColor,
     },
     cancelBtn: {
         width: '35%',
         paddingTop: 25,
         paddingBottom: 25,
         borderRadius: 50,
-        backgroundColor: 'rgb(240,240,240)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -130,6 +143,9 @@ const styles = StyleSheet.create({
     buttonClose: {
         backgroundColor: "#2196F3",
     },
+    acceptBtnText: {
+        color: importantText
+    },
     textStyle: {
         color: "#fff",
         fontFamily: 'Poppins',
@@ -139,7 +155,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: "center"
     },
-    
+
 
 });
 

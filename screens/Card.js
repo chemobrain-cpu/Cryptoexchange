@@ -21,7 +21,7 @@ import Loader from '../loaders/Loader';
 
 
 const Card = ({ navigation }) => {
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
     const dispatch = useDispatch()
     const [header, setHeader] = useState(false);
     const [modalVisible, setModalVisible] = useState(false)
@@ -287,25 +287,27 @@ const Card = ({ navigation }) => {
     return (<>
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
 
-        <SafeAreaView style={styles.screen}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollviewContainer} onScroll={scrollHandler} stickyHeaderIndices={[0]}>
-                <View style={{ ...styles.navigationHeader }}>
+                <View style={{...styles.navigationHeader,backgroundColor: background}}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
-                        <Feather name="arrow-left" size={24} color="rgb(44, 44, 44)" />
+                        <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
                     </TouchableOpacity>
                 </View>
 
 
                 <View style={styles.title}>
-                    <Text style={styles.titleText}>Card Information</Text>
+                    <Text style={{...styles.titleText,color:importantText}}>Card Information</Text>
                 </View>
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}>Name on Card</Text>
+                    <Text style={{...styles.label,color:normalText}}>Name on Card</Text>
 
                     <TextInput
-                        style={styles.input} placeholder='Harry'
+                        style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
+                        placeholder='Harry'
                         onChangeText={changeNameOnCard}
+                        placeholderTextColor={normalText}
                     />
                     <Text style={styles.errorText}>{nameOnCardError ? nameOnCardError : ""}</Text>
                 </KeyboardAvoidingView>
@@ -315,13 +317,14 @@ const Card = ({ navigation }) => {
 
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}> Card number</Text>
-                    <View style={styles.NumberinputContainer}>
-                        <TextInput style={styles.numberinput} placeholder='XXXX XXXX XXXX XXXX'
+                    <Text style={{...styles.label,color:normalText}}> Card number</Text>
+                    <View style={{...styles.NumberinputContainer,borderColor: fadeColor}}>
+                        <TextInput style={{...styles.numberinput,color: importantText}} placeholder='XXXX XXXX XXXX XXXX'
                             keyboardType='numeric'
                             onChangeText={changeCardNumber}
                             onBlur={onBlurCardNumber}
                             value={cardNumber}
+                            placeholderTextColor={normalText}
                              />
 
 
@@ -336,24 +339,28 @@ const Card = ({ navigation }) => {
                 <KeyboardAvoidingView style={{ ...styles.formCon, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
 
                     <View style={styles.innerInputContainer}>
-                        <Text style={styles.label}> Expiration</Text>
-                        <TextInput style={styles.input} placeholder="MM/YY"
+                        <Text style={{...styles.label,color:normalText}}> Expiration</Text>
+                        <TextInput style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}} placeholder="MM/YY"
                             onChangeText={changeCardExpiration}
                             keyboardType='numeric'
                             value={cardExpiration}
                             maxLength={5}
                             onBlur={onBlurCardExpiry}
+                            placeholderTextColor={normalText}
                         />
 
                         <Text style={styles.errorText}>{cardExpirationError ? cardExpirationError : ""}</Text>
 
                     </View>
                     <View style={styles.innerInputContainer}>
-                        <Text style={styles.label}> CVC</Text>
-                        <TextInput style={styles.input} placeholder="123"
+                        <Text style={{...styles.label,color:normalText}}> CVC</Text>
+                        <TextInput 
+                        style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
+                         placeholder="123"
                             onChangeText={changeCardCvc}
                             keyboardType='numeric'
-                            maxLength={3} />
+                            maxLength={3}
+                            placeholderTextColor={normalText} />
                         <Text style={styles.errorText}>{cardCvcError ? cardCvcError : ""}</Text>
 
                     </View>
@@ -362,24 +369,25 @@ const Card = ({ navigation }) => {
                 </KeyboardAvoidingView>
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}>Postal code</Text>
-                    <TextInput style={styles.input}
+                    <Text style={{...styles.label,color:normalText}}>Postal code</Text>
+                    <TextInput style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
                         onChangeText={changePostalcode}
-                        keyboardType='numeric' />
+                        keyboardType='numeric'
+                        placeholderTextColor={normalText} />
                     <Text style={styles.errorText}>{postalCodeError ? postalCodeError : ""}</Text>
 
                 </KeyboardAvoidingView>
 
                 <View style={styles.title}>
-                    <Text style={styles.titleText}>Account Information</Text>
+                    <Text style={{...styles.titleText,color: importantText}}>Account Information</Text>
 
 
                 </View>
 
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}>Name of bank</Text>
-                    <TextInput style={styles.input}
+                    <Text style={{...styles.label,color:normalText}}>Name of bank</Text>
+                    <TextInput style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
                         onChangeText={changeBankName} />
 
                     <Text style={styles.errorText}>{bankNameError ? bankNameError : ""}</Text>
@@ -388,8 +396,8 @@ const Card = ({ navigation }) => {
 
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}>Account Number</Text>
-                    <TextInput style={styles.input}
+                    <Text style={{...styles.label,color:normalText}}>Account Number</Text>
+                    <TextInput style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
                         keyboardType='numeric'
                         onChangeText={changeAccountNumber} />
 
@@ -398,8 +406,8 @@ const Card = ({ navigation }) => {
                 </KeyboardAvoidingView>
 
                 <KeyboardAvoidingView style={styles.formCon}>
-                    <Text style={styles.label}>Address 1</Text>
-                    <TextInput style={styles.input}
+                    <Text style={{...styles.label,color:normalText}}>Address 1</Text>
+                    <TextInput style={{...styles.input,color: importantText,borderColor:background==='black'? fadeColor:'rgb(210,210,210)',}}
                         onChangeText={changeAddressOne} />
 
                     <Text style={styles.errorText}>{bankAddressError ? bankAddressError : ""}</Text>
@@ -408,7 +416,7 @@ const Card = ({ navigation }) => {
 
                 <View style={styles.footer}>
                     <View style={styles.footerTopSection}>
-                        <Text style={styles.statement}>By adding a new card,you agree to the <Text style={styles.statementCard}>credit/debit card terms.</Text></Text>
+                        <Text style={{...styles.statement,color:normalText}}>By adding a new card,you agree to the <Text style={styles.statementCard}>credit/debit card terms.</Text></Text>
 
                         <TouchableOpacity style={styles.buttonCon} onPress={addCardHandler}>
                             {isLoading ? <ActivityIndicator color='#fff' size='small' /> : <Text style={styles.button}>Add Card</Text>}
@@ -417,7 +425,7 @@ const Card = ({ navigation }) => {
 
 
 
-                    <View style={styles.footerBottomSection}>
+                    <View style={{...styles.footerBottomSection,backgroundColor:fadeColor}}>
                         <View>
 
                         </View>
@@ -451,22 +459,20 @@ const Card = ({ navigation }) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "#fff",
         width: Dimensions.get('window').width,
-        paddingTop: 20,
     },
     scrollviewContainer: {
-
+        
     },
     navigationHeader: {
         paddingBottom: 10,
-        backgroundColor: '#fff',
         zIndex: 10,
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 21,
+        paddingHorizontal: '5%',
+        paddingTop: 15,
 
 
 
@@ -487,7 +493,7 @@ const styles = StyleSheet.create({
     title: {
         width: '100%',
         marginBottom: 20,
-        paddingHorizontal: 21,
+        paddingHorizontal: '5%',
 
     },
     titleText: {
@@ -498,7 +504,7 @@ const styles = StyleSheet.create({
     },
     formCon: {
         marginBottom: 38,
-        paddingHorizontal: 21,
+        paddingHorizontal: '5%',
 
 
     },
@@ -527,7 +533,6 @@ const styles = StyleSheet.create({
     },
     NumberinputContainer: {
         width: '100%',
-        borderColor: 'rgb(200,200,200)',
         borderWidth: .5,
         height: 55,
         borderRadius: 5,
@@ -552,7 +557,7 @@ const styles = StyleSheet.create({
         height: 220
     },
     footerTopSection: {
-        paddingHorizontal: 21,
+        paddingHorizontal: '5%',
 
     },
     statement: {
@@ -589,7 +594,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderTopColor: 'rgb(100,100,100)',
         borderTopWidth: .5,
-        backgroundColor: 'rgb(240,240,240)'
     },
     footerTextCon: {
         display: 'flex',

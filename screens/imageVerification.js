@@ -14,7 +14,7 @@ const Verification = ({ navigation }) => {
     const [authInfo, setAuthInfo] = useState("")
     const route = useRoute()
     let dispatch = useDispatch()
-    let { user } = useSelector(state => state.userAuth)
+    let { user,background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
     //preventing memory leak
     useEffect(() => {
@@ -49,7 +49,7 @@ const Verification = ({ navigation }) => {
         if(!user.isFrontIdVerified){
             return navigation.navigate('Camera_1')
         }
-        return navigation.navigate('Camera_2')
+        return navigation.navigate('Camera_1')
     }
 
     if (isLoading) {
@@ -59,26 +59,24 @@ const Verification = ({ navigation }) => {
 
 
     return (<>
-        {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}<SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={updateAuthError} message={authInfo} />}
+        
+        <SafeAreaView style={{ ...styles.screen, backgroundColor: background }}>
 
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.body}>
                 <View style={styles.imageContainer}>
-                    {/*<Image
-                        source={require('../assets/icons/secure.jpg')}
-                        style={{ width: 200, height: 100, }} />
-                        <AntDesign name="idcard" size={150} color="red" />
-                        */}
+                    
                         
-                        <AntDesign name="idcard" size={120} color="red" />
+                        <AntDesign name="idcard" size={120} color={background === 'white' ? "black" : "white"}  />
 
                 </View>
 
                 <View style={styles.verificationContainer}>
-                    <Text style={styles.headerText}>
+                    <Text style={{...styles.headerText,color:importantText}}>
                         ID Verification Required
                     </Text>
-                    <Text style={styles.verificationText}>
+                    <Text style={{...styles.verificationText,color:normalText}}>
                         Before making your first purchase,please verify your identity.Identity verification helps us ensure the safety and security of your crypto asset!
                     </Text>
 
@@ -87,15 +85,15 @@ const Verification = ({ navigation }) => {
             </ScrollView>
 
 
-            <View style={styles.buttonContainer}>
+            <View style={{...styles.buttonContainer,backgroundColor:background}}>
                 <TouchableOpacity style={styles.checkBtnContainer} onPress={takePictureHandler}>
                     <Text style={styles.check}>
                         Let's do it
                     </Text>
 
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.resendBtnContainer} onPress={gobackHandler}>
-                    <Text style={styles.resend}>Take me back</Text>
+                <TouchableOpacity style={{...styles.resendBtnContainer,backgroundColor:fadeColor}} onPress={gobackHandler}>
+                    <Text style={{...styles.resend,color:importantText}}>Take me back</Text>
 
                 </TouchableOpacity>
 
@@ -112,6 +110,10 @@ const Verification = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
+    screen:{
+        flex:1
+
+    },
     container: {
         width: Dimensions.get('window').width,
 
@@ -164,10 +166,8 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         bottom: '0%',
         height: 180,
-        paddingTop: 20,
+        paddingTop: 15,
         zIndex: 5,
-        backgroundColor: '#fff',
-
     },
     checkBtnContainer: {
         width: '85%',
