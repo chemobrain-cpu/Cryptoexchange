@@ -9,14 +9,16 @@ import {
     Dimensions,
     TextInput,
     ActivityIndicator,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Platform,
+    Alert
 } from 'react-native'
 
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { validateText, validatePhoneNumber, addTrailingSpaces } from "../utils/util";
 import AuthModal from '../modals/authModal'
 import { useDispatch, useSelector } from "react-redux";
-import { Withdrawal } from "../store/action/appStorage";
+import { withdrawalToOtherAccount } from "../store/action/appStorage";
 import Loader from '../loaders/Loader';
 import { Picker } from '@react-native-picker/picker';
 import { useRoute } from "@react-navigation/native";
@@ -124,6 +126,8 @@ const SendCashToBank = ({ navigation }) => {
         setIsAuthError(prev => !prev)
         if (!url) {
             //print pdf invoice reciept if no error on server call
+            let date = new Date().toLocaleDateString()
+
             const pdfContent = `<!DOCTYPE html>
             <html lang='en'>
             <head>
@@ -135,7 +139,7 @@ const SendCashToBank = ({ navigation }) => {
             
             </head>
             <body style="display:flex;flex-direction:column;">
-            <h1 style=";font-size:3.5rem;margin-bottom:30px"> COINCAP RECIEPT </h1>
+            <h1 style=";font-size:2.5rem;margin-bottom:30px"> COINCAP DEBIT RECIEPT </h1>
 
             <div style='width:100%;overflow:scroll'>
                 <table style='width:100%'>
@@ -146,41 +150,34 @@ const SendCashToBank = ({ navigation }) => {
                         Transaction Type
                         </td>
                         <td style='font-size:1.5rem'>
-                        Crypto
+                        Cash withdrawal
                         </td>
                     
                     </tr>
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
-                        Quantity Of Asset
+                        Withdrawal Amount
 
                         </td>
                         <td style='font-size:1.5rem'>
-                        $ ${quantity}
+                        $ ${amount}
                         </td>
                     
                     </tr>
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
-                        Amount Equivalent
+                        Date
 
                         </td>
                         <td style='font-size:1.5rem'>
-                        ${price}
+                        $ ${date}
                         </td>
                     
                     </tr>
-                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
-                        <td style='font-size:1.5rem'>
-                        Name of Assset
-
-                        </td>
-                        <td style='font-size:1.5rem'>
-                        ${name}
-                        </td>
                     
-                    </tr>
+                    
                 </table>
+                </div>
 
                 <h1 style="font-size:2.5rem;margin-bottom:30px">  RECIPIENT INFORMATION </h1>
 
@@ -241,6 +238,18 @@ const SendCashToBank = ({ navigation }) => {
                         </td>
                     
                     </tr>
+                    stateName
+
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Recipient's State
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${stateName}
+                        </td>
+                    
+                    </tr>
 
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
@@ -268,20 +277,16 @@ const SendCashToBank = ({ navigation }) => {
                 </table>
                 </div>
             
-            
-            
-            </div>
-
-            
             </body>
 
-        </html>`
+            </html>`
 
-
-            createPdf(pdfContent).then(() => {
-                console.log('pdf created')
+            createPdf(pdfContent).then(()=>{
+                Alert.alert('check your pdf document for transaction reciept')
             })
 
+            return
+                
         }
         //navigate due to error url
         return navigation.navigate(url)
@@ -297,7 +302,7 @@ const SendCashToBank = ({ navigation }) => {
         setIsLoading(true)
 
 
-        let res = await dispatch(Withdrawal({
+        let res = await dispatch(withdrawalToOtherAccount({
             country,
             nameOfBank,
             accountName,
@@ -305,7 +310,6 @@ const SendCashToBank = ({ navigation }) => {
             stateName,
             bankAddress,
             routeNumber,
-
             assetData: {
                 amount
             }
@@ -320,6 +324,7 @@ const SendCashToBank = ({ navigation }) => {
             setUrl(res.url)
             return
         }
+
         setIsAuthError(true)
         setAuthInfo("Transaction is being processed,continue to print pdf reciept")
         setIsLoading(false)
@@ -409,7 +414,7 @@ const SendCashToBank = ({ navigation }) => {
 
 
                 <View style={styles.title}>
-                    <Text style={{ ...styles.titleText, color: importantText }}>Withdrawal Information</Text>
+                    <Text style={{ ...styles.titleText, color: importantText }}>Recipient Information</Text>
                 </View>
 
                 <KeyboardAvoidingView style={styles.formCon}>
@@ -754,29 +759,16 @@ const SendCashToBank = ({ navigation }) => {
 
                 <View style={styles.footer}>
                     <View style={styles.footerTopSection}>
-                        <Text style={{ ...styles.statement, color: normalText }}>By adding a new card,you agree to the <Text style={styles.statementCard}>credit/debit card terms.</Text></Text>
+                        
 
                         <TouchableOpacity style={styles.buttonCon} onPress={continueHandler}>
-                            {isLoading ? <ActivityIndicator color='#fff' size='small' /> : <Text style={styles.button}>Continue to withdraw</Text>}
+                            {isLoading ? <ActivityIndicator color='#fff' size='small' /> : <Text style={styles.button}>Send</Text>}
                         </TouchableOpacity>
                     </View>
 
 
 
-                    <View style={{ ...styles.footerBottomSection, backgroundColor: fadeColor }}>
-                        <View>
-
-                        </View>
-                        <View style={styles.footerTextCon}>
-                            <MaterialIcons name="lock" size={24} color="black" />
-                            <Text style={styles.footerText}>
-                                Processed by <Text style={styles.coinbaseText}>coincap</Text>
-                            </Text>
-
-                        </View>
-
-
-                    </View>
+                    
 
 
                 </View>

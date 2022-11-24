@@ -26,7 +26,7 @@ import millify from "millify";
 import Loader from '../loaders/Loader';
 import TradeModal from '../modals/tradeModal';
 import AuthModal from '../modals/authModal';
-import {truncate} from "../utils/util"
+import { truncate } from "../utils/util"
 
 const filterDaysArray = [
   { filterDay: "1", filterText: "24h" },
@@ -55,20 +55,20 @@ const PriceChart = ({ navigation }) => {
 
 
   const route = useRoute();
-  let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
+  let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
 
-   //preventing memory leak
-    useEffect(() => {
-        let focus = navigation.addListener('beforeRemove', (e) => {
-            if (isLoading) {
-                e.preventDefault();
-            } else {
-                //can go back
-            }
-        });
-        return focus
-    }, [isLoading]);
+  //preventing memory leak
+  useEffect(() => {
+    let focus = navigation.addListener('beforeRemove', (e) => {
+      if (isLoading) {
+        e.preventDefault();
+      } else {
+        //can go back
+      }
+    });
+    return focus
+  }, [isLoading]);
 
   const {
     name: coinId,
@@ -81,7 +81,7 @@ const PriceChart = ({ navigation }) => {
 
 
 
-  
+
 
   let isWatchList = (id, arr) => {
     let assetExist = arr.find(data => {
@@ -96,7 +96,7 @@ const PriceChart = ({ navigation }) => {
     return true
   }
 
-  
+
 
   let updateVisibility = () => {
     setModalVisible(false)
@@ -193,7 +193,7 @@ const PriceChart = ({ navigation }) => {
   }
 
 
- 
+
 
   useEffect(() => {
     fetchCoinData();
@@ -223,7 +223,7 @@ const PriceChart = ({ navigation }) => {
 
   }
   const {
-    image:{
+    image: {
       large
     },
     id,
@@ -233,9 +233,9 @@ const PriceChart = ({ navigation }) => {
       price_change_percentage_24h,
     },
     symbol
-    
+
   } = coin;
-  
+
 
 
   //opening second modal after first modal
@@ -244,7 +244,7 @@ const PriceChart = ({ navigation }) => {
     setModalVisible(false)
     if (action == 'sell') {
       //what happens if user select buy
-      
+
       if (!user.isPayVerified) {
         setModalVisible(false)
         setUserStatus('pay')
@@ -261,47 +261,47 @@ const PriceChart = ({ navigation }) => {
         return
 
       }
-      
+
 
       return navigation.navigate('CryptoCalculator', {
         action: 'sell',
         price,
-        image:large,
+        image: large,
         name,
         id
       })
-    
-      
+
+
     } else if (action == "convert") {
       //what happens if user select convert
-    
-        if (!user.isPayVerified) {
-          setModalVisible(false)
-          setUserStatus('pay')
-          setIsAuthError(true)
-          setAuthInfo("You need to activate your account by adding a payment method to use available funds and top up funds later")
-          return
-        }
-        if (!user.isFrontIdVerified || !user.isBackIdVerified) {
-          setModalVisible(false)
-          setUserStatus('id')
-          setIsAuthError(true)
 
-          setAuthInfo("please you need to verify your identity before you can start trading on crypto assets")
-          return
+      if (!user.isPayVerified) {
+        setModalVisible(false)
+        setUserStatus('pay')
+        setIsAuthError(true)
+        setAuthInfo("You need to activate your account by adding a payment method to use available funds and top up funds later")
+        return
+      }
+      if (!user.isFrontIdVerified || !user.isBackIdVerified) {
+        setModalVisible(false)
+        setUserStatus('id')
+        setIsAuthError(true)
 
-        }
-       
-        
-        //navigate user to convert calculator
-        return navigation.navigate('ConvertToList', {
-          fromName:name.toLowerCase(), 
-          fromImage:large, 
-          fromPrice:price,
-          fromSymbol:symbol
+        setAuthInfo("please you need to verify your identity before you can start trading on crypto assets")
+        return
 
-        })
-       
+      }
+
+
+      //navigate user to convert calculator
+      return navigation.navigate('ConvertToList', {
+        fromName: name.toLowerCase(),
+        fromImage: large,
+        fromPrice: price,
+        fromSymbol: symbol
+
+      })
+
 
 
       //go to convert calculator
@@ -313,7 +313,7 @@ const PriceChart = ({ navigation }) => {
     setIsAuthError(prev => !prev)
     setAuthInfo('')
     if (userStatus == 'pay') {
-    
+
       return navigation.navigate('LinkToCard')
 
     } else if (userStatus == 'id') {
@@ -324,7 +324,7 @@ const PriceChart = ({ navigation }) => {
     return navigation.navigate('CryptoCalculator', {
       action: 'buy',
       price,
-      image:large,
+      image: large,
       name,
       id
     })
@@ -336,7 +336,7 @@ const PriceChart = ({ navigation }) => {
     return <Error tryAgain={reload} />;
   }
 
-  
+
 
   const { prices } = coinMarketData;
   //precentage color
@@ -376,13 +376,13 @@ const PriceChart = ({ navigation }) => {
       <ScrollView style={styles.chartCon} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]} onScroll={scrollHandler}>
 
         {header ? <View >
-          <View style={{ ...styles.scrollNavigationHeader,backgroundColor: background,borderBottomColor: fadeColor}}>
+          <View style={{ ...styles.scrollNavigationHeader, backgroundColor: background, borderBottomColor: fadeColor }}>
 
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ ...styles.goback }} >
               <Feather name="arrow-left" size={24} color={background === 'white' ? "black" : "white"} />
             </TouchableOpacity>
 
-            <Text style={{ ...styles.headerName,color: importantText }}>{name}</Text>
+            <Text style={{ ...styles.headerName, color: importantText }}>{name}</Text>
 
             <View style={styles.favouriteContainer}>
               <Pressable onPress={addAssetToWatchList}>
@@ -391,7 +391,7 @@ const PriceChart = ({ navigation }) => {
               </Pressable>
 
               <Pressable>
-              <AntDesign name="download" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
+                <AntDesign name="download" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
 
               </Pressable>
 
@@ -410,9 +410,9 @@ const PriceChart = ({ navigation }) => {
         >
 
           {header ? <></> : <View style={{ ...styles.priceContainer, opacity: header ? 0 : 1 }}>
-            <View style={{...styles.navigationHeader,backgroundColor: background,}}>
+            <View style={{ ...styles.navigationHeader, backgroundColor: background, }}>
               <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
-                <AntDesign name="arrowleft" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"}  />
+                <AntDesign name="arrowleft" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
               </TouchableOpacity>
 
 
@@ -421,21 +421,21 @@ const PriceChart = ({ navigation }) => {
 
 
             <View>
-              <Text style={{...styles.name,color: importantText,}}>{name}</Text>
+              <Text style={{ ...styles.name, color: importantText, }}>{name}</Text>
               <View style={styles.favoriteContainer}>
                 <LineChart.PriceText
                   format={formatCurrency}
-                  style={{...styles.currentPrice,color: importantText,}}
+                  style={{ ...styles.currentPrice, color: importantText, }}
                 />
 
 
                 <View style={styles.favorite}>
-                  <Pressable style={{...styles.favoriteIcon,backgroundColor: fadeColor}} onPress={addAssetToWatchList}>
+                  <Pressable style={{ ...styles.favoriteIcon, backgroundColor: fadeColor }} onPress={addAssetToWatchList}>
                     <MaterialIcons name="star" size={22} fontWeight='Poppins' color={isWatchList(coinId, user.watchList) ? "#1652f0" : "black"} />
                   </Pressable>
 
-                  <Pressable style={{...styles.favoriteIcon,backgroundColor: fadeColor}} >
-                    <AntDesign name="download" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"}/>
+                  <Pressable style={{ ...styles.favoriteIcon, backgroundColor: fadeColor }} >
+                    <AntDesign name="download" size={22} fontWeight='Poppins' color={background === 'white' ? "black" : "white"} />
                   </Pressable>
                 </View>
 
@@ -540,12 +540,12 @@ const PriceChart = ({ navigation }) => {
 
           </View>
         </LineChart.Provider>
-        <View style={{...styles.aboutContainer,borderTopColor: importantText,borderBottomColor: importantText,}}>
-          <Text style={{...styles.aboutHead,color:importantText}}>About {name}</Text>
-          <Text style={{...styles.aboutText,color: normalText}}>{truncate(coin.description.en, 400)}</Text>
+        <View style={{ ...styles.aboutContainer, borderTopColor: importantText, borderBottomColor: importantText, }}>
+          <Text style={{ ...styles.aboutHead, color: importantText }}>About {name}</Text>
+          <Text style={{ ...styles.aboutText, color: normalText }}>{truncate(coin.description.en, 400)}</Text>
         </View>
-        <View style={{...styles.marketContainer,borderTopColor: importantText,borderBottomColor: importantText,}}>
-          <Text style={{...styles.aboutHead,color: importantText}}>Market stats</Text>
+        <View style={{ ...styles.marketContainer, borderTopColor: importantText, borderBottomColor: importantText, }}>
+          <Text style={{ ...styles.aboutHead, color: importantText }}>Market stats</Text>
 
 
           <View style={styles.listContainer}>
@@ -556,7 +556,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={{...styles.logoText,color: normalText}}>Market cap</Text>
+                <Text style={{ ...styles.logoText, color: normalText }}>Market cap</Text>
 
               </View>
 
@@ -564,7 +564,7 @@ const PriceChart = ({ navigation }) => {
 
             </View>
             <View style={styles.rightListConCon}>
-              <Text style={{...styles.rightListText,color: normalText}}>{millify(market_cap)}</Text>
+              <Text style={{ ...styles.rightListText, color: normalText }}>{millify(market_cap)}</Text>
 
 
             </View>
@@ -578,7 +578,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={{...styles.logoText,color: normalText}}>Volume</Text>
+                <Text style={{ ...styles.logoText, color: normalText }}>Volume</Text>
 
               </View>
 
@@ -609,7 +609,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={{...styles.logoText,color: normalText}}>Circulating supply</Text>
+                <Text style={{ ...styles.logoText, color: normalText }}>Circulating supply</Text>
 
               </View>
 
@@ -617,7 +617,7 @@ const PriceChart = ({ navigation }) => {
 
             </View>
             <View style={styles.rightListConCon}>
-              <Text style={{...styles.rightListText,color: normalText}}>{millify(market_cap)}</Text>
+              <Text style={{ ...styles.rightListText, color: normalText }}>{millify(market_cap)}</Text>
 
 
             </View>
@@ -631,7 +631,7 @@ const PriceChart = ({ navigation }) => {
 
               </View>
               <View style={styles.logoTextCon}>
-                <Text style={{...styles.logoText,color: normalText}}>Popularity</Text>
+                <Text style={{ ...styles.logoText, color: normalText }}>Popularity</Text>
 
               </View>
 
@@ -639,7 +639,7 @@ const PriceChart = ({ navigation }) => {
 
             </View>
             <View style={styles.popularityListCon}>
-              <Text style={{...styles.rightListText,color: normalText}}>#{market_cap_rank}</Text>
+              <Text style={{ ...styles.rightListText, color: normalText }}>#{market_cap_rank}</Text>
 
 
             </View>
@@ -649,12 +649,12 @@ const PriceChart = ({ navigation }) => {
 
         </View>
 
-        
+
       </ScrollView>
 
 
 
-      <View style={{...styles.buttonCon,backgroundColor: background,}} >
+      <View style={{ ...styles.buttonCon, backgroundColor: background, }} >
         <TouchableOpacity style={styles.button} onPress={tradeCrypto}>
           <Text style={styles.buttonText}>trade</Text>
         </TouchableOpacity>
@@ -846,7 +846,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins'
   },
   buttonCon: {
-    fontSize: 20, 
+    fontSize: 20,
     marginBottom: 10,
     fontFamily: 'Poppins',
     backgroundColor: '#fff',

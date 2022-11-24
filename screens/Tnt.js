@@ -38,7 +38,6 @@ const Tnt = ({ navigation }) => {
         setTimeout(() => {
             setIsLoading(false)
             setModalVisible(true)
-
         }, 3000)
     }, [])
 
@@ -56,7 +55,6 @@ const Tnt = ({ navigation }) => {
 
     const chatHandler = async() => {
         await WebBrowser.openBrowserAsync('http://www.coincap.cloud/support')
-
     }
 
     const submitHandler = async()=>{

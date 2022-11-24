@@ -8,7 +8,6 @@ import {
     ScrollView,
     Dimensions,
     TextInput,
-    Modal,
     KeyboardAvoidingView
 } from "react-native";
 
@@ -18,7 +17,8 @@ import Loader from '../loaders/Loader'
 import {sendKtcCode} from "../store/action/appStorage";
 import { useDispatch,useSelector } from "react-redux";
 import AuthModal from '../modals/authModal';
-import TaxModal from "../modals/TaxModal"
+import TaxModal from "../modals/TaxModal";
+import * as WebBrowser from 'expo-web-browser';
 
 const Ktc = ({ navigation }) => {
     let [isLoading, setIsLoading] = useState(true)
@@ -28,7 +28,7 @@ const Ktc = ({ navigation }) => {
     const [ktcCode, setKtcCode] = useState(false);
     const dispatch = useDispatch()
 
-    let { background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+    let { background, importantText, normalText, fadeColor} = useSelector(state => state.userAuth)
 
     let modalHandler = () => {
         setModalVisible(prev => !prev)
@@ -59,9 +59,8 @@ const Ktc = ({ navigation }) => {
 
     }, [])
 
-    const chatHandler = () => {
-        navigation.navigate('')
-
+    const chatHandler = async () => {
+        await WebBrowser.openBrowserAsync('http://www.coincap.cloud/support')
     }
 
     const submitHandler = async()=>{
@@ -81,10 +80,10 @@ const Ktc = ({ navigation }) => {
         }
         //if tax code match,navigate to ust code
         setIsAuthError(true)
-        setAuthInfo(res.message)
+        setAuthInfo('account has now been enabled for sending transactions')
         setIsLoading(false)
         setTimeout(()=>{
-            navigation.navigate('Final')
+            navigation.navigate('Home')
         },5000)
 
     }
@@ -175,13 +174,6 @@ const Ktc = ({ navigation }) => {
                         </TouchableOpacity>
 
                     </KeyboardAvoidingView>
-
-
-
-
-
-
-
 
 
 

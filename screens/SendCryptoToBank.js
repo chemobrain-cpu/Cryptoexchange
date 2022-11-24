@@ -9,11 +9,12 @@ import {
     Dimensions,
     TextInput,
     ActivityIndicator,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native'
 
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import { validateText, validatePhoneNumber, addTrailingSpaces } from "../utils/util";
+import { validateText, validatePhoneNumber} from "../utils/util";
 import AuthModal from '../modals/authModal'
 import { useDispatch, useSelector } from "react-redux";
 import { sendCryptoToBank } from "../store/action/appStorage";
@@ -98,7 +99,6 @@ const SendCryptoToBank = ({ navigation }) => {
 
 
     const createPdf = async (html) => {
-        console.log(html)
         try {
             const { uri } = await Print.printToFileAsync({ html });
             if (Platform.OS === 'ios') {
@@ -127,6 +127,7 @@ const SendCryptoToBank = ({ navigation }) => {
         setIsAuthError(prev => !prev)
         if (!url) {
             //print pdf invoice reciept if no error on server call
+            let date = new Date().toLocaleDateString()
             const pdfContent = `<!DOCTYPE html>
             <html lang='en'>
             <head>
@@ -138,7 +139,7 @@ const SendCryptoToBank = ({ navigation }) => {
             
             </head>
             <body style="display:flex;flex-direction:column;">
-            <h1 style=";font-size:3.5rem;margin-bottom:30px"> COINCAP RECIEPT </h1>
+            <h1 style=";font-size:2.5rem;margin-bottom:30px"> COINCAP DEBIT RECIEPT </h1>
 
             <div style='width:100%;overflow:scroll'>
                 <table style='width:100%'>
@@ -149,17 +150,39 @@ const SendCryptoToBank = ({ navigation }) => {
                         Transaction Type
                         </td>
                         <td style='font-size:1.5rem'>
+                        Debit
+                        </td>
+                    
+                    </tr>
+
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Currency Type
+                        </td>
+                        <td style='font-size:1.5rem'>
                         Crypto
                         </td>
                     
                     </tr>
+
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                    <td style='font-size:1.5rem'>
+                    Name Of Currency
+                    </td>
+                    <td style='font-size:1.5rem'>
+                     ${name}
+                    </td>
+                
+                </tr>
+
+
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
                         Quantity Of Asset
 
                         </td>
                         <td style='font-size:1.5rem'>
-                        $ ${quantity}
+                        ${quantity.toFixed(4)}
                         </td>
                     
                     </tr>
@@ -169,28 +192,29 @@ const SendCryptoToBank = ({ navigation }) => {
 
                         </td>
                         <td style='font-size:1.5rem'>
-                        ${price}
+                        $ ${price}
                         </td>
                     
                     </tr>
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
-                        <td style='font-size:1.5rem'>
-                        Name of Assset
+                    <td style='font-size:1.5rem'>
+                    Date Of Transaction
 
-                        </td>
-                        <td style='font-size:1.5rem'>
-                        ${name}
-                        </td>
+                    </td>
+                    <td style='font-size:1.5rem'>
+                    ${date}
+                    </td>
+                
+                </tr>
                     
-                    </tr>
                 </table>
+                </div>
 
                 <h1 style="font-size:2.5rem;margin-bottom:30px">  RECIPIENT INFORMATION </h1>
 
                 <div style='width:100%;overflow:scroll'>
 
                 <table style='width:100%'>
-                    
                     
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
@@ -223,6 +247,7 @@ const SendCryptoToBank = ({ navigation }) => {
                         </td>
                     
                     </tr>
+
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
                         Route Number
@@ -244,10 +269,20 @@ const SendCryptoToBank = ({ navigation }) => {
                         </td>
                     
                     </tr>
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                    <td style='font-size:1.5rem'>
+                    Recipient's State
+
+                    </td>
+                    <td style='font-size:1.5rem'>
+                    ${stateName}
+                    </td>
+                
+                </tr>
 
                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
-                        Bank Address
+                        Address One
 
                         </td>
                         <td style='font-size:1.5rem'>
@@ -270,10 +305,6 @@ const SendCryptoToBank = ({ navigation }) => {
 
                 </table>
                 </div>
-            
-            
-            
-            </div>
 
             
             </body>
@@ -282,8 +313,13 @@ const SendCryptoToBank = ({ navigation }) => {
 
 
             createPdf(pdfContent).then(() => {
-                console.log('pdf created')
+                //tell user about reciept
+                Alert.alert('open document to view pdf reciept')
+
+                navigation.navigate('Home')
             })
+            
+            return
 
         }
         //navigate due to error url
@@ -415,7 +451,7 @@ const SendCryptoToBank = ({ navigation }) => {
 
 
                 <View style={styles.title}>
-                    <Text style={{ ...styles.titleText, color: importantText }}>Withdrawal Information</Text>
+                    <Text style={{ ...styles.titleText, color: importantText }}>Recipient Information</Text>
                 </View>
 
                 <KeyboardAvoidingView style={styles.formCon}>
@@ -760,29 +796,16 @@ const SendCryptoToBank = ({ navigation }) => {
 
                 <View style={styles.footer}>
                     <View style={styles.footerTopSection}>
-                        <Text style={{ ...styles.statement, color: normalText }}>By adding a new card,you agree to the <Text style={styles.statementCard}>credit/debit card terms.</Text></Text>
+                        
 
                         <TouchableOpacity style={styles.buttonCon} onPress={continueHandler}>
-                            {isLoading ? <ActivityIndicator color='#fff' size='small' /> : <Text style={styles.button}>Continue to withdraw</Text>}
+                            {isLoading ? <ActivityIndicator color='#fff' size='small' /> : <Text style={styles.button}>Send</Text>}
                         </TouchableOpacity>
                     </View>
 
 
 
-                    <View style={{ ...styles.footerBottomSection, backgroundColor: fadeColor }}>
-                        <View>
-
-                        </View>
-                        <View style={styles.footerTextCon}>
-                            <MaterialIcons name="lock" size={24} color="black" />
-                            <Text style={styles.footerText}>
-                                Processed by <Text style={styles.coinbaseText}>coincap</Text>
-                            </Text>
-
-                        </View>
-
-
-                    </View>
+                    
 
 
                 </View>

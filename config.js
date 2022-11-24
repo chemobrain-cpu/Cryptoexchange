@@ -64,6 +64,8 @@ import SendCryptoCalculator from "./screens/SendCryptoCalculator"
 import Appearance from "./screens/Appearance"
 import SendToBank from "./screens/SendCryptoToBank"
 import SendCashToBank from "./screens/SendCashToBank"
+import Transaction from "./screens/Transactions"
+import TransactionDetail from "./screens/TransactionDetails"
 
 //auth screen
 import Splash_1 from "./auth/splash";
@@ -82,6 +84,7 @@ import SearchSplash from "./auth/searchSplash";
 
 //importing component
 import CustomDrawerContent from "./component/DrawerContent";
+import Transactions from './screens/Transactions';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -268,13 +271,22 @@ const HomeStackNavigator = () => {
                 component={DrawerNavigator}
                 options={{ headerShown: false }}
             />
+            <Stack.Screen
+                name="Transactions"
+                component={Transaction}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="TransactionDetails"
+                component={TransactionDetail}
+                options={{ headerShown: false }}
+            />
 
             <Stack.Screen
                 name="SendToBank"
                 component={SendToBank}
                 options={{ headerShown: false }}
             />
-
             <Stack.Screen
                 name="SendCashToBank"
                 component={SendCashToBank}

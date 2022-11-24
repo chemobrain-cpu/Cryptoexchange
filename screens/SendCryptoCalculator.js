@@ -36,14 +36,14 @@ const Calculator = ({ navigation }) => {
 
     const dispatch = useDispatch()
 
-    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue } = useSelector(state => state.userAuth)
 
     const {
         id,
         image,
         price,
         name,
-        action
+        action,
     } = route.params
 
     //preventing memory leak
@@ -58,8 +58,7 @@ const Calculator = ({ navigation }) => {
         return focus
     }, [isLoading]);
 
-
-    //check if the user has the asset 
+ 
     let invertPriceHandler = () => {
         setInvert(prev => !prev)
     }
@@ -189,9 +188,7 @@ const Calculator = ({ navigation }) => {
                 if (Number(value) > Number(cryptoQuantity)) {
                     setModalVisible(true)
                     setUserStatus('insufficient')
-
                     setModalTopic("You'll need to top up")
-
                     setModalText("Your available asset balance is not enough")
                     return
                 }
@@ -316,7 +313,7 @@ const Calculator = ({ navigation }) => {
                         })
                 }
 
-
+                setIsLoading(false)
                 return navigation.navigate("CryptoForm", data)
             }
 
@@ -349,8 +346,7 @@ const Calculator = ({ navigation }) => {
                         action: "SendToWallet"
                     })
             }
-
-
+            setIsLoading(false)
             return navigation.navigate("CryptoForm", data)
 
         }

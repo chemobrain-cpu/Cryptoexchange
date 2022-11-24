@@ -220,7 +220,6 @@ const Home = ({ navigation }) => {
     let actionHandler = (data) => {
         if (data === "Buy") {
             navigation.navigate("BuyCryptoList")
-
         } else if (data === "Sell") {
             navigation.navigate("SellList")
 

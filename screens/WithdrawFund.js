@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     View,
     Text,
@@ -7,16 +7,22 @@ import {
     SafeAreaView,
     ScrollView,
     Dimensions,
+    Platform,
+    Alert
 } from "react-native";
 
 import { Feather, AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import Error from "../component/errorComponent";
 import { useRoute } from "@react-navigation/native";
-import { Withdrawal } from "../store/action/appStorage";
+import { withdrawalToOtherAccount, withdrawalToMyAccount } from "../store/action/appStorage";
 import Loader from '../loaders/Loader';
 import AuthModal from '../modals/authModal';
 import SendModal from "../modals/sendOptionModal";
+//importing pdf module
+import * as Print from 'expo-print'
+import * as MediaLibrary from "expo-media-library"
+import * as Sharing from "expo-sharing"
 
 
 const Withdraw = ({ navigation }) => {
@@ -28,16 +34,18 @@ const Withdraw = ({ navigation }) => {
     const [isAuthError, setIsAuthError] = useState(false)
     const [authInfo, setAuthInfo] = useState("")
     const [modalVisible, setModalVisible] = useState("")
+    const [sendModalVisible, setSendModalVisible] = useState("")
+
     const [url, setUrl] = useState("")
 
-    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
+    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
 
 
 
     const dispatch = useDispatch()
 
-       //preventing memory leak
-       useEffect(() => {
+    //preventing memory leak
+    useEffect(() => {
         let focus = navigation.addListener('beforeRemove', (e) => {
             if (isLoading) {
                 e.preventDefault();
@@ -57,6 +65,26 @@ const Withdraw = ({ navigation }) => {
 
 
 
+    }
+
+    const createPdf = async (html) => {
+        try {
+            const { uri } = await Print.printToFileAsync({ html });
+            if (Platform.OS === 'ios') {
+                await Sharing.shareAsync(uri)
+
+            } else {
+                const permission = await MediaLibrary.requestPermissionsAsync();
+                if (permission.granted) {
+                    await MediaLibrary.createAssetAsync(uri)
+                }
+
+            }
+
+        } catch (err) {
+            console.log(err)
+
+        }
     }
 
     //deciding where to go depending on the action
@@ -104,40 +132,179 @@ const Withdraw = ({ navigation }) => {
 
     let proceedHandler = async () => {
         //check if user has that amount
-        
+        setSendModalVisible(prev => !prev)
         if (Number(user.accountBalance) < Number(value)) {
             setIsAuthError(true)
             setAuthInfo('insufficient fund')
             setIsLoading(false)
             setUrl('WithdrawFund')
             return
-
         }
-        //check for security pin
+
         //if pin enabled,go to authorization screen
         if (user.isRequiredPin) {
             return navigation.navigate('Authorize',
                 {
-                    data: {amount:Number(value)},
-                    action: "SendCashToBank"
+                    data: { amount: Number(value) },
+                    action: "SendCashToMyBank"
                 })
         }
-
         setIsLoading(true)
-        let res = await dispatch(Withdrawal({ amount: value }))
+
+        let res = await dispatch(withdrawalToMyAccount({ amount: Number(value) }))
 
         if (!res.bool) {
             setIsAuthError(true)
             setAuthInfo(res.message)
             setIsLoading(false)
             setUrl(res.url)
-
             return
         }
         setIsAuthError(true)
         setIsAuthError(true)
-        setAuthInfo("Transaction is being processed")
-        setIsLoading(false)
+        setAuthInfo("you have successfully withdrawn fund to your account")
+        //generate pdf reciept
+        let date = new Date().toLocaleDateString()
+        const pdfContent = `<!DOCTYPE html>
+            <html lang='en'>
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport"
+            content="width=device-width,initial-scale=1.0"
+            >
+            <title>Reciept </title>
+            
+            </head>
+            <body style="display:flex;flex-direction:column;">
+            <h1 style=";font-size:3.5rem;margin-bottom:30px"> COINCAP DEBIT RECIEPT </h1>
+
+            <div style='width:100%;overflow:scroll'>
+                <table style='width:100%'>
+                    
+                    
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Transaction Type
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        Cash withdrawal
+                        </td>
+                    
+                    </tr>
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Withdrawal Amount
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        $ ${Number(value)}
+                        </td>
+                    
+                    </tr>
+                    
+                    
+                </table>
+                </div>
+
+                <h1 style="font-size:2.5rem;margin-bottom:30px">  RECIPIENT INFORMATION </h1>
+
+                <div style='width:100%;overflow:scroll'>
+
+                <table style='width:100%'>
+
+           
+                    
+                
+       
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Account Name
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${user.nameOnCard}
+                        </td>
+                    
+                    </tr>
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Account Number
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${user.accountNumber}
+                        </td>
+                    
+                    </tr>
+
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                <td style='font-size:1.5rem'>
+                Name Of Bank
+
+                </td>
+                <td style='font-size:1.5rem'>
+                ${user.NameOfBank}
+                </td>
+            
+                </tr>
+                
+
+                    
+                    
+
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Recipient's Country
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${user.country}
+                        </td>
+                    
+                    </tr>
+                   
+
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        Bank Address
+
+                        </td>
+                        <td style='font-size:1.5rem'>
+                        ${user.AddressOne}
+                        </td>
+                    
+                    </tr>
+                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                        <td style='font-size:1.5rem'>
+                        status
+                        </td>
+
+                        <td>
+                        <button style="width:100px;height:50px;background-color:green;color:white">
+                        withdawn
+                        </button>
+                        </td>
+                    
+                    </tr>
+
+                </table>
+                </div>
+            
+            
+            
+
+            
+            </body>
+
+            </html>`
+
+
+        createPdf(pdfContent).then(() => {
+            setIsLoading(false)
+            Alert.alert('check your pdf document for your reciept')
+        }).catch(()=>{
+            setIsLoading(false)
+        })
+        
 
     }
 
@@ -151,32 +318,44 @@ const Withdraw = ({ navigation }) => {
         return
     }
 
+    let changeSendModalVisibility = () => {
+        if(!value){
+            return
+        }
+        setSendModalVisible(prev => !prev)
+
+    }
+
 
     let otherAccountHandler = (coin) => {
+        setSendModalVisible(prev => !prev)
         if (Number(user.accountBalance) < Number(value)) {
             setIsAuthError(true)
             setAuthInfo('insufficient fund')
             setIsLoading(false)
             setUrl('WithdrawFund')
             return
-
         }
         //if pin enabled,go to authorization screen
         if (user.isRequiredPin) {
             return navigation.navigate('Authorize',
                 {
-                    data: {amount:Number(value)},
-                    action: "SendCashToBank"
+                    data: { amount: Number(value) },
+                    action: "SendCashToOtherBank"
                 })
         }
-        setModalVisible(prev => !prev)
+        
         return navigation.navigate('SendCashToBank', {
-            amount:Number(value)
+            amount: Number(value)
         })
 
     }
 
+    let modalHandler = (coin) => {
+        setSendModalVisible(true)
+        return
 
+    }
 
 
     if (isLoading) {
@@ -193,25 +372,25 @@ const Withdraw = ({ navigation }) => {
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={changeVisibility} message={authInfo} />}
 
         <SendModal
-            modalVisible={modalVisible}
-            changeVisibility={changeVisibility} navigationHandler_1={proceedHandler}
+            modalVisible={sendModalVisible}
+            changeVisibility={changeSendModalVisibility} navigationHandler_1={proceedHandler}
             navigationHandler_2={otherAccountHandler}
             asset={`$ ${value}`}
             option_1="Personal account"
             option_2="Other account"
-             />
+        />
 
-        <SafeAreaView style={{ flex: 1, backgroundColor:background }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={{ display: 'flex', width: '100%' }}>
-                    <View style={{ ...styles.headerContainer,backgroundColor:background }}>
+                    <View style={{ ...styles.headerContainer, backgroundColor: background }}>
 
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerContainerIcon} >
-                            <AntDesign name="close" size={23} color={background==='white'?"black":"white"}  />
+                            <AntDesign name="close" size={23} color={background === 'white' ? "black" : "white"} />
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.headerContainerTitle} >
-                            <Text style={{...styles.title,color:importantText}}>${Number(user.accountBalance).toFixed(2)} available !</Text>
+                            <Text style={{ ...styles.title, color: importantText }}>${Number(user.accountBalance).toFixed(2)} available !</Text>
 
                         </TouchableOpacity>
 
@@ -250,58 +429,58 @@ const Withdraw = ({ navigation }) => {
                 <View style={styles.calculatorCon}>
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('1')}>
-                            <Text style={{...styles.number,color:importantText}}>1</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>1</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('2')}>
-                            <Text style={{...styles.number,color:importantText}}>2</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>2</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('3')}>
-                            <Text style={{...styles.number,color:importantText}}>3</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>3</Text>
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('4')}>
-                            <Text style={{...styles.number,color:importantText}}>4</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>4</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('5')}>
-                            <Text style={{...styles.number,color:importantText}}>5</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>5</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('6')}>
-                            <Text style={{...styles.number,color:importantText}}>6</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>6</Text>
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('7')}>
-                            <Text style={{...styles.number,color:importantText}}>7</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>7</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('8')}>
-                            <Text style={{...styles.number,color:importantText}}>8</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>8</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('9')}>
-                            <Text style={{...styles.number,color:importantText}}>9</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>9</Text>
                         </TouchableOpacity>
 
                     </View>
 
                     <View style={styles.numberContainer}>
                         <TouchableOpacity style={styles.numberButton} onPress={() => point(".")}>
-                            <Text style={{...styles.number,color:importantText}}>.</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>.</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => button('0')}>
-                            <Text style={{...styles.number,color:importantText}}>0</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>0</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.numberButton} onPress={() => deleteHandler()}>
-                            <Feather name="arrow-left" size={22} color={background==='white'?"black":"white"}  />
+                            <Feather name="arrow-left" size={22} color={background === 'white' ? "black" : "white"} />
                         </TouchableOpacity>
 
                     </View>
@@ -309,7 +488,7 @@ const Withdraw = ({ navigation }) => {
                 </View>
 
                 <View style={styles.buttonCon}>
-                    <TouchableOpacity style={{ ...styles.button }} onPress={proceedHandler}>
+                    <TouchableOpacity style={{ ...styles.button }} onPress={modalHandler}>
                         <Text style={styles.buttonText}>Withdraw fund</Text>
 
                     </TouchableOpacity>
@@ -336,17 +515,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
         marginBottom: 45,
-        width:'100%'
+        width: '100%'
     },
     headerContainerTitle: {
-        width:'90%',
+        width: '90%',
         display: "flex",
         flexDirection: "row",
         alignItems: 'flex-start',
 
     },
     headerContainerIcon: {
-        width:'10%',
+        width: '10%',
         display: "flex",
         flexDirection: "row",
         alignItems: 'flex-start',

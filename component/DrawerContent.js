@@ -4,12 +4,12 @@ import {
 } from '@react-navigation/drawer';
 import * as WebBrowser from 'expo-web-browser';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable } from "react-native";
-import { MaterialIcons, Ionicons, Octicons, FontAwesome,Entypo } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, Octicons, FontAwesome, Entypo,MaterialCommunityIcons } from '@expo/vector-icons';
 import { truncate } from "../utils/util"
 
 
-function CustomDrawerContent({ navigation,user,background, importantText, normalText, fadeColor}) {
-    
+function CustomDrawerContent({ navigation, user, background, importantText, normalText, fadeColor }) {
+
 
     let navigateToBrowser = async (data) => {
 
@@ -17,18 +17,22 @@ function CustomDrawerContent({ navigation,user,background, importantText, normal
         if (data == 'coincap') {
             //navigate to password reset page
             await WebBrowser.openBrowserAsync('http://www.coincap.cloud')
-        } else if(data == 'support'){
+        } else if (data == 'support') {
             //navigate to chat support page
             await WebBrowser.openBrowserAsync('http://www.coincap.cloud/support')
 
-        }else {
+        } else if (data === 'Transactions') {
+            navigation.navigate('Transactions')
+
+        } else {
             //navigate to policy page
             await WebBrowser.openBrowserAsync('http://www.coincap.cloud/policy')
+
         }
 
     }
 
-    let pictureHandler = ()=>{
+    let pictureHandler = () => {
         return
         //navigation.navigate('PhotoIdentity')
     }
@@ -37,12 +41,12 @@ function CustomDrawerContent({ navigation,user,background, importantText, normal
 
 
     return (
-        <DrawerContentScrollView style={{flex:1,backgroundColor:background}}>
+        <DrawerContentScrollView style={{ flex: 1, backgroundColor: background }}>
             <View style={styles.drawerContainer}>
 
-                {user.photo ? <Pressable style={{...styles.profileContainer,backgroundColor:fadeColor}} onPress={pictureHandler}>
+                {user.photo ? <Pressable style={{ ...styles.profileContainer, backgroundColor: fadeColor }} onPress={pictureHandler}>
                     <Image source={{ uri: user.identity }} style={{ width: 100, height: 100, borderRadius: 100 }} />
-                </Pressable> : <Pressable style={{...styles.profileContainer,backgroundColor:fadeColor}} onPress={pictureHandler}>
+                </Pressable> : <Pressable style={{ ...styles.profileContainer, backgroundColor: fadeColor }} onPress={pictureHandler}>
                     <Ionicons name="person" size={80} color={background === 'white' ? "black" : "white"} style={{ paddingTop: 10 }} />
                     <Pressable style={styles.photo}>
                         <FontAwesome name="camera" size={30} color={background === 'white' ? "black" : "white"} />
@@ -56,19 +60,19 @@ function CustomDrawerContent({ navigation,user,background, importantText, normal
 
 
                 <TouchableOpacity style={styles.usernameCon}>
-                    <Text style={{...styles.username,color:importantText}}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
+                    <Text style={{ ...styles.username, color: importantText }}>{truncate(user.firstName, 8)} {truncate(user.lastName, 8)}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{...styles.button,backgroundColor:fadeColor}} onPress={() => navigation.navigate('ProfileSetting')}>
-                    <Text style={{...styles.buttonText,color:importantText}}>Profile & Settings</Text>
+                <TouchableOpacity style={{ ...styles.button, backgroundColor: fadeColor }} onPress={() => navigation.navigate('ProfileSetting')}>
+                    <Text style={{ ...styles.buttonText, color: importantText }}>Profile & Settings</Text>
                 </TouchableOpacity>
 
 
                 <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('LearnEarn')}>
 
-                    <MaterialIcons name="add-task" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"}/>
+                    <MaterialIcons name="add-task" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"} />
 
-                    <Text style={{...styles.text,color:normalText}}>Learn and Earn
+                    <Text style={{ ...styles.text, color: normalText }}>Learn and Earn
                     </Text>
                 </TouchableOpacity>
 
@@ -78,22 +82,30 @@ function CustomDrawerContent({ navigation,user,background, importantText, normal
 
                     <MaterialIcons name="person-add-alt" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"} />
 
-                    <Text style={{...styles.text,color:normalText}}>invite friends</Text>
+                    <Text style={{ ...styles.text, color: normalText }}>invite friends</Text>
                 </TouchableOpacity>
 
 
 
                 <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('Send')}>
-                    <Octicons name="gift" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"}/>
+                    <Octicons name="gift" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"} />
 
-                    <Text style={{...styles.text,color:normalText}}>send a gift</Text>
+                    <Text style={{ ...styles.text, color: normalText }}>send a gift</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.content} onPress={() => navigateToBrowser('support')}>
-                    
+
                     <Entypo name="chat" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"} />
 
-                    <Text style={{...styles.text,color:normalText}}>contact support</Text>
+                    <Text style={{ ...styles.text, color: normalText }}>contact support</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.content} onPress={() => navigateToBrowser('Transactions')}>
+
+                    
+                    <MaterialCommunityIcons name="transfer" size={21} style={{ paddingTop: 10 }} color={background === 'white' ? "black" : "white"}  />
+
+                    <Text style={{ ...styles.text, color: normalText }}>Transaction history</Text>
                 </TouchableOpacity>
 
 
@@ -106,7 +118,7 @@ function CustomDrawerContent({ navigation,user,background, importantText, normal
 
 
                     <TouchableOpacity onPress={() => navigateToBrowser('privacy')}>
-                        <Text style={{ fontSize: 16, color:importantText, paddingLeft: 12, paddingTop: 10, textDecorationLine: 'underline' }}>Legal & Privacy</Text>
+                        <Text style={{ fontSize: 16, color: importantText, paddingLeft: 12, paddingTop: 10, textDecorationLine: 'underline' }}>Legal & Privacy</Text>
 
                     </TouchableOpacity>
 
@@ -143,14 +155,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 20,
         overflow: 'hidden',
-        position:'relative',
-        zIndex:1
+        position: 'relative',
+        zIndex: 1
     },
-    photo:{
-        position:'absolute',
-        top:'60%',
-        left:'60%',
-        zIndex:3
+    photo: {
+        position: 'absolute',
+        top: '60%',
+        left: '60%',
+        zIndex: 3
 
     },
     camera: {

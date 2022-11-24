@@ -65,7 +65,6 @@ let SendList = ({ navigation }) => {
             name: transferedCoin.name,
             quantity: quantity,
             image:transferedCoin.image,
-            action:'SendToWallet',
             action:'SendToBank',
         })
     }

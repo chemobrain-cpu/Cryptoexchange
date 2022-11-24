@@ -9,7 +9,8 @@ import {
     Dimensions,
     TextInput,
     ActivityIndicator,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native'
 
 import { Feather } from '@expo/vector-icons';
@@ -19,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendCryptoToWallet } from "../store/action/appStorage";
 import { useRoute } from "@react-navigation/native";
 //importing pdf module
+import { truncate } from "../utils/util"
 import * as Print from 'expo-print'
 import * as MediaLibrary from "expo-media-library"
 import * as Sharing from "expo-sharing"
@@ -57,11 +59,33 @@ const CryptoForm = ({ navigation }) => {
         return focus
     }, [isLoading]);
 
+    const createPdf = async (html) => {
+        try {
+            const { uri } = await Print.printToFileAsync({ html });
+            if (Platform.OS === 'ios') {
+                await Sharing.shareAsync(uri)
+
+            } else {
+                const permission = await MediaLibrary.requestPermissionsAsync();
+                if (permission.granted) {
+                    await MediaLibrary.createAssetAsync(uri)
+                }
+
+            }
+
+        } catch (err) {
+            console.log(err)
+
+        }
+    }
+
 
     const updateAuthError = () => {
         setIsAuthError(prev => !prev)
         if (!url) {
             //print pdf invoice reciept if no error on server call
+            let date = new Date().toLocaleDateString()
+
             const pdfContent = `<!DOCTYPE html>
             <html lang='en'>
             <head>
@@ -72,79 +96,111 @@ const CryptoForm = ({ navigation }) => {
             <title>Reciept </title>
             
             </head>
-            <body style="display:flex;flex-direction:column;">
-            <h1 style=";font-size:3.5rem;margin-bottom:30px"> COINCAP RECIEPT </h1>
+            <body>
+            <h1 style=";font-size:2.5rem;margin-bottom:30px"> COINCAP DEBIT RECIEPT </h1>
 
             <div style='width:100%;overflow:scroll'>
-                <table style='width:100%'>
-                    
-                    
-                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
-                        <td style='font-size:1.5rem'>
-                        Transaction Type
-                        </td>
-                        <td style='font-size:1.5rem'>
-                        Crypto
-                        </td>
-                    
-                    </tr>
-                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
-                        <td style='font-size:1.5rem'>
-                        Quantity Of Asset
+                        <table style='width:100%'>
+                            <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                                <td style='font-size:1.5rem'>
+                                Transaction Type
+                                </td>
+                                
+                                <td style='font-size:1.5rem'>
+                                Debit
+                                </td>
+                            
+                            </tr>
 
-                        </td>
-                        <td style='font-size:1.5rem'>
-                        $ ${quantity}
-                        </td>
-                    
-                    </tr>
-                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
-                        <td style='font-size:1.5rem'>
-                        Amount Equivalent
+                            <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                                <td style='font-size:1.5rem'>
+                                Currency Type
+                                </td>
+                                <td style='font-size:1.5rem'>
+                                Crypto
+                                </td>
+                            
+                            </tr>
 
-                        </td>
-                        <td style='font-size:1.5rem'>
-                        ${price}
-                        </td>
-                    
-                    </tr>
-                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
-                        <td style='font-size:1.5rem'>
-                        Name of Assset
+                            <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                                    <td style='font-size:1.5rem'>
+                                    Name Of Currency
+                                    </td>
+                                    <td style='font-size:1.5rem'>
+                                    ${name}
+                                    </td>
+                        
+                            </tr>
 
-                        </td>
-                        <td style='font-size:1.5rem'>
-                        ${name}
-                        </td>
-                    
-                    </tr>
-                </table>
+
+                            <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                                <td style='font-size:1.5rem'>
+                                Quantity Of Asset
+
+                                </td>
+                                <td style='font-size:1.5rem'>
+                                 ${quantity.toFixed(4)}
+                                </td>
+                            
+                            </tr>
+
+                            <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                                <td style='font-size:1.5rem'>
+                                Amount Equivalent
+
+                                </td>
+                                <td style='font-size:1.5rem'>
+                                $ ${price}
+                                </td>
+                            
+                            </tr>
+
+                            <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                                <td style='font-size:1.5rem'>
+                                Date Of Transaction
+
+                                </td>
+                                <td style='font-size:1.5rem'>
+                                ${date}
+                                </td>
+                            
+                            </tr>
+                        
+                    </table>
+                </div>
 
                 <h1 style="font-size:2.5rem;margin-bottom:30px">  RECIPIENT INFORMATION </h1>
 
                 <div style='width:100%;overflow:scroll'>
 
-                <table style='width:100%'>
-                    
-                    
-                    <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                    <table style='width:100%'>
+                        <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px;width:100%'>
+                            <td style='font-size:1.5rem'>
+                            Wallet Address
+                            </td>
+                            <td style='font-size:1.5rem'>
+                            ${truncate(walletAddress,10)}
+                            </td>
+                        
+                        </tr>
+                        <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
                         <td style='font-size:1.5rem'>
-                        Wallet Address
+                        status
                         </td>
-                        <td style='font-size:1.5rem'>
-                        ${walletAddress}
+
+                        <td>
+                        <button style="width:100px;height:50px;background-color:green;color:white">
+                        sent
+                        </button>
                         </td>
                     
                     </tr>
-                   
-                  
+                    
+                    
 
-                </table>
+                    </table>
                 </div>
             
-            
-            
-            </div>
 
             
             </body>
@@ -153,8 +209,10 @@ const CryptoForm = ({ navigation }) => {
 
 
             createPdf(pdfContent).then(() => {
-                console.log('pdf created')
+                //tell user about reciept
+                Alert.alert('open document to view pdf reciept')
             })
+            return
 
         }
         //navigate due to error url
@@ -166,12 +224,10 @@ const CryptoForm = ({ navigation }) => {
         if (walletAddressError) {
             return
         }
-
-
         setIsLoading(true)
 
         let res = await dispatch(sendCryptoToWallet({
-            walletAddress:walletAddress,
+            walletAddress: walletAddress,
             assetData: {
                 price,
                 name,
@@ -190,7 +246,7 @@ const CryptoForm = ({ navigation }) => {
         }
 
         setIsAuthError(true)
-        setAuthInfo("Transaction is being processed,continue to print pdf reciept")
+        setAuthInfo("Transaction has been processed,continue to print pdf reciept")
         setIsLoading(false)
 
 

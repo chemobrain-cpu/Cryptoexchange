@@ -15,7 +15,9 @@ import { useSelector } from "react-redux"
 
 
 const SendCryptoModal = ({ modalVisible, changeVisibility, navigationHandler_2,navigationHandler_1,asset,option_1,option_2}) => {
+
     let { background,importantText,normalText,fadeColor,blue,fadeButtonColor } = useSelector(state => state.userAuth)
+    
 
     return (<Modal
         animationType="slide"

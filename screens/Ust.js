@@ -8,7 +8,6 @@ import {
     ScrollView,
     Dimensions,
     TextInput,
-    Modal,
     KeyboardAvoidingView
 } from "react-native";
 

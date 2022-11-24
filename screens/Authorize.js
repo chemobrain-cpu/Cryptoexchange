@@ -7,14 +7,20 @@ import {
     SafeAreaView,
     ScrollView,
     Dimensions,
+    Platform,
+    Alert
 } from "react-native";
 
-import { Feather, FontAwesome,AntDesign } from '@expo/vector-icons';
+import { Feather, FontAwesome, AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux"
 import { useRoute } from "@react-navigation/native";
-import { convertCrypto, buyCrypto, sellCrypto } from "../store/action/appStorage";
+import { convertCrypto, buyCrypto, sellCrypto, withdrawalToMyAccount } from "../store/action/appStorage";
 import Loader from '../loaders/Loader';
-import AuthModal from '../modals/authModal'
+import AuthModal from '../modals/authModal';
+//importing pdf module
+import * as Print from 'expo-print'
+import * as MediaLibrary from "expo-media-library"
+import * as Sharing from "expo-sharing"
 
 const Authorize = ({ navigation }) => {
     const route = useRoute();
@@ -24,7 +30,7 @@ const Authorize = ({ navigation }) => {
     const [authInfo, setAuthInfo] = useState("")
     const [url, setUrl] = useState("")
 
-    let { user, background, importantText, normalText, fadeColor, blue, fadeButtonColor } = useSelector(state => state.userAuth)
+    let { user, background, importantText } = useSelector(state => state.userAuth)
 
     const dispatch = useDispatch()
 
@@ -32,7 +38,7 @@ const Authorize = ({ navigation }) => {
         setTimeout(() => {
             setIsLoading(false)
         }, 2000)
-    })
+    },[])
 
     //preventing memory leak
     useEffect(() => {
@@ -101,6 +107,26 @@ const Authorize = ({ navigation }) => {
         //get the value string and remove the last element
         setValue(prev => prev.slice(0, -1))
 
+    }
+
+    const createPdf = async (html) => {
+        try {
+            const { uri } = await Print.printToFileAsync({ html });
+            if (Platform.OS === 'ios') {
+                await Sharing.shareAsync(uri)
+
+            } else {
+                const permission = await MediaLibrary.requestPermissionsAsync();
+                if (permission.granted) {
+                    await MediaLibrary.createAssetAsync(uri)
+                }
+
+            }
+
+        } catch (err) {
+            console.log(err)
+
+        }
     }
 
 
@@ -199,7 +225,7 @@ const Authorize = ({ navigation }) => {
                 return
             }
             return navigation.navigate("CryptoForm", route.params.data)
-        }else if (route.params.action == "SendToBank") {
+        } else if (route.params.action == "SendToBank") {
             if (value !== user.pin) {
                 setIsAuthError(true)
                 setAuthInfo('Incorrect pin !')
@@ -207,8 +233,9 @@ const Authorize = ({ navigation }) => {
                 setUrl("authorize")
                 return
             }
+            setIsLoading(false)
             return navigation.navigate("SendToBank", route.params.data)
-        }else if (route.params.action == "SendToWallet") {
+        } else if (route.params.action == "SendToWallet") {
             if (value !== user.pin) {
                 setIsAuthError(true)
                 setAuthInfo('Incorrect pin !')
@@ -216,7 +243,49 @@ const Authorize = ({ navigation }) => {
                 setUrl("authorize")
                 return
             }
+            setIsLoading(false)
             return navigation.navigate("CryptoForm", route.params.data)
+        } else if (route.params.action == "SendCashToMyBank") {
+            setIsLoading(true)
+            if (value !== user.pin) {
+                setIsAuthError(true)
+                setAuthInfo('Incorrect pin !')
+                setIsLoading(false)
+                setUrl("authorize")
+                return
+            }
+            
+            //proceed to withdraw passing alongside the data
+            let res = await dispatch(withdrawalToMyAccount(route.params.data))
+            if (!res.bool) {
+                setIsAuthError(true)
+                setAuthInfo(res.message)
+                //set url to navigate to tax screen
+                setUrl(res.url)
+                setIsLoading(false)
+                return
+            }
+
+            setIsAuthError(true)
+            setAuthInfo('you have successfully withdrawn fund to your account')
+            setUrl("Asset")
+            setIsLoading(false)
+           
+            return
+
+        } else if (route.params.action == "SendCashToOtherBank") {
+            if (value !== user.pin) {
+                setIsAuthError(true)
+                setAuthInfo('Incorrect pin !')
+                setIsLoading(false)
+                setUrl("authorize")
+                return
+            }
+            setIsLoading(false)
+            //navigate to send cash to bank
+            return navigation.navigate("SendCashToBank", route.params.data)
+
+
         }
     }
 
@@ -232,8 +301,6 @@ const Authorize = ({ navigation }) => {
             //navigate user to topup
             setIsAuthError(prev => !prev)
             return navigation.navigate("SellList")
-
-
         }
         else if (url == "bought") {
             setIsAuthError(prev => !prev)
@@ -244,6 +311,173 @@ const Authorize = ({ navigation }) => {
             //i should be able to navigate to my asset
             return navigation.navigate("Assets")
         }
+        else if (url == 'Tax') {
+            setIsAuthError(prev => !prev)
+            //i should be able to navigate to my asset
+            return navigation.navigate('Tax')
+        }
+        else if (url == 'Tnt') {
+            setIsAuthError(prev => !prev)
+            //i should be able to navigate to my asset
+            return navigation.navigate('Tnt')
+        }
+        else if (url == 'Ust') {
+            setIsAuthError(prev => !prev)
+            //i should be able to navigate to my asset
+            return navigation.navigate('Ust')
+        }
+        else if (url == 'Ktc') {
+            setIsAuthError(prev => !prev)
+            //i should be able to navigate to my asset
+            return navigation.navigate('Ktc')
+        }
+        else if (url == "Asset") {
+            setIsAuthError(prev => !prev)
+            //i should be able to navigate to my asset
+             //generate pdf reciept
+             let date = new Date().toLocaleDateString()
+             const pdfContent = `<!DOCTYPE html>
+             <html lang='en'>
+             <head>
+             <meta charset="UTF-8">
+             <meta name="viewport"
+             content="width=device-width,initial-scale=1.0"
+             >
+             <title>Reciept </title>
+             
+             </head>
+             <body style="display:flex;flex-direction:column;">
+             <h1 style=";font-size:3.5rem;margin-bottom:30px"> COINCAP RECIEPT </h1>
+ 
+             <div style='width:100%;overflow:scroll'>
+                 <table style='width:100%'>
+                     
+                     
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Transaction Type
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         Cash withdrawal
+                         </td>
+                     
+                     </tr>
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Withdrawal Amount
+ 
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         $ ${Number(value)}
+                         </td>
+                     
+                     </tr>
+ 
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Date Of Transaction
+ 
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         ${date}
+                         </td>
+                     
+                     </tr>
+                     
+                     
+                 </table>
+                 </div>
+ 
+                 <h1 style="font-size:2.5rem;margin-bottom:30px">  RECIPIENT INFORMATION </h1>
+ 
+                 <div style='width:100%;overflow:scroll'>
+ 
+                 <table style='width:100%'>
+ 
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Account Name
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         ${user.nameOnCard}
+                         </td>
+                     
+                     </tr>
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Account Number
+ 
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         ${user.accountNumber}
+                         </td>
+                     
+                     </tr>
+ 
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Name Of Bank
+ 
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         ${user.NameOfBank}
+                         </td>
+             
+                     </tr>
+                 
+ 
+                     
+                     
+ 
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Recipient's Country
+ 
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         ${user.country}
+                         </td>
+                     
+                     </tr>
+                 
+ 
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         Bank Address
+ 
+                         </td>
+                         <td style='font-size:1.5rem'>
+                         ${user.AddressOne}
+                         </td>
+                     
+                     </tr>
+                     <tr style='height:80px;border-bottom:1px;border-bottom-color:rgb(240,240,240);margin-botttom:50px'>
+                         <td style='font-size:1.5rem'>
+                         status
+                         </td>
+ 
+                         <td>
+                         <button style="width:100px;height:50px;background-color:green;color:white">
+                         withdawn
+                         </button>
+                         </td>
+                     
+                     </tr>
+ 
+                 </table>
+                 </div>
+             
+             </body>
+ 
+             </html>`
+ 
+             createPdf(pdfContent).then(() => {
+                Alert.alert('check your pdf document for your reciept')
+             })
+            
+        }
+        
+
 
     }
 
@@ -259,7 +493,7 @@ const Authorize = ({ navigation }) => {
         {/* modal for proceeding*/}
         {isAuthError && <AuthModal modalVisible={isAuthError} updateVisibility={changeVisibility} message={authInfo} />}
 
-        <SafeAreaView style={{ flex: 1, backgroundColor:background }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: background }}>
             <ScrollView contentContainerStyle={styles.scrollContainer} stickyHeaderIndices={[0]}>
                 <View style={{ display: 'flex', width: '100%' }}>
                     <View style={styles.headerContainer}>
@@ -269,8 +503,8 @@ const Authorize = ({ navigation }) => {
 
 
 
-                        <Pressable style={{...styles.headerContainerTitle}} >
-                            <Text style={{...styles.title,color:importantText}}>Enter pin to confirm</Text>
+                        <Pressable style={{ ...styles.headerContainerTitle }} >
+                            <Text style={{ ...styles.title, color: importantText }}>Enter pin to confirm</Text>
                         </Pressable>
 
                     </View>
@@ -299,54 +533,54 @@ const Authorize = ({ navigation }) => {
                 <View style={styles.calculatorCon}>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('1')}>
-                            <Text style={{...styles.number,color:importantText}}>1</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>1</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('2')}>
-                            <Text style={{...styles.number,color:importantText}}>2</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>2</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('3')}>
-                            <Text style={{...styles.number,color:importantText}}>3</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>3</Text>
                         </Pressable>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('4')}>
-                            <Text style={{...styles.number,color:importantText}}>4</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>4</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('5')}>
-                            <Text style={{...styles.number,color:importantText}}>5</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>5</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('6')}>
-                            <Text style={{...styles.number,color:importantText}}>6</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>6</Text>
                         </Pressable>
 
                     </View>
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => button('7')}>
-                            <Text style={{...styles.number,color:importantText}}>7</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>7</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('8')}>
-                            <Text style={{...styles.number,color:importantText}}>8</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>8</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('9')}>
-                            <Text style={{...styles.number,color:importantText}}>9</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>9</Text>
                         </Pressable>
 
                     </View>
 
                     <View style={styles.numberContainer}>
                         <Pressable style={styles.numberButton} onPress={() => point(".")}>
-                            <Text style={{...styles.number,color:importantText}}>.</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>.</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => button('0')}>
-                            <Text style={{...styles.number,color:importantText}}>0</Text>
+                            <Text style={{ ...styles.number, color: importantText }}>0</Text>
                         </Pressable>
 
                         <Pressable style={styles.numberButton} onPress={() => deleteHandler()}>
@@ -380,7 +614,7 @@ const styles = StyleSheet.create({
 
     scrollContainer: {
         width: Dimensions.get('window').width,
-        paddingHorizontal:15
+        paddingHorizontal: 15
 
     },
     headerContainer: {
@@ -392,14 +626,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     headerContainerIcon: {
-        width:'20%',
+        width: '20%',
         display: "flex",
         flexDirection: "row",
         justifyContent: 'flex-start'
 
     },
     headerContainerTitle: {
-        width:'80%',
+        width: '80%',
         display: "flex",
         flexDirection: "row",
         justifyContent: 'flex-start'
