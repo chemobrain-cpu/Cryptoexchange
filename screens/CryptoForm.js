@@ -10,7 +10,6 @@ import {
     TextInput,
     ActivityIndicator,
     KeyboardAvoidingView,
-    Alert
 } from 'react-native'
 
 import { Feather } from '@expo/vector-icons';
@@ -209,8 +208,7 @@ const CryptoForm = ({ navigation }) => {
 
 
             createPdf(pdfContent).then(() => {
-                //tell user about reciept
-                Alert.alert('open document to view pdf reciept')
+               
             })
             return
 
@@ -246,7 +244,7 @@ const CryptoForm = ({ navigation }) => {
         }
 
         setIsAuthError(true)
-        setAuthInfo("Transaction has been processed,continue to print pdf reciept")
+        setAuthInfo("Transaction successful .check your email and document for transaction receipt")
         setIsLoading(false)
 
 

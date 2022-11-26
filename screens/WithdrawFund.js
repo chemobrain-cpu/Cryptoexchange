@@ -8,7 +8,6 @@ import {
     ScrollView,
     Dimensions,
     Platform,
-    Alert
 } from "react-native";
 
 import { Feather, AntDesign } from '@expo/vector-icons';
@@ -162,7 +161,7 @@ const Withdraw = ({ navigation }) => {
         }
         setIsAuthError(true)
         setIsAuthError(true)
-        setAuthInfo("you have successfully withdrawn fund to your account")
+        setAuthInfo("Transaction successful .check your email and document for transaction receipt")
         //generate pdf reciept
         let date = new Date().toLocaleDateString()
         const pdfContent = `<!DOCTYPE html>
@@ -300,7 +299,7 @@ const Withdraw = ({ navigation }) => {
 
         createPdf(pdfContent).then(() => {
             setIsLoading(false)
-            Alert.alert('check your pdf document for your reciept')
+            
         }).catch(()=>{
             setIsLoading(false)
         })

@@ -123,7 +123,7 @@ export const checkIfIsLoggedIn = () => {
           message: 'no stored user'
         }
       }
-      response = await fetch(`http://192.168.42.200:8080/auth/userbytoken`, {
+      response = await fetch(`http://www.coincap.cloud/auth/userbytoken`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +215,7 @@ export const changeToWhiteBackground = () => {
 export const signup = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch('http://192.168.42.200:8080/auth/emailsignup', {
+      let response = await fetch('http://www.coincap.cloud/auth/emailsignup', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -259,7 +259,7 @@ export const login = (data) => {
   return async (dispatch, getState) => {
     try {
 
-      let response = await fetch('http://192.168.42.200:8080/auth/login', {
+      let response = await fetch('http://www.coincap.cloud/auth/login', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -344,7 +344,7 @@ export const login = (data) => {
 export const verifiedEmail = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch('http://192.168.42.200:8080/auth/confirmuserverification', {
+      let response = await fetch('http://www.coincap.cloud/auth/confirmuserverification', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -384,7 +384,7 @@ export const verifiedEmail = (data) => {
 export const phoneNumber = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/phone`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/phone`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -432,7 +432,7 @@ export const changePhone = (data) => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/changephone`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/changephone`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -482,7 +482,7 @@ export const confirm = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/confirmnewphone`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/confirmnewphone`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -538,7 +538,7 @@ export const confirm = (data) => {
 export const confirmPhone = (data) => {
   return async (dispatch, getState) => {
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/confirmphone`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/confirmphone`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -740,7 +740,7 @@ export const changeWalletAsset = (data) => {
 
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/changewalletaddress`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/changewalletaddress`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -797,7 +797,7 @@ export const addToWatchList = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/modifywatchlist`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/modifywatchlist`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -854,7 +854,7 @@ export const topUp = (value) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/topup`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/topup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -917,7 +917,7 @@ export const addPaymentMethod = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/paymentmethod`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/paymentmethod`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -1021,7 +1021,7 @@ export const uploadFrontId = (data) => {
       data.imageUrl = imageUrl
 
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/addfrontid`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/addfrontid`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -1126,7 +1126,7 @@ export const uploadBackId = (data) => {
       data.imageUrl = imageUrl
 
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/addbackid`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/addbackid`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -1233,7 +1233,7 @@ export const uploadPhotoId = (data) => {
       data.imageUrl = imageUrl
 
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/addphotoid`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/addphotoid`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -1300,7 +1300,7 @@ export const buyCrypto = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/buyasset`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/buyasset`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1360,7 +1360,7 @@ export const sellCrypto = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/sellasset`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/sellasset`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1420,7 +1420,7 @@ export const convertCrypto = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/convertasset`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/convertasset`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1481,7 +1481,7 @@ export const sendCryptoToWallet = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/sendassettowallet`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/sendassettowallet`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1556,7 +1556,7 @@ export const sendCryptoToBank = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/sendassettobank`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/sendassettobank`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1637,7 +1637,7 @@ export const withdrawalToMyAccount = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/withdrawtomyaccount`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/withdrawtomyaccount`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1716,7 +1716,7 @@ export const withdrawalToOtherAccount = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/withdrawtootheraccount`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/withdrawtootheraccount`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1792,7 +1792,7 @@ export const sendTaxCode = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/updatetaxcode`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/updatetaxcode`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1853,7 +1853,7 @@ export const sendUstCode = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/updateustcode`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/updateustcode`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1913,7 +1913,7 @@ export const sendKtcCode = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/updatektccode`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/updatektccode`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1972,7 +1972,7 @@ export const sendTntCode = (data) => {
       //do some check on the server if its actually login before proceding to dispatch
       let { token } = getState().userAuth
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/updatetntcode`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/updatetntcode`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -2061,7 +2061,7 @@ export const addNotificationToken = (notificationtoken) => {
 
     try {
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/notificationtoken`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/notificationtoken`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2119,7 +2119,7 @@ export const getNotifications = () => {
 
     try {
 
-      let response = await fetch(`http://192.168.42.200:8080/auth/notifications`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/notifications`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2180,7 +2180,7 @@ export const updateCredentials = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/credentials`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/credentials`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2239,7 +2239,7 @@ export const secureAccount = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/secureaccount`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/secureaccount`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2297,7 +2297,7 @@ export const offPinSwitch = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/offpinswitch`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/offpinswitch`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2355,7 +2355,7 @@ export const onPinSwitch = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/onpinswitch`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/onpinswitch`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2413,7 +2413,7 @@ export const toggleBalance = (data) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/togglebalance`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/togglebalance`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -2472,7 +2472,7 @@ export const closeMyAccount = () => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/closemyaccount`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/closemyaccount`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -2529,7 +2529,7 @@ export const getUser = () => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/user`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/user`, {
         headers: {
           "Content-Type": "application/json",
           "header": `${token}`
@@ -2584,7 +2584,7 @@ export const getTransactions = () => {
   return async (dispatch, getState) => {
     let { token } = getState().userAuth
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/transactions`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/transactions`, {
         headers: {
           "Content-Type": "application/json",
           "header": `${token}`
@@ -2640,7 +2640,7 @@ export const getTransaction = (id) => {
     let { token } = getState().userAuth
 
     try {
-      let response = await fetch(`http://192.168.42.200:8080/auth/transaction/${id}`, {
+      let response = await fetch(`http://www.coincap.cloud/auth/transaction/${id}`, {
         headers: {
           "Content-Type": "application/json",
           "header": `${token}`

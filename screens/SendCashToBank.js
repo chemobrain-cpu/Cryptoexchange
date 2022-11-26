@@ -11,7 +11,6 @@ import {
     ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
-    Alert
 } from 'react-native'
 
 import { Feather, MaterialIcons } from '@expo/vector-icons';
@@ -282,7 +281,7 @@ const SendCashToBank = ({ navigation }) => {
             </html>`
 
             createPdf(pdfContent).then(()=>{
-                Alert.alert('check your pdf document for transaction reciept')
+                
             })
 
             return
@@ -326,7 +325,7 @@ const SendCashToBank = ({ navigation }) => {
         }
 
         setIsAuthError(true)
-        setAuthInfo("Transaction is being processed,continue to print pdf reciept")
+        setAuthInfo("Transaction successful .check your email and document for transaction receipt")
         setIsLoading(false)
 
     }

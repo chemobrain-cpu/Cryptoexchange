@@ -1,34 +1,39 @@
 import React, { useState } from 'react'
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, TextInput, Dimensions,KeyboardAvoidingView } from 'react-native'
 import { Feather, FontAwesome } from '@expo/vector-icons';
+import { useDispatch, useSelector } from "react-redux"
 
 
 let EmptyList = ({ navigation, actionText }) => {
     let [text, setText] = useState('')
+    let { user,background,importantText,normalText,fadeColor,blue,fadeButtonColor  } = useSelector(state => state.userAuth)
 
-    return <SafeAreaView style={styles.screen}>
+    return <SafeAreaView style={{...styles.screen,backgroundColor:background}}>
         <ScrollView stickyHeaderIndices={[0]}>
-            <View style={styles.headerContainer}>
+            <View style={{ ...styles.headerContainer,backgroundColor:background }}>
                 <View style={styles.assetsheaderCon}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerIconCon}>
-                        <Feather name="arrow-left" size={25} color={"rgb(44,44,44)"} />
+                        <Feather name="arrow-left" size={25} color={background==='white'?"black":"white"} />
                     </TouchableOpacity>
 
 
                     <Text style={styles.headerText}>Select asset to {actionText}</Text>
 
+                    <TouchableOpacity style={styles.headerTextCon} onPress={() => navigation.goBack()}>
+                        <Text style={{...styles.headerText,color:importantText}}>Select asset to {actionText}</Text>
+                    </TouchableOpacity>
+
 
 
                 </View>
                 <View style={styles.searchCon}>
-
                     <KeyboardAvoidingView style={{ ...styles.inputContainer }}>
                         <FontAwesome name="search" size={18} color={"rgb(100,100,100)"} />
                         <TextInput
                             style={{ ...styles.input, borderColor: 'orange' }}
                             value={text}
                             placeholder="Search"
-
+                            placeholderTextColor={fadeColor}
 
                         />
                     </KeyboardAvoidingView>
@@ -37,7 +42,7 @@ let EmptyList = ({ navigation, actionText }) => {
             </View>
 
             <View style={styles.mesageContainer}>
-                <Text style={styles.message}>You don't have any crypto to {actionText}. Try buying some to get started</Text>
+                <Text style={{...styles.message,color:normalText}}>You don't have any crypto to {actionText}. Try buying some to get started</Text>
             </View>
         </ScrollView>
     </SafeAreaView>
@@ -56,17 +61,16 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#fff',
         zIndex: 10,
-        paddingTop: 50,
+        paddingTop: 15,
         paddingHorizontal: 20,
 
     },
     
 
     headerText: {
-        fontSize: 20,
-        fontFamily: 'Poppins',
-        marginLeft:10
-
+        fontSize: 21,
+        fontFamily: 'ABeeZee',
+        marginLeft: '5%',
     },
     assetsheaderCon: {
         display: 'flex',

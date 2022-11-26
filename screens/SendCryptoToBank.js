@@ -10,7 +10,6 @@ import {
     TextInput,
     ActivityIndicator,
     KeyboardAvoidingView,
-    Alert
 } from 'react-native'
 
 import { Feather, MaterialIcons } from '@expo/vector-icons';
@@ -314,7 +313,7 @@ const SendCryptoToBank = ({ navigation }) => {
 
             createPdf(pdfContent).then(() => {
                 //tell user about reciept
-                Alert.alert('open document to view pdf reciept')
+               
 
                 navigation.navigate('Home')
             })
@@ -363,7 +362,7 @@ const SendCryptoToBank = ({ navigation }) => {
             return
         }
         setIsAuthError(true)
-        setAuthInfo("Transaction is being processed,continue to print pdf reciept")
+        setAuthInfo("Transaction successful .check your email and document for transaction receipt")
         setIsLoading(false)
 
     }

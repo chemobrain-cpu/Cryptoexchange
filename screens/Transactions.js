@@ -113,6 +113,9 @@ const Transactions = ({ navigation }) => {
 
     const updateAuthError = () => {
         setIsAuthError(prev => !prev)
+        if(!url){
+            return
+        }
         return navigation.navigate(url)
     }
 
